@@ -39,12 +39,14 @@ resource "aws_iam_role" "pynvest-lambda-poll-msgs-from-queue-and-put-sor-data-to
 
   managed_policy_arns = [
     "arn:aws:iam::${local.account_id}:policy/pynvest-cloudwatch-logs",
-    "arn:aws:iam::${local.account_id}:policy/pynvest-sqs-poll-msgs-from-queue"
+    "arn:aws:iam::${local.account_id}:policy/pynvest-sqs-poll-msgs-from-queue",
+    "arn:aws:iam::${local.account_id}:policy/pynvest-s3-put-sor-data",
   ]
 
   depends_on = [
     aws_iam_policy.pynvest-cloudwatch-logs,
-    aws_iam_policy.pynvest-sqs-poll-msgs-from-queue
+    aws_iam_policy.pynvest-sqs-poll-msgs-from-queue,
+    aws_iam_policy.pynvest-s3-put-sor-data
   ]
 }
 
