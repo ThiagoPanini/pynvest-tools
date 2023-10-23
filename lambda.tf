@@ -76,3 +76,17 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-raw-data-to-s3" {
     aws_iam_role.pynvest-lambda-poll-msgs-from-queue-and-put-sor-data-to-s3
   ]
 }
+
+# Definindo gatilho para função: fila SQS
+resource "aws_lambda_event_source_mapping" "pynvest-tickers-queue" {
+  function_name    = aws_lambda_function.pynvest-lambda-get-financial-raw-data-to-s3.arn
+  event_source_arn = aws_sqs_queue.pynvest-tickers-queue.arn
+
+  # Configuração do trigger
+  batch_size                         = var.sqs_lambda_trigger_batch_size
+  maximum_batching_window_in_seconds = var.sqs_lambda_trigger_batch_window
+
+  scaling_config {
+    maximum_concurrency = var.sqs_lambda_trigger_max_concurrency
+  }
+}

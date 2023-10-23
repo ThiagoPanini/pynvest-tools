@@ -19,12 +19,11 @@ def lambda_handler(
     sqs_queue_name: str = "pynvest-tickers-queue"
 ):
     """
-    Extração de tickers de Ações e FIIs da B3 para fila no SQS.
+    Extração de indicadores de financeiros de tickers de Ações e FIIs da B3.
 
     Esta função é responsável por utilizar as funcionalidades da biblioteca
-    pynvest (módulo fundamentus) para extrair toda a listagem de tickers
-    (códigos) de Ações e Fundos Imobiliários listados na B3 e, posteriormente,
-    enviar tais informações para uma fila pré configurada no SQS.
+    pynvest (módulo fundamentus) para extrair indicadores financeiros através
+    de tickers previamente disponibilizados como mensagens em uma fila SQS.
 
     Args:
         event (dict):
