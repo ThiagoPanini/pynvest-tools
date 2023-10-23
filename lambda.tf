@@ -26,7 +26,7 @@ resource "aws_lambda_function" "pynvest-lambda-send-b3-tickers-to-sqs-queue" {
   filename         = "${path.module}/app/lambda/zip/pynvest-lambda-send-b3-tickers-to-sqs-queue.zip"
   source_code_hash = data.archive_file.pynvest-lambda-send-b3-tickers-to-sqs-queue.output_base64sha256
 
-  role    = aws_iam_role.pynvest-lambda-send-b3-tickers-to-sqs-queue.arn
+  role    = aws_iam_role.pynvest-lambda-send-msgs-to-queue.arn
   handler = "lambda_function.lambda_handler"
   runtime = "python3.10"
   timeout = 180

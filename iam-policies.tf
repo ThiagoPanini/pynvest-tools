@@ -69,3 +69,24 @@ resource "aws_iam_policy" "pynvest-sqs-poll-msgs-from-queue" {
   name   = "pynvest-sqs-poll-msgs-from-queue"
   policy = data.template_file.pynvest-sqs-poll-msgs-from-queue.rendered
 }
+
+/* -------------------------------------------------------
+    IAM Policy
+    pynvest-s3-put-sor-data
+------------------------------------------------------- */
+
+# Definindo template file para policy
+data "template_file" "pynvest-s3-put-sor-data" {
+  template = file("${path.module}/iam/policies/pynvest-s3-put-sor-data.json")
+
+  vars = {
+    sor_bucket_name = local.s3_bucket_names_map["sor"]
+  }
+}
+
+# Definindo policy
+resource "aws_iam_policy" "pynvest-s3-put-sor-data" {
+  name   = "pynvest-s3-put-sor-data"
+  policy = data.template_file.pynvest-s3-put-sor-data.rendered
+}
+

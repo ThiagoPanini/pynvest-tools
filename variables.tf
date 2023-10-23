@@ -10,14 +10,6 @@ definidas neste projeto.
     Variáveis de definição de filas SQS do módulo
 ------------------------------------------------------- */
 
-/*
-ToDos:
-    - Configurar policy para acesso básico à fila SQS (put message e get queue URL com resources restritos (começando com pynvest?))
-    - Adicionar policy à role da Lambda de get tickers (remover a s3 policy)
-    - Testar
-    - Configurar access policy da fila em si para restringir ainda mais as permissões de put e get messages
-*/
-
 variable "sqs_tickers_queue_name" {
   description = "Nome da fila SQS responsável por receber as mensagens contendo informações dos tickers extraídos"
   type        = string

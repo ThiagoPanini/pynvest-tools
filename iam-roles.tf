@@ -7,12 +7,12 @@ a serem assumidas por aplicações neste projeto de IaC.
 
 /* -------------------------------------------------------
     IAM Role
-    pynvest-lambda-send-b3-tickers-to-sqs-queue
+    pynvest-lambda-send-msgs-to-queue
 ------------------------------------------------------- */
 
 # Definindo role IAM
-resource "aws_iam_role" "pynvest-lambda-send-b3-tickers-to-sqs-queue" {
-  name               = "pynvest-lambda-send-b3-tickers-to-sqs-queue"
+resource "aws_iam_role" "pynvest-lambda-send-msgs-to-queue" {
+  name               = "pynvest-lambda-send-msgs-to-queue"
   assume_role_policy = file("${path.module}/iam/trust/trust-lambda.json")
 
   managed_policy_arns = [
@@ -25,3 +25,26 @@ resource "aws_iam_role" "pynvest-lambda-send-b3-tickers-to-sqs-queue" {
     aws_iam_policy.pynvest-sqs-send-msgs-to-queue
   ]
 }
+
+
+/* -------------------------------------------------------
+    IAM Role
+    pynvest-lambda-poll-msgs-from-queue-and-put-sor-data-to-s3
+------------------------------------------------------- */
+
+# Definindo role IAM
+resource "aws_iam_role" "pynvest-lambda-poll-msgs-from-queue-and-put-sor-data-to-s3" {
+  name               = "pynvest-lambda-poll-msgs-from-queue-and-put-sor-data-to-s3"
+  assume_role_policy = file("${path.module}/iam/trust/trust-lambda.json")
+
+  managed_policy_arns = [
+    "arn:aws:iam::${local.account_id}:policy/pynvest-cloudwatch-logs",
+    "arn:aws:iam::${local.account_id}:policy/pynvest-sqs-poll-msgs-from-queue"
+  ]
+
+  depends_on = [
+    aws_iam_policy.pynvest-cloudwatch-logs,
+    aws_iam_policy.pynvest-sqs-poll-msgs-from-queue
+  ]
+}
+

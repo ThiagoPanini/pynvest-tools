@@ -18,6 +18,22 @@ def lambda_handler(
     context,
     sqs_queue_name: str = "pynvest-tickers-queue"
 ):
+    """
+    Extração de tickers de Ações e FIIs da B3 para fila no SQS.
+
+    Esta função é responsável por utilizar as funcionalidades da biblioteca
+    pynvest (módulo fundamentus) para extrair toda a listagem de tickers
+    (códigos) de Ações e Fundos Imobiliários listados na B3 e, posteriormente,
+    enviar tais informações para uma fila pré configurada no SQS.
+
+    Args:
+        event (dict): Evento de entrada da chamada da função.
+        context (LambdaContext): Metadados da própria função.
+        sqs_queue_name: Nome da fila SQS alvo do envio das mensagens.
+
+    Return:
+        Dicionário contendo informações sobre o resultado de execução da função
+    """
 
     # Instanciando objeto de scrapper do pynvest
     pynvest_scrapper = Fundamentus(logger_level=logging.DEBUG)
@@ -34,7 +50,7 @@ def lambda_handler(
     tickers_acoes_identified = [
         {
             "ticker": ticker,
-            "tipo": "ação"
+            "tipo": "acao"
         }
         for ticker in tickers_acoes
     ]
@@ -76,30 +92,3 @@ def lambda_handler(
             "queue_url": queue_url
         }
     }
-
-
-if __name__ == "__main__":
-    r = lambda_handler(None, None)
-    print(r)
-
-"""
-# (tmp) Recebendo mensagens
-    r = sqs_client.get_queue_url(QueueName=sqs_queue_name)
-    queue_url = r['QueueUrl']
-    r = sqs_client.receive_message(
-        QueueUrl=queue_url,
-        MaxNumberOfMessages=10,
-        VisibilityTimeout=30,
-        WaitTimeSeconds=10
-    )
-    messages = r["Messages"]
-    print(len(messages))
-    print(messages[0].keys())
-    print(messages[0]["ReceiptHandle"])
-    print(json.loads(messages[0]["Body"]))
-    
-    for msg in messages:
-        msg_body = json.loads(msg["Body"])
-        print(msg_body["ticker"])
-    exit()
-"""
