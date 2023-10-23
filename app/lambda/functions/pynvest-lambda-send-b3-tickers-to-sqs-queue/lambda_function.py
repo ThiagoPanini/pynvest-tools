@@ -8,7 +8,7 @@ import logging
 
 
 # Configurando objeto logger
-logger = log_config(logger_name=__file__, logger_level=logging.INFO)
+logger = log_config(logger_name="lambda-logger", logger_level=logging.INFO)
 logger.propagate = False
 
 
@@ -20,11 +20,6 @@ def lambda_handler(
 ):
     """
     Extração de tickers de Ações e FIIs da B3 para fila no SQS.
-
-    Esta função é responsável por utilizar as funcionalidades da biblioteca
-    pynvest (módulo fundamentus) para extrair toda a listagem de tickers
-    (códigos) de Ações e Fundos Imobiliários listados na B3 e, posteriormente,
-    enviar tais informações para uma fila pré configurada no SQS.
 
     Args:
         event (dict): Evento de entrada da chamada da função.
@@ -68,7 +63,7 @@ def lambda_handler(
     tickers_messages = tickers_acoes_identified + ticker_fiis_identified
 
     # (tmp) Reduzindo a quantidade de mensagens para fins de validação
-    tickers_messages = tickers_messages[:50]
+    tickers_messages = tickers_messages[:5]
 
     # Iterando sobre todos os tickers para envio de mensagens para fila SQS
     logger.info(f"Iterando sobre os {len(tickers_messages)} códigos de ativos "
