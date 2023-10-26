@@ -10,10 +10,16 @@ definidas neste projeto.
     Variáveis de definição de filas SQS do módulo
 ------------------------------------------------------- */
 
-variable "sqs_tickers_queue_name" {
+variable "sqs_tickers_acoes_queue_name" {
   description = "Nome da fila SQS responsável por receber as mensagens contendo informações dos tickers extraídos"
   type        = string
-  default     = "pynvest-tickers-queue"
+  default     = "pynvest-tickers-acoes-queue"
+}
+
+variable "sqs_tickers_fiis_queue_name" {
+  description = "Nome da fila SQS responsável por receber as mensagens contendo informações dos tickers extraídos"
+  type        = string
+  default     = "pynvest-tickers-fiis-queue"
 }
 
 variable "sqs_visibility_timeout_seconds" {

@@ -8,25 +8,25 @@ projeto.
 
 /* -------------------------------------------------------
     Lambda function
-    pynvest-lambda-send-b3-tickers-to-sqs-queue
+    pynvest-lambda-send-tickers-to-sqs-queues
 ------------------------------------------------------- */
 
 # Criando pacote zip da função a ser criada
-data "archive_file" "pynvest-lambda-send-b3-tickers-to-sqs-queue" {
+data "archive_file" "pynvest-lambda-send-tickers-to-sqs-queues" {
   type        = "zip"
-  source_dir  = "${path.module}/app/lambda/functions/pynvest-lambda-send-b3-tickers-to-sqs-queue/"
-  output_path = "${path.module}/app/lambda/zip/pynvest-lambda-send-b3-tickers-to-sqs-queue.zip"
+  source_dir  = "${path.module}/app/lambda/functions/pynvest-lambda-send-tickers-to-sqs-queues/"
+  output_path = "${path.module}/app/lambda/zip/pynvest-lambda-send-tickers-to-sqs-queues.zip"
 }
 
 # Criando função Lambda
-resource "aws_lambda_function" "pynvest-lambda-send-b3-tickers-to-sqs-queue" {
-  function_name = "pynvest-lambda-send-b3-tickers-to-sqs-queue"
+resource "aws_lambda_function" "pynvest-lambda-send-tickers-to-sqs-queues" {
+  function_name = "pynvest-lambda-send-tickers-to-sqs-queues"
   description   = "Coleta tickers de ativos da B3 e envia mensagens para fila SQS"
 
-  filename         = "${path.module}/app/lambda/zip/pynvest-lambda-send-b3-tickers-to-sqs-queue.zip"
-  source_code_hash = data.archive_file.pynvest-lambda-send-b3-tickers-to-sqs-queue.output_base64sha256
+  filename         = "${path.module}/app/lambda/zip/pynvest-lambda-send-tickers-to-sqs-queues.zip"
+  source_code_hash = data.archive_file.pynvest-lambda-send-tickers-to-sqs-queues.output_base64sha256
 
-  role    = aws_iam_role.pynvest-lambda-send-msgs-to-queue.arn
+  role    = aws_iam_role.pynvest-lambda-send-msgs-to-tickers-queues.arn
   handler = "lambda_function.lambda_handler"
   runtime = "python3.10"
   timeout = 180
@@ -36,8 +36,8 @@ resource "aws_lambda_function" "pynvest-lambda-send-b3-tickers-to-sqs-queue" {
   ]
 
   depends_on = [
-    data.archive_file.pynvest-lambda-send-b3-tickers-to-sqs-queue,
-    aws_iam_role.pynvest-lambda-send-msgs-to-queue
+    data.archive_file.pynvest-lambda-send-tickers-to-sqs-queues,
+    aws_iam_role.pynvest-lambda-send-msgs-to-tickers-queues
   ]
 }
 
@@ -46,7 +46,7 @@ resource "aws_lambda_function" "pynvest-lambda-send-b3-tickers-to-sqs-queue" {
     Lambda function
     pynvest-lambda-get-financial-raw-data-to-s3
 ------------------------------------------------------- */
-
+/*
 # Criando pacote zip da função a ser criada
 data "archive_file" "pynvest-lambda-get-financial-raw-data-to-s3" {
   type        = "zip"
@@ -78,6 +78,7 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-raw-data-to-s3" {
 }
 
 # Definindo gatilho para função: fila SQS
+/*
 resource "aws_lambda_event_source_mapping" "pynvest-tickers-queue" {
   function_name    = aws_lambda_function.pynvest-lambda-get-financial-raw-data-to-s3.arn
   event_source_arn = aws_sqs_queue.pynvest-tickers-queue.arn
@@ -90,3 +91,4 @@ resource "aws_lambda_event_source_mapping" "pynvest-tickers-queue" {
     maximum_concurrency = var.sqs_lambda_trigger_max_concurrency
   }
 }
+*/

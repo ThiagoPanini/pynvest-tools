@@ -8,7 +8,10 @@
 				"sqs:GetQueueUrl",
 				"sqs:SendMessage"
 			],
-			"Resource": "arn:aws:sqs:${region_name}:${account_id}:pynvest*"
+			"Resource": [
+				"arn:aws:sqs:${region_name}:${account_id}:pynvest-tickers-acoes-queue",
+				"arn:aws:sqs:${region_name}:${account_id}:pynvest-tickers-fiis-queue"
+			]
 		}
 	]
 }

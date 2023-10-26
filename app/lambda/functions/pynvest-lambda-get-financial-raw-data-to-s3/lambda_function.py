@@ -16,11 +16,7 @@ logger.propagate = False
 
 
 # Definindo função handler
-def lambda_handler(
-    event,
-    context,
-    sqs_queue_name: str = "pynvest-tickers-queue"
-):
+def lambda_handler(event, context):
     """
     Extração de indicadores de financeiros de tickers de Ações e FIIs da B3.
 
@@ -43,7 +39,7 @@ def lambda_handler(
     pynvest_scrapper.logger.propagate = False
 
     # Definindo variáveis de saída do S3
-    s3_sor_bucket_name = f"datadelivery-sor-{account_id}-{region_name}"
+    s3_sor_bucket_name = f"datadelivery-sor-data-{account_id}-{region_name}"
     tbl_prefix = "fundamentus"
     tbl_name = "tbl_indicadores_ativos_fundamentus_raw"
     output_path = f"s3://{s3_sor_bucket_name}/{tbl_prefix}/{tbl_name}"
@@ -84,6 +80,9 @@ def lambda_handler(
             - Avaliar erro NoSuchBucket
             - Separar ações e fiis (layouts diferentes)
             - Incluir parâmetros para catalogação dos dados
+
+            - Separar filas para processamento de ações e de FIIs
+            - Criar lambda adicional para processamento das filas
         """
         wr.s3.to_parquet(
             df=df_financial_data,

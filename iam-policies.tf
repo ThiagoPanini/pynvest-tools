@@ -29,12 +29,12 @@ resource "aws_iam_policy" "pynvest-cloudwatch-logs" {
 
 /* -------------------------------------------------------
     IAM Policy
-    pynvest-sqs-send-msgs-to-queue
+    pynvest-sqs-send-msgs-to-tickers-queues
 ------------------------------------------------------- */
 
 # Definindo template file para policy
-data "template_file" "pynvest-sqs-send-msgs-to-queue" {
-  template = file("${path.module}/iam/policies/pynvest-sqs-send-msgs-to-queue.json")
+data "template_file" "pynvest-sqs-send-msgs-to-tickers-queues" {
+  template = file("${path.module}/iam/policies/pynvest-sqs-send-msgs-to-tickers-queues.json")
 
   vars = {
     region_name = local.region_name
@@ -43,9 +43,9 @@ data "template_file" "pynvest-sqs-send-msgs-to-queue" {
 }
 
 # Definindo policy
-resource "aws_iam_policy" "pynvest-sqs-send-msgs-to-queue" {
-  name   = "pynvest-sqs-send-msgs-to-queue"
-  policy = data.template_file.pynvest-sqs-send-msgs-to-queue.rendered
+resource "aws_iam_policy" "pynvest-sqs-send-msgs-to-tickers-queues" {
+  name   = "pynvest-sqs-send-msgs-to-tickers-queues"
+  policy = data.template_file.pynvest-sqs-send-msgs-to-tickers-queues.rendered
 }
 
 
@@ -53,7 +53,7 @@ resource "aws_iam_policy" "pynvest-sqs-send-msgs-to-queue" {
     IAM Policy
     pynvest-sqs-poll-msgs-from-queue
 ------------------------------------------------------- */
-
+/*
 # Definindo template file para policy
 data "template_file" "pynvest-sqs-poll-msgs-from-queue" {
   template = file("${path.module}/iam/policies/pynvest-sqs-poll-msgs-from-queue.json")
@@ -69,12 +69,13 @@ resource "aws_iam_policy" "pynvest-sqs-poll-msgs-from-queue" {
   name   = "pynvest-sqs-poll-msgs-from-queue"
   policy = data.template_file.pynvest-sqs-poll-msgs-from-queue.rendered
 }
+*/
 
 /* -------------------------------------------------------
     IAM Policy
     pynvest-s3-put-sor-data
 ------------------------------------------------------- */
-
+/*
 # Definindo template file para policy
 data "template_file" "pynvest-s3-put-sor-data" {
   template = file("${path.module}/iam/policies/pynvest-s3-put-sor-data.json")
@@ -89,4 +90,4 @@ resource "aws_iam_policy" "pynvest-s3-put-sor-data" {
   name   = "pynvest-s3-put-sor-data"
   policy = data.template_file.pynvest-s3-put-sor-data.rendered
 }
-
+*/

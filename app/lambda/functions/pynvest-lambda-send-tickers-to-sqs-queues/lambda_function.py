@@ -16,7 +16,8 @@ logger.propagate = False
 def lambda_handler(
     event,
     context,
-    sqs_queue_name: str = "pynvest-tickers-queue"
+    sqs_acoes_queue_name: str = "pynvest-tickers-acoes-queue",
+    sqs_fiis_queue_name: str = "pynvest-tickers-fiis-queue"
 ):
     """
     Extração de tickers de Ações e FIIs da B3 para fila no SQS.
@@ -24,7 +25,8 @@ def lambda_handler(
     Args:
         event (dict): Evento de entrada da chamada da função.
         context (LambdaContext): Metadados da própria função.
-        sqs_queue_name: Nome da fila SQS alvo do envio das mensagens.
+        sqs_acoes_queue_name: Fila SQS para envio de tickers de ações.
+        sqs_fiis_queue_name: Fila SQS para envio de tickers de FIIs.
 
     Return:
         Dicionário contendo informações sobre o resultado de execução da função
@@ -37,6 +39,14 @@ def lambda_handler(
     # Instanciando client do SQS
     sqs_client = boto3.client("sqs")
 
+    # Coletando URL de filas SQS para ações e fiis
+    sqs_acoes_queue_url = sqs_client.get_queue_url(
+        QueueName=sqs_acoes_queue_name
+    )['QueueUrl']
+    sqs_fiis_queue_url = sqs_client.get_queue_url(
+        QueueName=sqs_fiis_queue_name
+    )['QueueUrl']
+
     # Obtendo tickers de ações e fundos imobiliários
     tickers_acoes = pynvest_scrapper.extracao_tickers_de_ativos(tipo="ações")
     tickers_fiis = pynvest_scrapper.extracao_tickers_de_ativos(tipo="fiis")
@@ -45,7 +55,8 @@ def lambda_handler(
     tickers_acoes_identified = [
         {
             "ticker": ticker,
-            "tipo": "acao"
+            "tipo": "acao",
+            "queue_url": sqs_acoes_queue_url
         }
         for ticker in tickers_acoes
     ]
@@ -54,7 +65,8 @@ def lambda_handler(
     ticker_fiis_identified = [
         {
             "ticker": ticker,
-            "tipo": "fii"
+            "tipo": "fii",
+            "queue_url": sqs_fiis_queue_url
         }
         for ticker in tickers_fiis
     ]
@@ -69,21 +81,28 @@ def lambda_handler(
     logger.info(f"Iterando sobre os {len(tickers_messages)} códigos de ativos "
                 "extraídos e enviando para fila no SQS")
     for msg in tickers_messages:
-        # Coletando URL da fila
-        r = sqs_client.get_queue_url(QueueName=sqs_queue_name)
-        queue_url = r['QueueUrl']
-
         # Enviando mensagem
-        r = sqs_client.send_message(
-            QueueUrl=queue_url,
+        _ = sqs_client.send_message(
+            QueueUrl=msg["queue_url"],
             MessageBody=json.dumps(msg)
         )
-    logger.info(f"Mensagens enviadas com sucesso para fila SQS {queue_url}")
+
+    # Comunicando totais
+    total_msgs_acoes = len(tickers_acoes)
+    total_msgs_fiis = len(tickers_fiis)
+    logger.info("Mensagens enviadas com sucesso para filas SQS. Totalizando: "
+                f"\n{sqs_acoes_queue_name}: {total_msgs_acoes} mensagens "
+                f"\n{sqs_fiis_queue_name}: {total_msgs_fiis} mensagens")
 
     return {
+        # Corrigir
         "status_code": 200,
         "body": {
-            "total_messages": len(tickers_messages),
-            "queue_url": queue_url
+            "queues_messages": {
+                sqs_acoes_queue_name: {
+                    "url": total_msgs_acoes,
+                    "total_messages": total_msgs_acoes
+                }
+            }
         }
     }
