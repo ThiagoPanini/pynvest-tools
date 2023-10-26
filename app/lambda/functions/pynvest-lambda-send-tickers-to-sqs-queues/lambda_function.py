@@ -20,7 +20,7 @@ def lambda_handler(
     sqs_fiis_queue_name: str = "pynvest-tickers-fiis-queue"
 ):
     """
-    Extração de tickers de Ações e FIIs da B3 para fila no SQS.
+    Extração de tickers de Ações e FIIs da B3 para filas no SQS.
 
     Args:
         event (dict): Evento de entrada da chamada da função.

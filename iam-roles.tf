@@ -17,7 +17,7 @@ resource "aws_iam_role" "pynvest-lambda-send-msgs-to-tickers-queues" {
 
   managed_policy_arns = [
     "arn:aws:iam::${local.account_id}:policy/pynvest-cloudwatch-logs",
-    "arn:aws:iam::${local.account_id}:policy/pynvest-sqs-send-msgs-to-queues"
+    "arn:aws:iam::${local.account_id}:policy/pynvest-sqs-send-msgs-to-tickers-queues"
   ]
 
   depends_on = [

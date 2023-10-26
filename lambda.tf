@@ -21,7 +21,7 @@ data "archive_file" "pynvest-lambda-send-tickers-to-sqs-queues" {
 # Criando função Lambda
 resource "aws_lambda_function" "pynvest-lambda-send-tickers-to-sqs-queues" {
   function_name = "pynvest-lambda-send-tickers-to-sqs-queues"
-  description   = "Coleta tickers de ativos da B3 e envia mensagens para fila SQS"
+  description   = "Coleta tickers de ativos da B3 e envia mensagens para filas no SQS"
 
   filename         = "${path.module}/app/lambda/zip/pynvest-lambda-send-tickers-to-sqs-queues.zip"
   source_code_hash = data.archive_file.pynvest-lambda-send-tickers-to-sqs-queues.output_base64sha256
