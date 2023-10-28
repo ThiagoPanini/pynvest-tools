@@ -1,6 +1,7 @@
 # Importando bibliotecas
 import boto3
 import json
+import os
 
 import awswrangler as wr
 import pandas as pd
@@ -8,6 +9,9 @@ import pandas as pd
 from pynvest.scrappers.fundamentus import Fundamentus
 from pynvest.utils.log import log_config
 import logging
+
+from warnings import filterwarnings
+filterwarnings("ignore")
 
 
 # Configurando objeto logger
@@ -19,7 +23,8 @@ logger.propagate = False
 def lambda_handler(
     event,
     context,
-    output_table_name: str = "tbl_fundamentus_indicadores_acoes"
+    output_table_name: str = "tbl_fundamentus_indicadores_acoes",
+    partition_cols: list = ["date_exec"]
 ):
     """
     Extração de indicadores de financeiros de Ações listadas na B3.
@@ -79,7 +84,12 @@ def lambda_handler(
         wr.s3.to_parquet(
             df=df_financial_data,
             path=output_path,
-            dataset=True
+            dataset=True,
+            database=os.getenv("DATABASE_NAME"),
+            table=output_table_name,
+            partition_cols=partition_cols,
+            mode="overwrite_partitions",
+            schema_evolution=True
         )
 
     return {

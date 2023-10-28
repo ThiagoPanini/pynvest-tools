@@ -69,3 +69,21 @@ variable "sqs_lambda_trigger_max_concurrency" {
   type        = number
   default     = 2
 }
+
+
+/* -------------------------------------------------------
+    VARIABLES: Glue Data Catalog
+    Variáveis de definição de elementos do catálogo de dados
+------------------------------------------------------- */
+
+variable "flag_create_database" {
+  description = "Flag para validar a criação de um database no Glue Data Catalog caso o usuário não tenha ou não queira utilizar um database já existente para catalogação das tabelas geradas"
+  type        = bool
+  default     = true
+}
+
+variable "database_name" {
+  description = "Nome de um database a ser criado (se flag_create_database = True) ou utilizado (se flag_create_database = False) no Glue Data Catalog para criação de tabelas"
+  type        = string
+  default     = "db_fundamentus_sor"
+}

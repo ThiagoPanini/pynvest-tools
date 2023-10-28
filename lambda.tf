@@ -71,6 +71,12 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-acoes" {
     "arn:aws:lambda:${local.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
   ]
 
+  environment {
+    variables = {
+      DATABASE_NAME = var.database_name
+    }
+  }
+
   depends_on = [
     data.archive_file.pynvest-lambda-get-financial-data-for-acoes,
     aws_iam_role.pynvest-lambda-put-sor-data-for-acoes
