@@ -89,7 +89,7 @@ def lambda_handler(
             database=os.getenv("DATABASE_NAME"),
             table=output_table_name,
             partition_cols=partition_cols,
-            mode="overwrite_partitions",
+            mode="append",
             schema_evolution=True
         )
 
