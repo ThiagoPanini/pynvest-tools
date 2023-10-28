@@ -149,8 +149,9 @@ data "template_file" "pynvest-glue-tables-access" {
   template = file("${path.module}/iam/policies/pynvest-glue-tables-access.json")
 
   vars = {
-    region_name = local.region_name
-    account_id  = local.account_id
+    region_name   = local.region_name
+    account_id    = local.account_id,
+    database_name = var.database_name
   }
 }
 

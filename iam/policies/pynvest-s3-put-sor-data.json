@@ -2,10 +2,18 @@
 	"Version": "2012-10-17",
 	"Statement": [
 		{
-			"Sid": "PutPynvestDataToS3",
+			"Sid": "PutGetAndDeleteObjects",
 			"Effect": "Allow",
-			"Action": "s3:PutObject",
-			"Resource": "arn:aws:s3:::${sor_bucket_name}/${table_name_prefix}/*"
+			"Action": [
+				"s3:ListBucket",
+				"s3:PutObject",
+				"s3:GetObject",
+				"s3:DeleteObject"
+			],
+			"Resource": [
+				"arn:aws:s3:::${sor_bucket_name}",
+				"arn:aws:s3:::${sor_bucket_name}/${table_name_prefix}/*"
+			]
 		}
 	]
 }

@@ -4,8 +4,18 @@
 		{
 			"Sid": "SetGlueTablesAccess",
 			"Effect": "Allow",
-			"Action": "glue:GetTable",
-			"Resource": "arn:aws:glue:${region_name}:${account_id}:catalog"
+			"Action": [
+                "glue:GetDatabase",
+				"glue:CreateTable",
+				"glue:UpdateTable",
+				"glue:GetTable",
+                "glue:BatchCreatePartition"
+            ],
+			"Resource": [
+                "arn:aws:glue:${region_name}:${account_id}:catalog",
+                "arn:aws:glue:${region_name}:${account_id}:database/${database_name}",
+                "arn:aws:glue:${region_name}:${account_id}:table/${database_name}/tbl_fundamentus_*"
+            ]
 		}
 	]
 }
