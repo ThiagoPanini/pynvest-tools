@@ -16,9 +16,13 @@ logger.propagate = False
 
 
 # Definindo função handler
-def lambda_handler(event, context):
+def lambda_handler(
+    event,
+    context,
+    output_table_name: str = "tbl_fundamentus_indicadores_acoes"
+):
     """
-    Extração de indicadores de financeiros de tickers de Ações e FIIs da B3.
+    Extração de indicadores de financeiros de Ações listadas na B3.
 
     Args:
         event (dict): Evento de entrada da chamada da função (fila SQS).
@@ -40,14 +44,11 @@ def lambda_handler(event, context):
 
     # Definindo variáveis de saída do S3
     s3_sor_bucket_name = f"datadelivery-sor-data-{account_id}-{region_name}"
-    tbl_prefix = "fundamentus"
-    tbl_name = "tbl_indicadores_ativos_fundamentus_raw"
-    output_path = f"s3://{s3_sor_bucket_name}/{tbl_prefix}/{tbl_name}"
+    output_path = f"s3://{s3_sor_bucket_name}/{output_table_name}"
 
     # Informando total de mensagens recebidas para processamento
     total_msgs = len(event["Records"])
-    logger.info("Quantidade de mensagens recebidas para processamento: "
-                f"{total_msgs}")
+    logger.info(f"Mensagens recebidas para processamento: {total_msgs}")
 
     # Coletando tickers do batch
     tickers = [
@@ -74,19 +75,17 @@ def lambda_handler(event, context):
 
     # Validando resultado da extração de indicadores
     if len(df_financial_data) == len(tickers):
-        # Todos os tickers foram processados, salvando DataFrame no S3
-        """
-        ToDo:
-            - Avaliar erro NoSuchBucket
-            - Separar ações e fiis (layouts diferentes)
-            - Incluir parâmetros para catalogação dos dados
-
-            - Separar filas para processamento de ações e de FIIs
-            - Criar lambda adicional para processamento das filas
-        """
+        # Escrevendo dados no s3
         wr.s3.to_parquet(
             df=df_financial_data,
-            path=output_path
+            path=output_path,
+            dataset=True
         )
 
-    return 200
+    return {
+        "status_code": 200,
+        "body": {
+            "tickers_proccessed": tickers,
+            "total_tickers": total_msgs
+        }
+    }

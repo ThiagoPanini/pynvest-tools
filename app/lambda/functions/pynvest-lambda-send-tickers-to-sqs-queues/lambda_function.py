@@ -95,7 +95,6 @@ def lambda_handler(
                 f"\n{sqs_fiis_queue_name}: {total_msgs_fiis} mensagens")
 
     return {
-        # Corrigir
         "status_code": 200,
         "body": {
             "queues_messages": {
