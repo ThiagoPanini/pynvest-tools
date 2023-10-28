@@ -137,3 +137,25 @@ resource "aws_iam_policy" "pynvest-s3-put-sor-data-fiis" {
   name   = "pynvest-s3-put-sor-data-fiis"
   policy = data.template_file.pynvest-s3-put-sor-data-fiis.rendered
 }
+
+
+/* -------------------------------------------------------
+    IAM Policy
+    pynvest-glue-tables-access
+------------------------------------------------------- */
+
+# Definindo template file para policy
+data "template_file" "pynvest-glue-tables-access" {
+  template = file("${path.module}/iam/policies/pynvest-glue-tables-access.json")
+
+  vars = {
+    region_name = local.region_name
+    account_id  = local.account_id
+  }
+}
+
+# Definindo policy
+resource "aws_iam_policy" "pynvest-glue-tables-access" {
+  name   = "pynvest-glue-tables-access"
+  policy = data.template_file.pynvest-glue-tables-access.rendered
+}

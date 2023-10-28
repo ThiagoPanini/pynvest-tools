@@ -41,12 +41,14 @@ resource "aws_iam_role" "pynvest-lambda-put-sor-data-for-acoes" {
     "arn:aws:iam::${local.account_id}:policy/pynvest-cloudwatch-logs",
     "arn:aws:iam::${local.account_id}:policy/pynvest-sqs-poll-msgs-from-acoes-queue",
     "arn:aws:iam::${local.account_id}:policy/pynvest-s3-put-sor-data-acoes",
+    "arn:aws:iam::${local.account_id}:policy/pynvest-glue-tables-access",
   ]
 
   depends_on = [
     aws_iam_policy.pynvest-cloudwatch-logs,
     aws_iam_policy.pynvest-sqs-poll-msgs-from-acoes-queue,
-    aws_iam_policy.pynvest-s3-put-sor-data-acoes
+    aws_iam_policy.pynvest-s3-put-sor-data-acoes,
+    aws_iam_policy.pynvest-glue-tables-access
   ]
 }
 
@@ -65,11 +67,13 @@ resource "aws_iam_role" "pynvest-lambda-put-sor-data-for-fiis" {
     "arn:aws:iam::${local.account_id}:policy/pynvest-cloudwatch-logs",
     "arn:aws:iam::${local.account_id}:policy/pynvest-sqs-poll-msgs-from-fiis-queue",
     "arn:aws:iam::${local.account_id}:policy/pynvest-s3-put-sor-data-fiis",
+    "arn:aws:iam::${local.account_id}:policy/pynvest-glue-tables-access",
   ]
 
   depends_on = [
     aws_iam_policy.pynvest-cloudwatch-logs,
     aws_iam_policy.pynvest-sqs-poll-msgs-from-fiis-queue,
-    aws_iam_policy.pynvest-s3-put-sor-data-fiis
+    aws_iam_policy.pynvest-s3-put-sor-data-fiis,
+    aws_iam_policy.pynvest-glue-tables-access
   ]
 }
