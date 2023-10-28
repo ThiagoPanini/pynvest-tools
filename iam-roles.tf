@@ -29,25 +29,47 @@ resource "aws_iam_role" "pynvest-lambda-send-msgs-to-tickers-queues" {
 
 /* -------------------------------------------------------
     IAM Role
-    pynvest-lambda-poll-msgs-from-queue-and-put-sor-data-to-s3
+    pynvest-lambda-put-sor-data-for-acoes
 ------------------------------------------------------- */
-/*
+
 # Definindo role IAM
-resource "aws_iam_role" "pynvest-lambda-poll-msgs-from-queue-and-put-sor-data-to-s3" {
-  name               = "pynvest-lambda-poll-msgs-from-queue-and-put-sor-data-to-s3"
+resource "aws_iam_role" "pynvest-lambda-put-sor-data-for-acoes" {
+  name               = "pynvest-lambda-put-sor-data-for-acoes"
   assume_role_policy = file("${path.module}/iam/trust/trust-lambda.json")
 
   managed_policy_arns = [
     "arn:aws:iam::${local.account_id}:policy/pynvest-cloudwatch-logs",
-    "arn:aws:iam::${local.account_id}:policy/pynvest-sqs-poll-msgs-from-queue",
+    "arn:aws:iam::${local.account_id}:policy/pynvest-sqs-poll-msgs-from-acoes-queue",
     "arn:aws:iam::${local.account_id}:policy/pynvest-s3-put-sor-data",
   ]
 
   depends_on = [
     aws_iam_policy.pynvest-cloudwatch-logs,
-    aws_iam_policy.pynvest-sqs-poll-msgs-from-queue,
+    aws_iam_policy.pynvest-sqs-poll-msgs-from-acoes-queue,
     aws_iam_policy.pynvest-s3-put-sor-data
   ]
 }
 
-*/
+
+/* -------------------------------------------------------
+    IAM Role
+    pynvest-lambda-put-sor-data-for-fiis
+------------------------------------------------------- */
+
+# Definindo role IAM
+resource "aws_iam_role" "pynvest-lambda-put-sor-data-for-fiis" {
+  name               = "pynvest-lambda-put-sor-data-for-fiis"
+  assume_role_policy = file("${path.module}/iam/trust/trust-lambda.json")
+
+  managed_policy_arns = [
+    "arn:aws:iam::${local.account_id}:policy/pynvest-cloudwatch-logs",
+    "arn:aws:iam::${local.account_id}:policy/pynvest-sqs-poll-msgs-from-fiis-queue",
+    "arn:aws:iam::${local.account_id}:policy/pynvest-s3-put-sor-data",
+  ]
+
+  depends_on = [
+    aws_iam_policy.pynvest-cloudwatch-logs,
+    aws_iam_policy.pynvest-sqs-poll-msgs-from-fiis-queue,
+    aws_iam_policy.pynvest-s3-put-sor-data
+  ]
+}

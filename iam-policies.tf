@@ -51,31 +51,55 @@ resource "aws_iam_policy" "pynvest-sqs-send-msgs-to-tickers-queues" {
 
 /* -------------------------------------------------------
     IAM Policy
-    pynvest-sqs-poll-msgs-from-queue
+    pynvest-sqs-poll-msgs-from-acoes-queue
 ------------------------------------------------------- */
-/*
+
 # Definindo template file para policy
-data "template_file" "pynvest-sqs-poll-msgs-from-queue" {
-  template = file("${path.module}/iam/policies/pynvest-sqs-poll-msgs-from-queue.json")
+data "template_file" "pynvest-sqs-poll-msgs-from-acoes-queue" {
+  template = file("${path.module}/iam/policies/pynvest-sqs-poll-msgs-from-ticker-queue.json")
 
   vars = {
     region_name = local.region_name
-    account_id  = local.account_id
+    account_id  = local.account_id,
+    ticker_type = "acoes"
   }
 }
 
 # Definindo policy
-resource "aws_iam_policy" "pynvest-sqs-poll-msgs-from-queue" {
-  name   = "pynvest-sqs-poll-msgs-from-queue"
-  policy = data.template_file.pynvest-sqs-poll-msgs-from-queue.rendered
+resource "aws_iam_policy" "pynvest-sqs-poll-msgs-from-acoes-queue" {
+  name   = "pynvest-sqs-poll-msgs-from-acoes-queue"
+  policy = data.template_file.pynvest-sqs-poll-msgs-from-acoes-queue.rendered
 }
-*/
+
+
+/* -------------------------------------------------------
+    IAM Policy
+    pynvest-sqs-poll-msgs-from-fiis-queue
+------------------------------------------------------- */
+
+# Definindo template file para policy
+data "template_file" "pynvest-sqs-poll-msgs-from-fiis-queue" {
+  template = file("${path.module}/iam/policies/pynvest-sqs-poll-msgs-from-ticker-queue.json")
+
+  vars = {
+    region_name = local.region_name
+    account_id  = local.account_id,
+    ticker_type = "fiis"
+  }
+}
+
+# Definindo policy
+resource "aws_iam_policy" "pynvest-sqs-poll-msgs-from-fiis-queue" {
+  name   = "pynvest-sqs-poll-msgs-from-fiis-queue"
+  policy = data.template_file.pynvest-sqs-poll-msgs-from-acoes-queue.rendered
+}
+
 
 /* -------------------------------------------------------
     IAM Policy
     pynvest-s3-put-sor-data
 ------------------------------------------------------- */
-/*
+
 # Definindo template file para policy
 data "template_file" "pynvest-s3-put-sor-data" {
   template = file("${path.module}/iam/policies/pynvest-s3-put-sor-data.json")
@@ -90,4 +114,4 @@ resource "aws_iam_policy" "pynvest-s3-put-sor-data" {
   name   = "pynvest-s3-put-sor-data"
   policy = data.template_file.pynvest-s3-put-sor-data.rendered
 }
-*/
+
