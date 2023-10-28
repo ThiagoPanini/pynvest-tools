@@ -11,11 +11,16 @@ import logging
 logger = log_config(logger_name="lambda-logger", logger_level=logging.INFO)
 logger.propagate = False
 
+# Instanciando objeto de scrapper do pynvest
+pynvest_scrapper = Fundamentus(logger_level=logging.DEBUG)
+pynvest_scrapper.logger.propagate = False
+
 
 # Definindo função handler
 def lambda_handler(
     event,
     context,
+    pynvest_scrapper: Fundamentus = pynvest_scrapper,
     sqs_acoes_queue_name: str = "pynvest-tickers-acoes-queue",
     sqs_fiis_queue_name: str = "pynvest-tickers-fiis-queue"
 ):
@@ -31,10 +36,6 @@ def lambda_handler(
     Return:
         Dicionário contendo informações sobre o resultado de execução da função
     """
-
-    # Instanciando objeto de scrapper do pynvest
-    pynvest_scrapper = Fundamentus(logger_level=logging.DEBUG)
-    pynvest_scrapper.logger.propagate = False
 
     # Instanciando client do SQS
     sqs_client = boto3.client("sqs")
@@ -73,9 +74,6 @@ def lambda_handler(
 
     # Unindo listas em estrutura única
     tickers_messages = tickers_acoes_identified + ticker_fiis_identified
-
-    # (tmp) Reduzindo a quantidade de mensagens para fins de validação
-    tickers_messages = tickers_messages[:5]
 
     # Iterando sobre todos os tickers para envio de mensagens para fila SQS
     logger.info(f"Iterando sobre os {len(tickers_messages)} códigos de ativos "

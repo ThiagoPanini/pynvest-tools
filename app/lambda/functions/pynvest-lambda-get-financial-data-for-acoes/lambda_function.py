@@ -18,11 +18,16 @@ filterwarnings("ignore")
 logger = log_config(logger_name=__file__, logger_level=logging.INFO)
 logger.propagate = False
 
+# Instanciando objeto de scrapper do pynvest
+pynvest_scrapper = Fundamentus(logger_level=logging.INFO)
+pynvest_scrapper.logger.propagate = False
+
 
 # Definindo função handler
 def lambda_handler(
     event,
     context,
+    pynvest_scapper: Fundamentus = pynvest_scrapper,
     output_table_name: str = "tbl_fundamentus_indicadores_acoes",
     partition_cols: list = ["date_exec"]
 ):
@@ -42,10 +47,6 @@ def lambda_handler(
     sts_client = boto3.client("sts")
     account_id = sts_client.get_caller_identity()["Account"]
     region_name = session.region_name
-
-    # Instanciando objeto de scrapper do pynvest
-    pynvest_scrapper = Fundamentus(logger_level=logging.INFO)
-    pynvest_scrapper.logger.propagate = False
 
     # Definindo variáveis de saída do S3
     s3_sor_bucket_name = f"datadelivery-sor-data-{account_id}-{region_name}"
