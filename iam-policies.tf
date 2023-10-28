@@ -97,21 +97,43 @@ resource "aws_iam_policy" "pynvest-sqs-poll-msgs-from-fiis-queue" {
 
 /* -------------------------------------------------------
     IAM Policy
-    pynvest-s3-put-sor-data
+    pynvest-s3-put-sor-data-acoes
 ------------------------------------------------------- */
 
 # Definindo template file para policy
-data "template_file" "pynvest-s3-put-sor-data" {
+data "template_file" "pynvest-s3-put-sor-data-acoes" {
   template = file("${path.module}/iam/policies/pynvest-s3-put-sor-data.json")
 
   vars = {
-    sor_bucket_name = local.s3_bucket_names_map["sor"]
+    sor_bucket_name   = local.s3_bucket_names_map["sor"],
+    table_name_prefix = "tbl_fundamentus_indicadores_acoes"
   }
 }
 
 # Definindo policy
-resource "aws_iam_policy" "pynvest-s3-put-sor-data" {
-  name   = "pynvest-s3-put-sor-data"
-  policy = data.template_file.pynvest-s3-put-sor-data.rendered
+resource "aws_iam_policy" "pynvest-s3-put-sor-data-acoes" {
+  name   = "pynvest-s3-put-sor-data-acoes"
+  policy = data.template_file.pynvest-s3-put-sor-data-acoes.rendered
 }
 
+
+/* -------------------------------------------------------
+    IAM Policy
+    pynvest-s3-put-sor-data-fiis
+------------------------------------------------------- */
+
+# Definindo template file para policy
+data "template_file" "pynvest-s3-put-sor-data-fiis" {
+  template = file("${path.module}/iam/policies/pynvest-s3-put-sor-data.json")
+
+  vars = {
+    sor_bucket_name   = local.s3_bucket_names_map["sor"],
+    table_name_prefix = "tbl_fundamentus_indicadores_fiis"
+  }
+}
+
+# Definindo policy
+resource "aws_iam_policy" "pynvest-s3-put-sor-data-fiis" {
+  name   = "pynvest-s3-put-sor-data-fiis"
+  policy = data.template_file.pynvest-s3-put-sor-data-fiis.rendered
+}

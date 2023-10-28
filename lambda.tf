@@ -44,25 +44,25 @@ resource "aws_lambda_function" "pynvest-lambda-send-tickers-to-sqs-queues" {
 
 /* -------------------------------------------------------
     Lambda function
-    pynvest-lambda-get-financial-raw-data-to-s3
+    pynvest-lambda-get-financial-data-for-acoes
 ------------------------------------------------------- */
-/*
+
 # Criando pacote zip da função a ser criada
-data "archive_file" "pynvest-lambda-get-financial-raw-data-to-s3" {
+data "archive_file" "pynvest-lambda-get-financial-data-for-acoes" {
   type        = "zip"
-  source_dir  = "${path.module}/app/lambda/functions/pynvest-lambda-get-financial-raw-data-to-s3/"
-  output_path = "${path.module}/app/lambda/zip/pynvest-lambda-get-financial-raw-data-to-s3.zip"
+  source_dir  = "${path.module}/app/lambda/functions/pynvest-lambda-get-financial-data-for-acoes/"
+  output_path = "${path.module}/app/lambda/zip/pynvest-lambda-get-financial-data-for-acoes.zip"
 }
 
 # Criando função Lambda
-resource "aws_lambda_function" "pynvest-lambda-get-financial-raw-data-to-s3" {
-  function_name = "pynvest-lambda-get-financial-raw-data-to-s3"
-  description   = "Processa mensagens de fila SQS, coleta indicadores financeiros de ativos e salva os dados no S3"
+resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-acoes" {
+  function_name = "pynvest-lambda-get-financial-data-for-acoes"
+  description   = "Extrai e consolida indicadores financeiros de Ações a partir de tickers coletados de fila SQS"
 
-  filename         = "${path.module}/app/lambda/zip/pynvest-lambda-get-financial-raw-data-to-s3.zip"
-  source_code_hash = data.archive_file.pynvest-lambda-get-financial-raw-data-to-s3.output_base64sha256
+  filename         = "${path.module}/app/lambda/zip/pynvest-lambda-get-financial-data-for-acoes.zip"
+  source_code_hash = data.archive_file.pynvest-lambda-get-financial-data-for-acoes.output_base64sha256
 
-  role    = aws_iam_role.pynvest-lambda-poll-msgs-from-queue-and-put-sor-data-to-s3.arn
+  role    = aws_iam_role.pynvest-lambda-put-sor-data-for-acoes.arn
   handler = "lambda_function.lambda_handler"
   runtime = "python3.10"
   timeout = 180
@@ -72,16 +72,15 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-raw-data-to-s3" {
   ]
 
   depends_on = [
-    data.archive_file.pynvest-lambda-get-financial-raw-data-to-s3,
-    aws_iam_role.pynvest-lambda-poll-msgs-from-queue-and-put-sor-data-to-s3
+    data.archive_file.pynvest-lambda-get-financial-data-for-acoes,
+    aws_iam_role.pynvest-lambda-put-sor-data-for-acoes
   ]
 }
 
 # Definindo gatilho para função: fila SQS
-/*
 resource "aws_lambda_event_source_mapping" "pynvest-tickers-queue" {
-  function_name    = aws_lambda_function.pynvest-lambda-get-financial-raw-data-to-s3.arn
-  event_source_arn = aws_sqs_queue.pynvest-tickers-queue.arn
+  function_name    = aws_lambda_function.pynvest-lambda-get-financial-data-for-acoes.arn
+  event_source_arn = aws_sqs_queue.pynvest-tickers-acoes-queue.arn
 
   # Configuração do trigger
   batch_size                         = var.sqs_lambda_trigger_batch_size
@@ -90,5 +89,10 @@ resource "aws_lambda_event_source_mapping" "pynvest-tickers-queue" {
   scaling_config {
     maximum_concurrency = var.sqs_lambda_trigger_max_concurrency
   }
+
+  depends_on = [
+    aws_lambda_function.pynvest-lambda-get-financial-data-for-acoes,
+    aws_sqs_queue.pynvest-tickers-acoes-queue
+  ]
 }
-*/
+
