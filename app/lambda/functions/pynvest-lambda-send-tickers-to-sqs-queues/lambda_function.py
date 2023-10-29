@@ -95,9 +95,11 @@ def lambda_handler(
     return {
         "status_code": 200,
         "body": {
-            "queues_messages": {
+            "sqs_queues": {
                 sqs_acoes_queue_name: {
-                    "url": total_msgs_acoes,
+                    "total_messages": total_msgs_acoes
+                },
+                sqs_fiis_queue_name: {
                     "total_messages": total_msgs_acoes
                 }
             }
