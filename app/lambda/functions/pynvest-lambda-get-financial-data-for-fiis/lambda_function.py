@@ -32,7 +32,7 @@ def lambda_handler(
     partition_cols: list = ["date_exec"]
 ):
     """
-    Extração de indicadores de financeiros de Ações listadas na B3.
+    Extração de indicadores de financeiros de FIIs listados na B3.
 
     Args:
         event (dict): Evento de entrada da chamada da função (fila SQS).
