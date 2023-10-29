@@ -25,7 +25,7 @@ variable "sqs_tickers_fiis_queue_name" {
 variable "sqs_visibility_timeout_seconds" {
   description = "Tempo (em segundos) em que uma mensagem recebida por um consumidor ficará invisível para outros consumidores"
   type        = number
-  default     = 360
+  default     = 1080
 }
 
 variable "sqs_message_retention_seconds" {
@@ -67,7 +67,7 @@ variable "sqs_lambda_trigger_batch_window" {
 variable "sqs_lambda_trigger_max_concurrency" {
   description = "Número máximo de funções concorrentes a serem invocadas pelo gatilho"
   type        = number
-  default     = 2
+  default     = 10
 }
 
 
