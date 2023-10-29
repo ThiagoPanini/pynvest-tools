@@ -91,7 +91,7 @@ data "template_file" "pynvest-sqs-poll-msgs-from-fiis-queue" {
 # Definindo policy
 resource "aws_iam_policy" "pynvest-sqs-poll-msgs-from-fiis-queue" {
   name   = "pynvest-sqs-poll-msgs-from-fiis-queue"
-  policy = data.template_file.pynvest-sqs-poll-msgs-from-acoes-queue.rendered
+  policy = data.template_file.pynvest-sqs-poll-msgs-from-fiis-queue.rendered
 }
 
 
