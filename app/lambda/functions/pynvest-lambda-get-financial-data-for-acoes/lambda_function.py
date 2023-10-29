@@ -27,7 +27,7 @@ pynvest_scrapper.logger.propagate = False
 def lambda_handler(
     event,
     context,
-    pynvest_scapper: Fundamentus = pynvest_scrapper,
+    pynvest_scrapper: Fundamentus = pynvest_scrapper,
     output_table_name: str = "tbl_fundamentus_indicadores_acoes",
     partition_cols: list = ["date_exec"]
 ):
@@ -93,10 +93,15 @@ def lambda_handler(
             schema_evolution=True
         )
 
+        # Comunicação final
+        logger.info("Dados escritos no s3 e catalogados na tabela "
+                    f"{output_table_name}")
+
     return {
         "status_code": 200,
         "body": {
             "tickers_proccessed": tickers,
-            "total_tickers": total_msgs
+            "total_tickers": total_msgs,
+            "output_table": output_table_name
         }
     }
