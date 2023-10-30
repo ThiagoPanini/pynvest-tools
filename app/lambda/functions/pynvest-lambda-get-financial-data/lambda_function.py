@@ -28,15 +28,16 @@ def lambda_handler(
     event,
     context,
     pynvest_scrapper: Fundamentus = pynvest_scrapper,
-    output_table_name: str = "tbl_fundamentus_indicadores_fiis",
     partition_cols: list = ["date_exec"]
 ):
     """
     Extração de indicadores de financeiros de FIIs listados na B3.
 
     Args:
-        event (dict): Evento de entrada da chamada da função (fila SQS).
-        context (LambdaContext): Metadados da própria função.
+        event (dict): Evento de entrada da chamada da função (fila SQS)
+        context (LambdaContext): Metadados da própria função
+        pynvest_scrapper (Fundamentus): objeto para scrapper dos dados
+        partition_cols (list): Referência de colunas de partição da tabela
 
     Return:
         Dicionário contendo informações sobre o resultado de execução da função
@@ -48,9 +49,13 @@ def lambda_handler(
     account_id = sts_client.get_caller_identity()["Account"]
     region_name = session.region_name
 
+    # Coletando variáveis de ambiente para escrita dos dados
+    output_database = os.getenv("DATABASE_NAME")
+    output_table = os.getenv("TABLE_NAME")
+
     # Definindo variáveis de saída do S3
     s3_sor_bucket_name = f"datadelivery-sor-data-{account_id}-{region_name}"
-    output_path = f"s3://{s3_sor_bucket_name}/{output_table_name}"
+    output_path = f"s3://{s3_sor_bucket_name}/{output_table}"
 
     # Informando total de mensagens recebidas para processamento
     total_msgs = len(event["Records"])
@@ -86,8 +91,8 @@ def lambda_handler(
             df=df_financial_data,
             path=output_path,
             dataset=True,
-            database=os.getenv("DATABASE_NAME"),
-            table=output_table_name,
+            database=output_database,
+            table=output_table,
             partition_cols=partition_cols,
             mode="append",
             schema_evolution=True
@@ -95,13 +100,13 @@ def lambda_handler(
 
         # Comunicação final
         logger.info("Dados escritos no s3 e catalogados na tabela "
-                    f"{output_table_name}")
+                    f"{output_table}")
 
     return {
         "status_code": 200,
         "body": {
             "tickers_proccessed": tickers,
             "total_tickers": total_msgs,
-            "output_table": output_table_name
+            "output_table": f"{output_database}.{output_table}"
         }
     }
