@@ -6,6 +6,18 @@ definidas neste projeto.
 -------------------------------------------------------- */
 
 /* -------------------------------------------------------
+    VARIABLES: Eventbridge
+    Variáveis de definição de gatilhos do Eventbridge
+------------------------------------------------------- */
+
+variable "schedule_expression_to_initialize" {
+  description = "Expressão cron responsável por engatilhar a primeira etapa do processo"
+  type        = string
+  default     = "cron(0 22 ? * MON-FRI *)"
+}
+
+
+/* -------------------------------------------------------
     VARIABLES: SQS
     Variáveis de definição de filas SQS do módulo
 ------------------------------------------------------- */
