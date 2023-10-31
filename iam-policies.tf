@@ -7,6 +7,28 @@ IAM utilizadas para criação de roles de aplicação.
 
 /* -------------------------------------------------------
     IAM Policy
+    pynvest-lambda-invoke-functions
+------------------------------------------------------- */
+
+# Definindo template file para policy
+data "template_file" "pynvest-lambda-invoke-functions" {
+  template = file("${path.module}/iam/policy-templates/pynvest-lambda-invoke-functions.json")
+
+  vars = {
+    region_name = local.region_name
+    account_id  = local.account_id
+  }
+}
+
+# Definindo policy
+resource "aws_iam_policy" "pynvest-lambda-invoke-functions" {
+  name   = "pynvest-lambda-invoke-functions"
+  policy = data.template_file.pynvest-lambda-invoke-functions.rendered
+}
+
+
+/* -------------------------------------------------------
+    IAM Policy
     pynvest-cloudwatch-logs
 ------------------------------------------------------- */
 
@@ -24,6 +46,29 @@ data "template_file" "pynvest-cloudwatch-logs" {
 resource "aws_iam_policy" "pynvest-cloudwatch-logs" {
   name   = "pynvest-cloudwatch-logs"
   policy = data.template_file.pynvest-cloudwatch-logs.rendered
+}
+
+
+/* -------------------------------------------------------
+    IAM Policy
+    pynvest-gluedatacatalog-check-partitions-sor-tables
+------------------------------------------------------- */
+
+# Definindo template file para policy
+data "template_file" "pynvest-gluedatacatalog-check-partitions-sor-tables" {
+  template = file("${path.module}/iam/policy-templates/pynvest-gluedatacatalog-check-partitions-sor-tables.json")
+
+  vars = {
+    region_name       = local.region_name,
+    account_id        = local.account_id,
+    sor_database_name = var.databases_names_map["sor"]
+  }
+}
+
+# Definindo policy
+resource "aws_iam_policy" "pynvest-gluedatacatalog-check-partitions-sor-tables" {
+  name   = "pynvest-gluedatacatalog-check-partitions-sor-tables"
+  policy = data.template_file.pynvest-gluedatacatalog-check-partitions-sor-tables.rendered
 }
 
 

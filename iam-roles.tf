@@ -80,3 +80,33 @@ resource "aws_iam_role" "pynvest-lambda-write-and-catalog-sor-data-for-fiis" {
     aws_iam_policy.pynvest-gluedatacatalog-manage-sor-fiis-table
   ]
 }
+
+
+/* -------------------------------------------------------
+    IAM Role
+    pynvest-lambda-check-sor-partitions
+------------------------------------------------------- */
+
+# Definindo role IAM
+resource "aws_iam_role" "pynvest-lambda-check-sor-partitions" {
+  name                  = "pynvest-lambda-check-sor-partitions"
+  assume_role_policy    = file("${path.module}/iam/trust/trust-lambda.json")
+  force_detach_policies = true
+
+  managed_policy_arns = [
+    "arn:aws:iam::${local.account_id}:policy/pynvest-lambda-invoke-functions",
+    "arn:aws:iam::${local.account_id}:policy/pynvest-cloudwatch-logs",
+    "arn:aws:iam::${local.account_id}:policy/pynvest-s3-manage-sor-data-for-acoes",
+    "arn:aws:iam::${local.account_id}:policy/pynvest-s3-manage-sor-data-for-fiis",
+    "arn:aws:iam::${local.account_id}:policy/pynvest-gluedatacatalog-check-partitions-sor-tables"
+  ]
+
+  depends_on = [
+    aws_iam_policy.pynvest-lambda-invoke-functions,
+    aws_iam_policy.pynvest-cloudwatch-logs,
+    aws_iam_policy.pynvest-s3-manage-sor-data-for-acoes,
+    aws_iam_policy.pynvest-s3-manage-sor-data-for-fiis,
+    aws_iam_policy.pynvest-gluedatacatalog-check-partitions-sor-tables
+  ]
+}
+
