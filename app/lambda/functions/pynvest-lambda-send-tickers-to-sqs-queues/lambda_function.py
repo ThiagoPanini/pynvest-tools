@@ -100,7 +100,7 @@ def lambda_handler(
                     "total_messages": total_msgs_acoes
                 },
                 sqs_fiis_queue_name: {
-                    "total_messages": total_msgs_acoes
+                    "total_messages": total_msgs_fiis
                 }
             }
         }
