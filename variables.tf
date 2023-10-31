@@ -84,18 +84,44 @@ variable "sqs_lambda_trigger_max_concurrency" {
 
 
 /* -------------------------------------------------------
-    VARIABLES: Glue Data Catalog
-    Variáveis de definição de elementos do catálogo de dados
+    VARIABLES: S3 e Glue Data Catalog
+    Armazenamento e catalogação dos dados gerados
 ------------------------------------------------------- */
 
-variable "flag_create_database" {
-  description = "Flag para validar a criação de um database no Glue Data Catalog caso o usuário não tenha ou não queira utilizar um database já existente para catalogação das tabelas geradas"
+variable "bucket_names_map" {
+  description = "Dicionário (map) contendo nomes dos buckets SoR, SoT e Spec da conta AWS alvo de implantação dos recursos. O objetivo desta variável e permitir que o usuário forneça seus próprios buckets para armazenamento dos arquivos gerados. O correto preenchimento desta variável exige que as referências de nomes sejam fornecidas dentro das chaves 'sor', 'sot' e 'spec'. O usuário também pode fornecer o mesmo nome de bucket para as três quebras, caso queira armazenar os dados das tabelas em um único bucket."
+  type        = map(string)
+  default = {
+    "sor"  = "value"
+    "sot"  = "value"
+    "spec" = "value"
+  }
+}
+
+variable "flag_create_databases" {
+  description = "Flag para validar a criação de databases no Glue Data Catalog caso o usuário não tenha ou não queira utilizar databases já existentes para catalogação das tabelas geradas"
   type        = bool
   default     = true
 }
 
-variable "database_name" {
-  description = "Nome de um database a ser criado (se flag_create_database = True) ou utilizado (se flag_create_database = False) no Glue Data Catalog para criação de tabelas"
+variable "databases_names_map" {
+  description = "Dicionário (map) contendo os nomes dos databases no Glue Data Catalog para catalogação de tabelas SoR, SoT e Spec. O correto preenchimento desta variável exige que as referências de nomes sejam fornecidas dentro das chaves 'sor', 'sot' e 'spec'. O usuário também pode fornecer o mesmo nome de database para as três quebras, caso queira armazenar os dados das tabelas em um único database."
+  type        = map(string)
+  default = {
+    "sor"  = "db_pynvest_sor"
+    "sot"  = "db_pynvest_sot"
+    "spec" = "db_pynvest_spec"
+  }
+}
+
+variable "sor_acoes_table_name" {
+  description = "Nome da tabela SoR gerada a partir do processamento de indicadores financeiros de Ações"
   type        = string
-  default     = "db_fundamentus_sor"
+  default     = "tbl_fundamentus_indicadores_acoes"
+}
+
+variable "sor_fiis_table_name" {
+  description = "Nome da tabela SoR gerada a partir do processamento de indicadores financeiros de Fundos Imobiliários"
+  type        = string
+  default     = "tbl_fundamentus_indicadores_fiis"
 }

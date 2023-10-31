@@ -13,8 +13,8 @@
             ],
 			"Resource": [
                 "arn:aws:glue:${region_name}:${account_id}:catalog",
-                "arn:aws:glue:${region_name}:${account_id}:database/${database_name}",
-                "arn:aws:glue:${region_name}:${account_id}:table/${database_name}/tbl_fundamentus_*"
+                "arn:aws:glue:${region_name}:${account_id}:database/${sor_database_name}",
+                "arn:aws:glue:${region_name}:${account_id}:table/${sor_database_name}/${sor_table_name}"
             ]
 		}
 	]

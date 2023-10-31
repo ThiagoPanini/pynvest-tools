@@ -1,7 +1,7 @@
 /* --------------------------------------------------------
-ARQUIVO: iam-policies.tf
+ARQUIVO: iam-policy.tf
 
-Arquivo Terraform responsável por definir todas as policies
+Arquivo Terraform responsável por definir todas as policy
 IAM utilizadas para criação de roles de aplicação.
 -------------------------------------------------------- */
 
@@ -12,7 +12,7 @@ IAM utilizadas para criação de roles de aplicação.
 
 # Definindo template file para policy
 data "template_file" "pynvest-cloudwatch-logs" {
-  template = file("${path.module}/iam/policies/pynvest-cloudwatch-logs.json")
+  template = file("${path.module}/iam/policy-templates/pynvest-cloudwatch-logs.json")
 
   vars = {
     region_name = local.region_name
@@ -34,10 +34,10 @@ resource "aws_iam_policy" "pynvest-cloudwatch-logs" {
 
 # Definindo template file para policy
 data "template_file" "pynvest-sqs-send-msgs-to-tickers-queues" {
-  template = file("${path.module}/iam/policies/pynvest-sqs-send-msgs-to-tickers-queues.json")
+  template = file("${path.module}/iam/policy-templates/pynvest-sqs-send-msgs-to-tickers-queues.json")
 
   vars = {
-    region_name = local.region_name
+    region_name = local.region_name,
     account_id  = local.account_id
   }
 }
@@ -56,7 +56,7 @@ resource "aws_iam_policy" "pynvest-sqs-send-msgs-to-tickers-queues" {
 
 # Definindo template file para policy
 data "template_file" "pynvest-sqs-poll-msgs-from-acoes-queue" {
-  template = file("${path.module}/iam/policies/pynvest-sqs-poll-msgs-from-ticker-queue.json")
+  template = file("${path.module}/iam/policy-templates/pynvest-sqs-poll-msgs-from-tickers-queues.json")
 
   vars = {
     region_name = local.region_name
@@ -79,7 +79,7 @@ resource "aws_iam_policy" "pynvest-sqs-poll-msgs-from-acoes-queue" {
 
 # Definindo template file para policy
 data "template_file" "pynvest-sqs-poll-msgs-from-fiis-queue" {
-  template = file("${path.module}/iam/policies/pynvest-sqs-poll-msgs-from-ticker-queue.json")
+  template = file("${path.module}/iam/policy-templates/pynvest-sqs-poll-msgs-from-tickers-queues.json")
 
   vars = {
     region_name = local.region_name
@@ -97,66 +97,91 @@ resource "aws_iam_policy" "pynvest-sqs-poll-msgs-from-fiis-queue" {
 
 /* -------------------------------------------------------
     IAM Policy
-    pynvest-s3-put-sor-data-acoes
+    pynvest-s3-manage-sor-data-for-acoes
 ------------------------------------------------------- */
 
 # Definindo template file para policy
-data "template_file" "pynvest-s3-put-sor-data-acoes" {
-  template = file("${path.module}/iam/policies/pynvest-s3-put-sor-data.json")
+data "template_file" "pynvest-s3-manage-sor-data-for-acoes" {
+  template = file("${path.module}/iam/policy-templates/pynvest-s3-manage-sor-data.json")
 
   vars = {
-    sor_bucket_name   = local.s3_bucket_names_map["sor"],
-    table_name_prefix = "tbl_fundamentus_indicadores_acoes"
+    sor_bucket_name = local.bucket_names_map["sor"],
+    sor_table_name  = var.sor_acoes_table_name
   }
 }
 
 # Definindo policy
-resource "aws_iam_policy" "pynvest-s3-put-sor-data-acoes" {
-  name   = "pynvest-s3-put-sor-data-acoes"
-  policy = data.template_file.pynvest-s3-put-sor-data-acoes.rendered
+resource "aws_iam_policy" "pynvest-s3-manage-sor-data-for-acoes" {
+  name   = "pynvest-s3-manage-sor-data-for-acoes"
+  policy = data.template_file.pynvest-s3-manage-sor-data-for-acoes.rendered
 }
 
 
 /* -------------------------------------------------------
     IAM Policy
-    pynvest-s3-put-sor-data-fiis
+    pynvest-s3-manage-sor-data-for-fiis
 ------------------------------------------------------- */
 
 # Definindo template file para policy
-data "template_file" "pynvest-s3-put-sor-data-fiis" {
-  template = file("${path.module}/iam/policies/pynvest-s3-put-sor-data.json")
+data "template_file" "pynvest-s3-manage-sor-data-for-fiis" {
+  template = file("${path.module}/iam/policy-templates/pynvest-s3-manage-sor-data.json")
 
   vars = {
-    sor_bucket_name   = local.s3_bucket_names_map["sor"],
-    table_name_prefix = "tbl_fundamentus_indicadores_fiis"
+    sor_bucket_name = local.bucket_names_map["sor"],
+    sor_table_name  = var.sor_fiis_table_name
   }
 }
 
 # Definindo policy
-resource "aws_iam_policy" "pynvest-s3-put-sor-data-fiis" {
-  name   = "pynvest-s3-put-sor-data-fiis"
-  policy = data.template_file.pynvest-s3-put-sor-data-fiis.rendered
+resource "aws_iam_policy" "pynvest-s3-manage-sor-data-for-fiis" {
+  name   = "pynvest-s3-manage-sor-data-for-fiis"
+  policy = data.template_file.pynvest-s3-manage-sor-data-for-fiis.rendered
 }
 
 
 /* -------------------------------------------------------
     IAM Policy
-    pynvest-glue-tables-access
+    pynvest-gluedatacatalog-manage-sor-acoes-table
 ------------------------------------------------------- */
 
 # Definindo template file para policy
-data "template_file" "pynvest-glue-tables-access" {
-  template = file("${path.module}/iam/policies/pynvest-glue-tables-access.json")
+data "template_file" "pynvest-gluedatacatalog-manage-sor-acoes-table" {
+  template = file("${path.module}/iam/policy-templates/pynvest-gluedatacatalog-manage-sor-tables.json")
 
   vars = {
-    region_name   = local.region_name
-    account_id    = local.account_id,
-    database_name = var.database_name
+    region_name       = local.region_name,
+    account_id        = local.account_id,
+    sor_database_name = var.databases_names_map["sor"],
+    sor_table_name    = var.sor_acoes_table_name
   }
 }
 
 # Definindo policy
-resource "aws_iam_policy" "pynvest-glue-tables-access" {
-  name   = "pynvest-glue-tables-access"
-  policy = data.template_file.pynvest-glue-tables-access.rendered
+resource "aws_iam_policy" "pynvest-gluedatacatalog-manage-sor-acoes-table" {
+  name   = "pynvest-gluedatacatalog-manage-sor-acoes-table"
+  policy = data.template_file.pynvest-gluedatacatalog-manage-sor-acoes-table.rendered
+}
+
+
+/* -------------------------------------------------------
+    IAM Policy
+    pynvest-gluedatacatalog-manage-sor-fiis-table
+------------------------------------------------------- */
+
+# Definindo template file para policy
+data "template_file" "pynvest-gluedatacatalog-manage-sor-fiis-table" {
+  template = file("${path.module}/iam/policy-templates/pynvest-gluedatacatalog-manage-sor-tables.json")
+
+  vars = {
+    region_name       = local.region_name,
+    account_id        = local.account_id,
+    sor_database_name = var.databases_names_map["sor"],
+    sor_table_name    = var.sor_fiis_table_name
+  }
+}
+
+# Definindo policy
+resource "aws_iam_policy" "pynvest-gluedatacatalog-manage-sor-fiis-table" {
+  name   = "pynvest-gluedatacatalog-manage-sor-fiis-table"
+  policy = data.template_file.pynvest-gluedatacatalog-manage-sor-fiis-table.rendered
 }

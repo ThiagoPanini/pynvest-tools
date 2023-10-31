@@ -14,7 +14,9 @@ locals {
   region_name = data.aws_region.current.name
 
   # Definindo map com nomes de buckets utilizados no projeto
-  s3_bucket_names_map = {
+  bucket_names_map = {
     "sor" : "datadelivery-sor-data-${local.account_id}-${local.region_name}"
+    "sot" : "datadelivery-sot-data-${local.account_id}-${local.region_name}"
+    "spec" : "datadelivery-spec-data-${local.account_id}-${local.region_name}"
   }
 }

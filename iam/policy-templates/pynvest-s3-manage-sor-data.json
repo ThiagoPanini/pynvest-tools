@@ -12,7 +12,7 @@
 			],
 			"Resource": [
 				"arn:aws:s3:::${sor_bucket_name}",
-				"arn:aws:s3:::${sor_bucket_name}/${table_name_prefix}/*"
+				"arn:aws:s3:::${sor_bucket_name}/${sor_table_name}/*"
 			]
 		}
 	]
