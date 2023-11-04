@@ -1,5 +1,4 @@
 # Importando bibliotecas
-import boto3
 import json
 import os
 
@@ -43,18 +42,12 @@ def lambda_handler(
         Dicionário contendo informações sobre o resultado de execução da função
     """
 
-    # Coletando variáveis dinâmicas via boto3
-    session = boto3.session.Session()
-    sts_client = boto3.client("sts")
-    account_id = sts_client.get_caller_identity()["Account"]
-    region_name = session.region_name
-
     # Coletando variáveis de ambiente para escrita dos dados
     output_database = os.getenv("DATABASE_NAME")
     output_table = os.getenv("TABLE_NAME")
+    s3_sor_bucket_name = os.getenv("OUTPUT_BUCKET")
 
     # Definindo variáveis de saída do S3
-    s3_sor_bucket_name = f"datadelivery-sor-data-{account_id}-{region_name}"
     output_path = f"s3://{s3_sor_bucket_name}/{output_table}"
 
     # Informando total de mensagens recebidas para processamento
