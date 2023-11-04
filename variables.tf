@@ -23,13 +23,13 @@ variable "schedule_expression_to_initialize" {
 ------------------------------------------------------- */
 
 variable "sqs_tickers_acoes_queue_name" {
-  description = "Nome da fila SQS responsável por receber as mensagens contendo informações dos tickers extraídos"
+  description = "Nome da fila SQS responsável por receber as mensagens contendo informações dos tickers de Ações extraídos"
   type        = string
   default     = "pynvest-tickers-acoes-queue"
 }
 
 variable "sqs_tickers_fiis_queue_name" {
-  description = "Nome da fila SQS responsável por receber as mensagens contendo informações dos tickers extraídos"
+  description = "Nome da fila SQS responsável por receber as mensagens contendo informações dos tickers de FIIs extraídos"
   type        = string
   default     = "pynvest-tickers-fiis-queue"
 }
@@ -92,9 +92,7 @@ variable "bucket_names_map" {
   description = "Dicionário (map) contendo nomes dos buckets SoR, SoT e Spec da conta AWS alvo de implantação dos recursos. O objetivo desta variável e permitir que o usuário forneça seus próprios buckets para armazenamento dos arquivos gerados. O correto preenchimento desta variável exige que as referências de nomes sejam fornecidas dentro das chaves 'sor', 'sot' e 'spec'. O usuário também pode fornecer o mesmo nome de bucket para as três quebras, caso queira armazenar os dados das tabelas em um único bucket."
   type        = map(string)
   default = {
-    "sor"  = "value"
-    "sot"  = "value"
-    "spec" = "value"
+    "sor" = "value"
   }
 }
 
