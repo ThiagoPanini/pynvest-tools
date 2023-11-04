@@ -188,7 +188,7 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-acoes" {
 
   environment {
     variables = {
-      OUTPUT_BUCKET = local.bucket_names_map["sor"],
+      OUTPUT_BUCKET = var.bucket_names_map["sor"],
       DATABASE_NAME = var.databases_names_map["sor"],
       TABLE_NAME    = var.sor_acoes_table_name
     }
@@ -244,7 +244,7 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-fiis" {
 
   environment {
     variables = {
-      OUTPUT_BUCKET = local.bucket_names_map["sor"],
+      OUTPUT_BUCKET = var.bucket_names_map["sor"],
       DATABASE_NAME = var.databases_names_map["sor"],
       TABLE_NAME    = var.sor_fiis_table_name
     }

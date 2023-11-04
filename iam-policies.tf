@@ -150,7 +150,7 @@ data "template_file" "pynvest-s3-manage-sor-data-for-acoes" {
   template = file("${path.module}/iam/policy-templates/pynvest-s3-manage-sor-data.json")
 
   vars = {
-    sor_bucket_name = local.bucket_names_map["sor"],
+    sor_bucket_name = var.bucket_names_map["sor"],
     sor_table_name  = var.sor_acoes_table_name
   }
 }
@@ -172,7 +172,7 @@ data "template_file" "pynvest-s3-manage-sor-data-for-fiis" {
   template = file("${path.module}/iam/policy-templates/pynvest-s3-manage-sor-data.json")
 
   vars = {
-    sor_bucket_name = local.bucket_names_map["sor"],
+    sor_bucket_name = var.bucket_names_map["sor"],
     sor_table_name  = var.sor_fiis_table_name
   }
 }
