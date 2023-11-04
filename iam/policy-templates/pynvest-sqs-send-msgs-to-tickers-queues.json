@@ -1,0 +1,17 @@
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "SQSSendMessages",
+			"Effect": "Allow",
+			"Action": [
+				"sqs:GetQueueUrl",
+				"sqs:SendMessage"
+			],
+			"Resource": [
+				"arn:aws:sqs:${region_name}:${account_id}:pynvest-tickers-acoes-queue",
+				"arn:aws:sqs:${region_name}:${account_id}:pynvest-tickers-fiis-queue"
+			]
+		}
+	]
+}
