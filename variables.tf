@@ -115,11 +115,11 @@ variable "databases_names_map" {
 variable "sor_acoes_table_name" {
   description = "Nome da tabela SoR gerada a partir do processamento de indicadores financeiros de Ações"
   type        = string
-  default     = "tbl_fundamentus_indicadores_acoes"
+  default     = "tbsor_fundamentus_indicadores_brutos_fiis"
 }
 
 variable "sor_fiis_table_name" {
   description = "Nome da tabela SoR gerada a partir do processamento de indicadores financeiros de Fundos Imobiliários"
   type        = string
-  default     = "tbl_fundamentus_indicadores_fiis"
+  default     = "tbsor_fundamentus_indicadores_brutos_fiis"
 }
