@@ -1,18 +1,13 @@
 /* --------------------------------------------------------
-ARQUIVO: catalog.tf
+ARQUIVO: databases.tf @ catalog module
 
-Arquivo Terraform responsável por definir recursos
-relacionados ao Glue Data Catalog para fins de catalogação
-de databases e tabelas geradas a partir deste projeto.
+Arquivo Terraform responsável pela criação de todos os
+databases no Glue Catalog para armazenamento de tabelas
+nas camadas SoR, SoT e Spec capazes de armazenar todos os
+dados de indicadores financeiros gerados no projeto
 -------------------------------------------------------- */
 
-/*
-resource "aws_glue_catalog_database" "db_fundamentus_sor" {
-  count = var.flag_create_databases ? 1 : 0
-  name  = var.sor_database_name
-}
-*/
-
+# Criando databases SoR, SoT e Spec
 resource "aws_glue_catalog_database" "databases_fundamentus" {
   for_each    = var.flag_create_databases ? var.databases_names_map : {}
   name        = each.value
