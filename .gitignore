@@ -1,5 +1,5 @@
-# Policies renderizada
-iam/policy-rendered/
+# Policies renderizadas
+infra/iam/policy/*
 
 # Drawio temporary diagram file
 **.drawio.bkp
@@ -13,12 +13,9 @@ feature_exploration/
 tmp/
 
 # Auxiliar dirs
-scripts/
 .vscode/
 **.zip
 
-# Novos dados utilizados apenas para documentação
-data/tt3/
 
 # Local .terraform directories
 **/.terraform/*
