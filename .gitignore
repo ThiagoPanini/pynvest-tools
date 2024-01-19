@@ -1,5 +1,5 @@
 # Policies renderizadas
-infra/iam/policy/*
+infra/iam/policy/
 
 # Drawio temporary diagram file
 **.drawio.bkp
