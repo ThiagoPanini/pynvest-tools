@@ -18,9 +18,3 @@ module "catalog" {
   # Definindo detalhes das tabelas a serem criadas
   tables_names_map = var.tables_names_map
 }
-
-output "json_file" {
-  value = jsondecode(
-    file("${path.module}/infra/modules/catalog/table-schemas/tbsor_fundamentus_indicadores_brutos_acoes.json")
-  )["columns"]
-}

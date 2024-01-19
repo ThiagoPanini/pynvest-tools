@@ -37,7 +37,8 @@ variable "tables_names_map" {
   type        = map(map(string))
   default = {
     "fundamentus" = {
-      "sor_acoes" = "tbsor_fundamentus_indicadores_brutos_acoes"
+      "sor_acoes" = "tbsor_fundamentus_indicadores_brutos_acoes",
+      "sor_fiis"  = "tbsor_fundamentus_indicadores_brutos_fiis"
     }
   }
 }
