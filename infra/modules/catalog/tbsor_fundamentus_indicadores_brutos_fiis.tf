@@ -4,7 +4,7 @@ ARQUIVO: tbsor_fundamentus_indicadores_brutos_fiis.tf @ catalog module
 Arquivo Terraform responsável pela criação da tabela SoR
 tbsor_fundamentus_indicadores_brutos_fiis no Glue Data
 Catalog para armazenamento de dados brutos de indicadores
-financeiros de ações extraídos utilizando a biblioteca
+financeiros de FIIs extraídos utilizando a biblioteca
 pynvest aplicada ao site Fundamentus.
 -------------------------------------------------------- */
 
