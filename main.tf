@@ -48,12 +48,9 @@ module "iam" {
   source = "./infra/modules/iam"
 
   # Configurando variáveis para substituição de templates JSON
-  account_id       = local.account_id
-  region_name      = local.region_name
-  bucket_names_map = var.bucket_names_map
-}
-
-
-output "iam_files" {
-  value = module.iam.files
+  account_id          = local.account_id
+  region_name         = local.region_name
+  databases_names_map = var.databases_names_map
+  tables_names_map    = var.tables_names_map
+  bucket_names_map    = var.bucket_names_map
 }

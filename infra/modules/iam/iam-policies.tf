@@ -11,17 +11,22 @@ IAM utilizadas para criação de roles de aplicação.
 ------------------------------------------------------- */
 
 # Chamando recurso para substituição de variáveis em templates JSON
+/*
 resource "template_dir" "iam-policies" {
   source_dir      = "${path.module}/policy-templates"
   destination_dir = "${path.module}/policy"
 
   # Substituindo variáveis
   vars = {
-    account_id        = var.account_id
-    region_name       = var.region_name
-    sor_database_name = var.bucket_names_map["sor"]
+    account_id           = var.account_id
+    region_name          = var.region_name
+    sor_database_name    = var.databases_names_map["sor"]
+    sor_acoes_table_name = var.tables_names_map["fundamentus"]["sor_acoes"]
+    sor_fiis_table_name  = var.tables_names_map["fundamentus"]["sor_fiis"]
+    sor_bucket_name      = var.bucket_names_map["sor"]
   }
 }
+*/
 
 
 /* -------------------------------------------------------
@@ -29,6 +34,7 @@ resource "template_dir" "iam-policies" {
     Definindo policies IAM com base em templates renderizados
 ------------------------------------------------------- */
 
+/*
 resource "aws_iam_policy" "all_policies" {
   for_each = toset(fileset("${template_dir.iam-policies.destination_dir}", "**"))
   name     = split(".", each.key)[0]
@@ -39,22 +45,124 @@ resource "aws_iam_policy" "all_policies" {
     template_dir.iam-policies
   ]
 }
+*/
 
-# Policy que permite a invocação de funções Lambda
-/*
-resource "aws_iam_policy" "pynvest-lambda-invoke-functions" {
-  name   = "pynvest-lambda-invoke-functions"
-  policy = "${template_dir.iam-policies.destination_dir}/pynvest-lambda-invoke-functions.json"
 
-  depends_on = [  ]
+/* -------------------------------------------------------
+    IAM POLICY
+    Definindo policy para armazenamento de logs no
+    CloudWatch
+------------------------------------------------------- */
+
+# Definindo template file para policy
+data "template_file" "pynvest-store-cloudwatch-logs" {
+  template = file("${path.module}/policy-templates/pynvest-store-cloudwatch-logs.json")
+
+  vars = {
+    region_name = var.region_name
+    account_id  = var.account_id
+  }
 }
 
-# Policy que permite o armazenamento de logs no CloudWatch
-resource "aws_iam_policy" "pynvest-cloudwatch-logs" {
-  name   = "pynvest-cloudwatch-logs"
-  policy = "${template_dir.iam-policies.destination_dir}/pynvest-lambda-invoke-functions.json"
-}*/
+# Definindo policy
+resource "aws_iam_policy" "pynvest-store-cloudwatch-logs" {
+  name   = "pynvest-store-cloudwatch-logs"
+  policy = data.template_file.pynvest-store-cloudwatch-logs.rendered
+}
 
-output "files" {
-  value = toset(fileset("${template_dir.iam-policies.destination_dir}", "**"))
+
+/* -------------------------------------------------------
+    IAM POLICY
+    Definindo policy para invocação de funções Lambda
+------------------------------------------------------- */
+
+# Definindo template file para policy
+data "template_file" "pynvest-invoke-lambda-functions" {
+  template = file("${path.module}/policy-templates/pynvest-invoke-lambda-functions.json")
+
+  vars = {
+    region_name = var.region_name
+    account_id  = var.account_id
+  }
+}
+
+# Definindo policy
+resource "aws_iam_policy" "pynvest-invoke-lambda-functions" {
+  name   = "pynvest-invoke-lambda-functions"
+  policy = data.template_file.pynvest-invoke-lambda-functions.rendered
+}
+
+
+/* -------------------------------------------------------
+    IAM POLICY
+    Definindo policy para deleção de partições
+------------------------------------------------------- */
+
+# Definindo template file para policy
+data "template_file" "pynvest-check-and-delete-partitions" {
+  template = file("${path.module}/policy-templates/pynvest-check-and-delete-partitions.json")
+
+  vars = {
+    region_name          = var.region_name
+    account_id           = var.account_id
+    sor_database_name    = var.databases_names_map["sor"]
+    sor_acoes_table_name = var.tables_names_map["fundamentus"]["sor_acoes"]
+    sor_fiis_table_name  = var.tables_names_map["fundamentus"]["sor_fiis"]
+  }
+}
+
+# Definindo policy
+resource "aws_iam_policy" "pynvest-check-and-delete-partitions" {
+  name   = "pynvest-check-and-delete-partitions"
+  policy = data.template_file.pynvest-check-and-delete-partitions.rendered
+}
+
+
+/* -------------------------------------------------------
+    IAM POLICY
+    Definindo policy para envio de mensagens para filas no
+    SQS
+------------------------------------------------------- */
+
+# Definindo template file para policy
+data "template_file" "pynvest-send-msgs-to-queues" {
+  template = file("${path.module}/policy-templates/pynvest-send-msgs-to-queues.json")
+
+  vars = {
+    region_name = var.region_name
+    account_id  = var.account_id
+  }
+}
+
+# Definindo policy
+resource "aws_iam_policy" "pynvest-send-msgs-to-queues" {
+  name   = "pynvest-send-msgs-to-queues"
+  policy = data.template_file.pynvest-send-msgs-to-queues.rendered
+}
+
+
+/* -------------------------------------------------------
+    IAM POLICY
+    Definindo policy para coleta, armazenamento e catalogação
+    de dados brutos na camada SoR
+------------------------------------------------------- */
+
+# Definindo template file para policy
+data "template_file" "pynvest-share-raw-financial-data" {
+  template = file("${path.module}/policy-templates/pynvest-share-raw-financial-data.json")
+
+  vars = {
+    region_name          = var.region_name
+    account_id           = var.account_id
+    sor_bucket_name      = var.bucket_names_map["sor"]
+    sor_database_name    = var.databases_names_map["sor"]
+    sor_acoes_table_name = var.tables_names_map["fundamentus"]["sor_acoes"]
+    sor_fiis_table_name  = var.tables_names_map["fundamentus"]["sor_fiis"]
+  }
+}
+
+# Definindo policy
+resource "aws_iam_policy" "pynvest-share-raw-financial-data" {
+  name   = "pynvest-share-raw-financial-data"
+  policy = data.template_file.pynvest-share-raw-financial-data.rendered
 }
