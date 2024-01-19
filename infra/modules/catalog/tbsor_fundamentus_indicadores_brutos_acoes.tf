@@ -22,7 +22,7 @@ resource "aws_glue_catalog_table" "tbsor_fundamentus_indicadores_brutos_acoes" {
   }
 
   storage_descriptor {
-    location      = "s3://some-bucket" # Definir bucket de armazenamento SoR
+    location      = "s3://${var.bucket_names_map["sor"]}/${var.tables_names_map["fundamentus"]["sor_acoes"]}"
     input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
     output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
 
