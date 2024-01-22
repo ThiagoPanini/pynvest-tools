@@ -116,3 +116,21 @@ variable "sqs_lambda_trigger_max_concurrency" {
   type        = number
   default     = 10
 }
+
+
+/* -------------------------------------------------------
+    VARIABLES: lambda
+    Variáveis aceitas pelo módulo lambda
+------------------------------------------------------- */
+
+variable "lambda_python_runtime" {
+  description = "Definição do runtime (versão) da linguagem Python associada às funções"
+  type        = string
+  default     = "python3.10"
+}
+
+variable "lambda_timeout" {
+  description = "Timeout das funções Lambda"
+  type        = number
+  default     = 180
+}

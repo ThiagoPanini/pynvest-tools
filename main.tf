@@ -9,8 +9,8 @@ realizadas pelos usuários.
 ToDos:
 - [x] Criar de tabelas SoR no Glue Data Catalog
 - [x] Criar filas SQS para armazenamento de mensagens contendo tickers de Ações e FIIs
-- [ ] Revisitar estratégia de policies e roles IAM visando propor uma consolidação dos JSONs e a utilização do resource template_dir (1 policy por Lambda exceto policy de logs?)
-- [ ] Criar role IAM para Lambda de extração de tickers de Ações e FIIs
+- [x] Revisitar estratégia de policies e roles IAM visando propor uma consolidação dos JSONs e a utilização do resource template_dir (1 policy por Lambda exceto policy de logs?)
+- [x] Criar role IAM para Lambda de extração de tickers de Ações e FIIs
 - [ ] Subir primeira Lambda de extração de tickers de Ações e FIIs
       Obs: renomear pynvest-lambda-send-tickers-to-sqs-queues para pynvest-lambda-get-tickers
 -------------------------------------------------------- */
@@ -53,4 +53,15 @@ module "iam" {
   databases_names_map = var.databases_names_map
   tables_names_map    = var.tables_names_map
   bucket_names_map    = var.bucket_names_map
+}
+
+# Chamando módulo lambda
+module "lambda" {
+  source = "./infra/modules/lambda"
+
+  # Configurando variáveis para definição das funções
+  region_name           = local.region_name
+  tables_names_map      = var.tables_names_map
+  lambda_python_runtime = var.lambda_python_runtime
+  lambda_timeout        = var.lambda_timeout
 }
