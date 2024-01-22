@@ -29,7 +29,7 @@ resource "aws_lambda_function" "pynvest-lambda-check-and-delete-partitions" {
   source_code_hash = data.archive_file.pynvest-lambda-check-and-delete-partitions.output_base64sha256
 
   # Configurações adicionais
-  role    = aws_iam_role.pynvest-lambda-check-and-delete-partitions.arn
+  role    = module.aws_iam_role.pynvest-lambda-check-and-delete-partitions.arn
   handler = "lambda_function.lambda_handler"
   runtime = var.lambda_python_runtime
   timeout = var.lambda_timeout
