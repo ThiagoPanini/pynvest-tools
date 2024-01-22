@@ -125,8 +125,8 @@ resource "aws_iam_policy" "pynvest-check-and-delete-partitions" {
 ------------------------------------------------------- */
 
 # Definindo template file para policy
-data "template_file" "pynvest-send-msgs-to-queues" {
-  template = file("${path.module}/policy-templates/pynvest-send-msgs-to-queues.json")
+data "template_file" "pynvest-send-msgs-to-tickers-queues" {
+  template = file("${path.module}/policy-templates/pynvest-send-msgs-to-tickers-queues.json")
 
   vars = {
     region_name = var.region_name
@@ -135,9 +135,9 @@ data "template_file" "pynvest-send-msgs-to-queues" {
 }
 
 # Definindo policy
-resource "aws_iam_policy" "pynvest-send-msgs-to-queues" {
-  name   = "pynvest-send-msgs-to-queues"
-  policy = data.template_file.pynvest-send-msgs-to-queues.rendered
+resource "aws_iam_policy" "pynvest-send-msgs-to-tickers-queues" {
+  name   = "pynvest-send-msgs-to-tickers-queues"
+  policy = data.template_file.pynvest-send-msgs-to-tickers-queues.rendered
 }
 
 
