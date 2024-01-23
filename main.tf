@@ -61,7 +61,11 @@ module "lambda" {
 
   # Configurando variáveis para definição das funções
   region_name           = local.region_name
+  databases_names_map   = var.databases_names_map
   tables_names_map      = var.tables_names_map
   lambda_python_runtime = var.lambda_python_runtime
   lambda_timeout        = var.lambda_timeout
+
+  # Transferindo informações de roles IAM criadas no módulo iam
+  iam_roles_arns_map = module.iam.iam_roles_arns_map
 }
