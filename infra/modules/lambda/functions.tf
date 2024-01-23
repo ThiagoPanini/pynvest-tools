@@ -1,10 +1,11 @@
 /* --------------------------------------------------------
-ARQUIVO: main.tf @ lambda module
+ARQUIVO: functions.tf @ lambda module
 
-Arquivo principal do módulo sqs do projeto Terraform onde
-recursos de infraestrutura relacionados à funções Lambda
-são definidos e implantados.
-
+Arquivo responsável por consolidar todas as definições
+de funções Lambda existentes no projeto. Para consultar
+recursos alternativos, como triggers e permissionamentos,
+arquivos Terraform específicos são disponibilizados neste
+módulo.
 -------------------------------------------------------- */
 
 /* -------------------------------------------------------
@@ -31,8 +32,8 @@ resource "aws_lambda_function" "pynvest-lambda-check-and-delete-partitions" {
   # Configurações adicionais
   role    = var.iam_roles_arns_map["pynvest-lambda-check-and-delete-partitions"]
   handler = "lambda_function.lambda_handler"
-  runtime = var.lambda_python_runtime
-  timeout = var.lambda_timeout
+  runtime = var.functions_python_runtime
+  timeout = var.functions_timeout
 
   # Layers
   layers = [
