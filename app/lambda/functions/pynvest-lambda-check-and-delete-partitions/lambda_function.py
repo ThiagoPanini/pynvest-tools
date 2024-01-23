@@ -113,6 +113,12 @@ def lambda_handler(
                 "s3_partition_path": partition_path,
             })
 
+        # Nenhuma partição existente na referência de data atual
+        else:
+            logger.info("Nenhuma partição de data com referência "
+                        f"{partition_col_name}={partition_value} encontrada "
+                        f"na tabela {table}")
+
     return {
         "status_code": 200,
         "body": {
