@@ -60,11 +60,14 @@ module "lambda" {
   source = "./infra/modules/lambda"
 
   # Configurando variáveis para definição das funções
-  region_name           = local.region_name
-  databases_names_map   = var.databases_names_map
-  tables_names_map      = var.tables_names_map
-  lambda_python_runtime = var.lambda_python_runtime
-  lambda_timeout        = var.lambda_timeout
+  region_name              = local.region_name
+  databases_names_map      = var.databases_names_map
+  tables_names_map         = var.tables_names_map
+  functions_python_runtime = var.functions_python_runtime
+  functions_timeout        = var.functions_timeout
+
+  # Agendamento do processo completo
+  cron_expression_to_initialize_process = var.cron_expression_to_initialize_process
 
   # Transferindo informações de roles IAM criadas no módulo iam
   iam_roles_arns_map = module.iam.iam_roles_arns_map

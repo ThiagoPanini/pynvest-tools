@@ -123,14 +123,21 @@ variable "sqs_lambda_trigger_max_concurrency" {
     Variáveis aceitas pelo módulo lambda
 ------------------------------------------------------- */
 
-variable "lambda_python_runtime" {
+variable "functions_python_runtime" {
   description = "Definição do runtime (versão) da linguagem Python associada às funções"
   type        = string
   default     = "python3.10"
 }
 
-variable "lambda_timeout" {
+variable "functions_timeout" {
   description = "Timeout das funções Lambda"
   type        = number
   default     = 180
 }
+
+variable "cron_expression_to_initialize_process" {
+  description = "Expressão cron responsável por engatilhar todo o processo de obtenção e atualização dos dados"
+  type        = string
+  default     = "cron(0 22 ? * MON-FRI *)"
+}
+

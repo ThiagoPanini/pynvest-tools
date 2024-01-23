@@ -5,12 +5,12 @@ Arquivo de variáveis aceitas pelo módulo lambda do projeto
 Terraform.
 -------------------------------------------------------- */
 
-variable "lambda_python_runtime" {
+variable "functions_python_runtime" {
   description = "Definição do runtime (versão) da linguagem Python associada às funções"
   type        = string
 }
 
-variable "lambda_timeout" {
+variable "functions_timeout" {
   description = "Timeout das funções Lambda"
   type        = number
 }
@@ -33,4 +33,9 @@ variable "tables_names_map" {
 variable "iam_roles_arns_map" {
   description = "Dicionário (map) contendo informações sobre todas as ARNs de roles criadas no módulo IAM para serem vinculadas às funções Lambda criadas neste módulo"
   type        = map(string)
+}
+
+variable "cron_expression_to_initialize_process" {
+  description = "Expressão cron responsável por engatilhar todo o processo de obtenção e atualização dos dados"
+  type        = string
 }
