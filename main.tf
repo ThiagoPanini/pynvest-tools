@@ -71,4 +71,11 @@ module "lambda" {
 
   # Transferindo informações de roles IAM criadas no módulo iam
   iam_roles_arns_map = module.iam.iam_roles_arns_map
+
+  # Explicitando dependências
+  depends_on = [
+    module.iam,
+    module.sqs,
+    module.catalog
+  ]
 }
