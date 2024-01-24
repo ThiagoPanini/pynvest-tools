@@ -9,7 +9,7 @@ são definidos e implantados.
 
 # Definindo fila SQS para recebimento de tickers de ações
 resource "aws_sqs_queue" "pynvest-tickers-acoes-queue" {
-  name = var.sqs_tickers_acoes_queue_name
+  name = "pynvest-tickers-acoes-queue"
 
   visibility_timeout_seconds = var.sqs_visibility_timeout_seconds
   message_retention_seconds  = var.sqs_message_retention_seconds
@@ -22,7 +22,7 @@ resource "aws_sqs_queue" "pynvest-tickers-acoes-queue" {
 
 # Definindo fila SQS para recebimento de tickers de fiis
 resource "aws_sqs_queue" "pynvest-tickers-fiis-queue" {
-  name = var.sqs_tickers_fiis_queue_name
+  name = "pynvest-tickers-fiis-queue"
 
   visibility_timeout_seconds = var.sqs_visibility_timeout_seconds
   message_retention_seconds  = var.sqs_message_retention_seconds
