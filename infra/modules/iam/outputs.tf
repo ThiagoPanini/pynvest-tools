@@ -1,5 +1,5 @@
 /* --------------------------------------------------------
-ARQUIVO: outputs.tf
+ARQUIVO: outputs.tf @ iam module
 
 Arquivo Terraform responsável por consolidar todas as saídas
 expostas pelo módulo IAM. Tais saídas são, em geral,
