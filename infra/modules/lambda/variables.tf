@@ -35,7 +35,32 @@ variable "iam_roles_arns_map" {
   type        = map(string)
 }
 
+variable "bucket_names_map" {
+  description = "Dicionário (map) contendo nomes dos buckets SoR, SoT e Spec da conta AWS alvo de implantação dos recursos. O objetivo desta variável e permitir que o usuário forneça seus próprios buckets para armazenamento dos arquivos gerados. O correto preenchimento desta variável exige que as referências de nomes sejam fornecidas dentro das chaves 'sor', 'sot' e 'spec'. O usuário também pode fornecer o mesmo nome de bucket para as três quebras, caso queira armazenar os dados das tabelas em um único bucket."
+  type        = map(string)
+}
+
+variable "sqs_queues_arn_map" {
+  description = "Dicionário (map) contendo informações sobre ARNs de filas SQS criadas no módulo sqs a serem associadas como gatilhos para execução de funções Lambda neste módulo."
+  type        = map(string)
+}
+
 variable "cron_expression_to_initialize_process" {
   description = "Expressão cron responsável por engatilhar todo o processo de obtenção e atualização dos dados"
   type        = string
+}
+
+variable "sqs_lambda_trigger_batch_size" {
+  description = "Número máximo de registros a serem enviados para a função em cada batch"
+  type        = number
+}
+
+variable "sqs_lambda_trigger_batch_window" {
+  description = "Valor máximo de tempo (em segundos) que a função irá aguardar para a coleta de registros antes da invocação"
+  type        = number
+}
+
+variable "sqs_lambda_trigger_max_concurrency" {
+  description = "Número máximo de funções concorrentes a serem invocadas pelo gatilho"
+  type        = number
 }

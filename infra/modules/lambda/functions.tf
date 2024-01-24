@@ -88,3 +88,87 @@ resource "aws_lambda_function" "pynvest-lambda-get-tickers" {
     data.archive_file.pynvest-lambda-get-tickers
   ]
 }
+
+
+/* -------------------------------------------------------
+    ARCHIVE FILE
+    Zip comum a ser utlizado para próximas duas Lambdas
+------------------------------------------------------- */
+
+# Criando pacote zip da função a ser criada
+data "archive_file" "pynvest-lambda-get-financial-data" {
+  type        = "zip"
+  source_dir  = "${path.root}/app/lambda/functions/pynvest-lambda-get-financial-data/"
+  output_path = "${path.root}/app/lambda/zip/pynvest-lambda-get-financial-data.zip"
+}
+
+/* -------------------------------------------------------
+    LAMBDA FUNCTION
+    pynvest-lambda-get-financial-data-for-acoes
+------------------------------------------------------- */
+
+# Criando função Lambda
+resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-acoes" {
+  function_name = "pynvest-lambda-get-financial-data-for-acoes"
+  description   = "Extrai e consolida indicadores financeiros de Ações a partir de tickers coletados de fila SQS"
+
+  filename         = "${path.root}/app/lambda/zip/pynvest-lambda-get-financial-data.zip"
+  source_code_hash = data.archive_file.pynvest-lambda-get-financial-data.output_base64sha256
+
+  role    = var.iam_roles_arns_map["pynvest-lambda-share-raw-financial-data"]
+  handler = "lambda_function.lambda_handler"
+  runtime = var.functions_python_runtime
+  timeout = var.functions_timeout
+
+  layers = [
+    "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
+  ]
+
+  environment {
+    variables = {
+      OUTPUT_BUCKET = var.bucket_names_map["sor"],
+      DATABASE_NAME = var.databases_names_map["sor"],
+      TABLE_NAME    = var.tables_names_map["fundamentus"]["sor_acoes"]
+    }
+  }
+
+  depends_on = [
+    data.archive_file.pynvest-lambda-get-financial-data
+  ]
+}
+
+
+/* -------------------------------------------------------
+    LAMBDA FUNCTION
+    pynvest-lambda-get-financial-data-for-fiis
+------------------------------------------------------- */
+
+# Criando função Lambda
+resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-fiis" {
+  function_name = "pynvest-lambda-get-financial-data-for-fiis"
+  description   = "Extrai e consolida indicadores financeiros de FIIs a partir de tickers coletados de fila SQS"
+
+  filename         = "${path.root}/app/lambda/zip/pynvest-lambda-get-financial-data.zip"
+  source_code_hash = data.archive_file.pynvest-lambda-get-financial-data.output_base64sha256
+
+  role    = var.iam_roles_arns_map["pynvest-lambda-share-raw-financial-data"]
+  handler = "lambda_function.lambda_handler"
+  runtime = var.functions_python_runtime
+  timeout = var.functions_timeout
+
+  layers = [
+    "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
+  ]
+
+  environment {
+    variables = {
+      OUTPUT_BUCKET = var.bucket_names_map["sor"],
+      DATABASE_NAME = var.databases_names_map["sor"],
+      TABLE_NAME    = var.tables_names_map["fundamentus"]["sor_fiis"]
+    }
+  }
+
+  depends_on = [
+    data.archive_file.pynvest-lambda-get-financial-data
+  ]
+}

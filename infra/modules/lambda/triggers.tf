@@ -29,3 +29,53 @@ resource "aws_cloudwatch_event_target" "trigger-pynvest-lambda-check-and-delete-
     aws_cloudwatch_event_rule.trigger-pynvest-lambda-check-and-delete-partitions
   ]
 }
+
+
+/* -------------------------------------------------------
+    TRIGGER
+    From: SQS
+    To: pynvest-lambda-get-financial-data-for-acoes
+------------------------------------------------------- */
+
+# Definindo gatilho para função: fila SQS
+resource "aws_lambda_event_source_mapping" "pynvest-tickers-queue-acoes" {
+  function_name    = aws_lambda_function.pynvest-lambda-get-financial-data-for-acoes.arn
+  event_source_arn = var.sqs_queues_arn_map["pynvest-tickers-acoes-queue"]
+
+  # Configuração do trigger
+  batch_size                         = var.sqs_lambda_trigger_batch_size
+  maximum_batching_window_in_seconds = var.sqs_lambda_trigger_batch_window
+
+  scaling_config {
+    maximum_concurrency = var.sqs_lambda_trigger_max_concurrency
+  }
+
+  depends_on = [
+    aws_lambda_function.pynvest-lambda-get-financial-data-for-acoes
+  ]
+}
+
+
+/* -------------------------------------------------------
+    TRIGGER
+    From: SQS
+    To: pynvest-lambda-get-financial-data-for-fiis
+------------------------------------------------------- */
+
+# Definindo gatilho para função: fila SQS
+resource "aws_lambda_event_source_mapping" "pynvest-tickers-queue-fiis" {
+  function_name    = aws_lambda_function.pynvest-lambda-get-financial-data-for-fiis.arn
+  event_source_arn = var.sqs_queues_arn_map["pynvest-tickers-fiis-queue"]
+
+  # Configuração do trigger
+  batch_size                         = var.sqs_lambda_trigger_batch_size
+  maximum_batching_window_in_seconds = var.sqs_lambda_trigger_batch_window
+
+  scaling_config {
+    maximum_concurrency = var.sqs_lambda_trigger_max_concurrency
+  }
+
+  depends_on = [
+    aws_lambda_function.pynvest-lambda-get-financial-data-for-fiis
+  ]
+}
