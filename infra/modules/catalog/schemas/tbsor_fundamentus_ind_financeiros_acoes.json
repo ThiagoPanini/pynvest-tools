@@ -291,7 +291,12 @@
             "comment": "O que sobrou das vendas após a dedução de todas as depesas. Valor referente aos últimos 3 meses"
         },
         {
-            "name": "datetime_scrapper_exec",
+            "name": "date_exec",
+            "type": "date",
+            "comment": "Data em que os indicadores financeiros do referido ativo foi capturado pelo scrapper"
+        },
+        {
+            "name": "datetime_exec",
             "type": "timestamp",
             "comment": "Data e hora exata em que os indicadores financeiros do referido ativo foi capturado pelo scrapper"
         }
