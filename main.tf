@@ -27,7 +27,7 @@ module "catalog" {
   # Configurando databases, tabelas e localização no S3
   flag_create_databases = var.flag_create_databases
   databases_names_map   = var.databases_names_map
-  tables_names_map      = var.tables_names_map
+  tables_names_map      = local.tables_names_map
   bucket_names_map      = var.bucket_names_map
 }
 
@@ -51,7 +51,7 @@ module "iam" {
   account_id          = local.account_id
   region_name         = local.region_name
   databases_names_map = var.databases_names_map
-  tables_names_map    = var.tables_names_map
+  tables_names_map    = local.tables_names_map
   bucket_names_map    = var.bucket_names_map
 }
 
@@ -64,7 +64,7 @@ module "lambda" {
 
   # Dicionários de databases, tabelas, buckets no S3, ARNs de roles IAM e ARNs de filas SQS para uso nas funções
   databases_names_map = var.databases_names_map
-  tables_names_map    = var.tables_names_map
+  tables_names_map    = local.tables_names_map
   bucket_names_map    = var.bucket_names_map
   iam_roles_arns_map  = module.iam.iam_roles_arns_map
   sqs_queues_arn_map  = module.sqs.sqs_queues_arn_map

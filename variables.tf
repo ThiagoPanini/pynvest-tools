@@ -32,22 +32,33 @@ variable "databases_names_map" {
   }
 }
 
+/*
 variable "tables_names_map" {
   description = "Dicionário (map) contendo os nomes de todas as tabelas a serem criadas no Glue Data Catalog para armazenamento de dados de indicadores financeiros em todas as camadas SoR, SoT e Spec"
   type        = map(map(string))
   default = {
     "fundamentus" = {
-      "sor_acoes" = "tbsor_fundamentus_indicadores_brutos_acoes",
-      "sor_fiis"  = "tbsor_fundamentus_indicadores_brutos_fiis"
+      "sor_acoes" = "tbsor_fundamentus_ind_financeiros_acoes",
+      "sor_fiis"  = "tbsor_fundamentus_ind_financeiros_fiis"
     }
+    # ToDo: criar validação de chaves do dicionário (map) presente nesta variável
+    # ToDo: já que existe um vínculo entre o nome das tabelas e o schema em arquivo JSON, ou seja,
+    # o valor desta variável é usado para leitura de arquivo JSOn de mesmo nome, caso o usuário
+    # informe um valor diferente para a tabela desejada, a chamada ao módulo retornará um erro
+    # de arquivo inexistente (afinal, o nome do arquivo JSON terá um valor fixo)... neste caso,
+    # vale estudar se esta informação de nome de tabelas não deve ser chumbado em locals.tf
+    # em outras palavras, o usuário não terá permissões de modificar o nome da tabela
   }
 }
+*/
 
 variable "bucket_names_map" {
   description = "Dicionário (map) contendo nomes dos buckets SoR, SoT e Spec da conta AWS alvo de implantação dos recursos. O objetivo desta variável e permitir que o usuário forneça seus próprios buckets para armazenamento dos arquivos gerados. O correto preenchimento desta variável exige que as referências de nomes sejam fornecidas dentro das chaves 'sor', 'sot' e 'spec'. O usuário também pode fornecer o mesmo nome de bucket para as três quebras, caso queira armazenar os dados das tabelas em um único bucket."
   type        = map(string)
   default = {
-    "sor" = "pynvest-sor-652880499916-us-east-1" # ToDo: retirar valor default para exigir q o usuário passe essa info
+    "sor" = "pynvest-sor-448712804644-us-east-1"
+    # ToDo: retirar valor default para exigir q o usuário passe essa info
+    # ToDo: criar validação de chaves do dicionário (map) presente nesta variável
   }
 }
 
