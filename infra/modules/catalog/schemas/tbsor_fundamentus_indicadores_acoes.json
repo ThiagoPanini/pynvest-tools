@@ -76,7 +76,7 @@
             "comment": "Percentual de variação/oscilação da ação no dia"
         },
         {
-            "name": "pct_var_mês",
+            "name": "pct_var_mes",
             "type": "float",
             "comment": "Percentual de variação/oscilação da ação no mês"
         },
@@ -292,12 +292,12 @@
         },
         {
             "name": "date_exec",
-            "type": "date",
+            "type": "string",
             "comment": "Data em que os indicadores financeiros do referido ativo foi capturado pelo scrapper"
         },
         {
             "name": "datetime_exec",
-            "type": "timestamp",
+            "type": "string",
             "comment": "Data e hora exata em que os indicadores financeiros do referido ativo foi capturado pelo scrapper"
         }
     ]
