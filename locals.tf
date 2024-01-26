@@ -16,8 +16,8 @@ locals {
   # Definindo mapeamento contendo nomes de tabelas a serem criadas pelo módulo
   tables_names_map = {
     "fundamentus" = {
-      "sor_acoes" = "tbsor_fundamentus_ind_financeiros_acoes",
-      "sor_fiis"  = "tbsor_fundamentus_ind_financeiros_fiis"
+      "sor_acoes" = "tbsor_fundamentus_indicadores_acoes",
+      "sor_fiis"  = "tbsor_fundamentus_indicadores_fiis"
     }
   }
 }
