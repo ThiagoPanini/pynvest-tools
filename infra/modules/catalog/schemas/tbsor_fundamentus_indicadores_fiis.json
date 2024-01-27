@@ -62,12 +62,12 @@
         },
         {
             "name": "dt_ult_relat_ger",
-            "type": "date",
+            "type": "string",
             "comment": "Data do último relatório gerencial do fundo"
         },
         {
             "name": "dt_ult_informe_trim",
-            "type": "date",
+            "type": "string",
             "comment": "Data do último informe trimestral processado"
         },
         {

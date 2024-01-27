@@ -32,7 +32,7 @@
         },
         {
             "name": "dt_ult_cot",
-            "type": "date",
+            "type": "string",
             "comment": "Data do último pregão onde o ativo foi negociado"
         },
         {
@@ -62,7 +62,7 @@
         },
         {
             "name": "dt_ult_balanco_proc",
-            "type": "date",
+            "type": "string",
             "comment": "Data do último balanço divulgado pela empresa que consta no banco de dados do site Fundamentus. Todos os indicadores são calculados considerando os últimos 12 meses finalizados na data do balanço"
         },
         {
