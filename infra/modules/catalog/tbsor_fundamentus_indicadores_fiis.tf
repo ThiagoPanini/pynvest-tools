@@ -10,7 +10,7 @@ pynvest aplicada ao site Fundamentus.
 
 # Criando tabela no Glue Data Catalog
 resource "aws_glue_catalog_table" "tbsor_fundamentus_indicadores_brutos_fiis" {
-  name          = var.tables_names_map["fundamentus"]["sor_fiis"]
+  name          = local.tables_names_map["fundamentus"]["sor_fiis"]
   database_name = var.databases_names_map["sor"]
   description   = "Tabela responsável por armazenar dados de indicadores de ações financeiras extraídos através de um motor de web scrapping apontado para o site Fundamentus"
 
@@ -22,12 +22,12 @@ resource "aws_glue_catalog_table" "tbsor_fundamentus_indicadores_brutos_fiis" {
   }
 
   storage_descriptor {
-    location      = "s3://${var.bucket_names_map["sor"]}/${var.tables_names_map["fundamentus"]["sor_fiis"]}"
+    location      = "s3://${var.bucket_names_map["sor"]}/${local.tables_names_map["fundamentus"]["sor_fiis"]}"
     input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
     output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
 
     ser_de_info {
-      name                  = "stream-${var.tables_names_map["fundamentus"]["sor_fiis"]}"
+      name                  = "stream-${local.tables_names_map["fundamentus"]["sor_fiis"]}"
       serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
 
       parameters = {
@@ -36,7 +36,7 @@ resource "aws_glue_catalog_table" "tbsor_fundamentus_indicadores_brutos_fiis" {
     }
 
     dynamic "columns" {
-      for_each = jsondecode(file("${path.root}/infra/modules/catalog/schemas/${var.tables_names_map["fundamentus"]["sor_fiis"]}.json"))["columns"]
+      for_each = jsondecode(file("${path.root}/infra/modules/catalog/schemas/${local.tables_names_map["fundamentus"]["sor_fiis"]}.json"))["columns"]
       content {
         name    = columns.value["name"]
         type    = columns.value["type"]
