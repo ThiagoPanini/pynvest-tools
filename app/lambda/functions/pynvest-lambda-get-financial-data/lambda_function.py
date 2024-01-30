@@ -101,7 +101,9 @@ def lambda_handler(
 
     # Extraindo colunas numéricas a serem transformadas
     numeric_cols_to_parse = [
-        col["name"] for col in table_columns if col["type"] in ("float", "int")
+        col["name"] for col in table_columns if col["type"] in (
+            "float", "int", "bigint"
+        )
     ]
 
     # Extraindo colunas contendo valor percentual para serem transformadas
@@ -141,7 +143,7 @@ def lambda_handler(
             col_type = col_info["type"]
 
             # Aplicando casting no DataFrame final
-            if col_type not in ("date", "datetime", "timestamp"):
+            if col_type not in ("date", "datetime", "timestamp", "bigint"):
                 df[col_name] = df[col_name].astype(col_type)
 
         # Criando coluna de partição
