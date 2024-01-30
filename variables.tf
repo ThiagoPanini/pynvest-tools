@@ -1,19 +1,65 @@
 /* --------------------------------------------------------
 ARQUIVO: variables.tf @ root module
 
-Arquivo contendo todas as variáveis do módulo Terraform
-definidas neste projeto.
+Arquivo de variáveis do módulo root do projeto Terraform
+contendo todas as declarações de variáveis de todos os
+submódulos do projeto
 -------------------------------------------------------- */
 
 /* -------------------------------------------------------
-    VARIABLES: Eventbridge
-    Variáveis de definição de gatilhos do Eventbridge
+    VARIABLES: catalog
+    Variáveis aceitas pelo módulo catalog
 ------------------------------------------------------- */
 
-variable "schedule_expression_to_initialize" {
-  description = "Expressão cron responsável por engatilhar a primeira etapa do processo"
-  type        = string
-  default     = "cron(0 22 ? * MON-FRI *)"
+variable "flag_create_databases" {
+  description = "Flag para validar a criação de databases no Glue Data Catalog caso o usuário não tenha ou não queira utilizar databases já existentes para catalogação das tabelas geradas"
+  type        = bool
+  default     = true
+}
+
+variable "databases_names_map" {
+  description = "Dicionário (map) contendo os nomes dos databases no Glue Data Catalog para catalogação de tabelas SoR, SoT e Spec. O correto preenchimento desta variável exige que as referências de nomes sejam fornecidas dentro das chaves 'sor', 'sot' e 'spec'. O usuário também pode fornecer o mesmo nome de database para as três quebras, caso queira armazenar os dados das tabelas em um único database."
+  type        = map(string)
+  default = {
+    "sor"  = "db_pynvest_sor"
+    "sot"  = "db_pynvest_sot"
+    "spec" = "db_pynvest_spec"
+  }
+
+  validation {
+    condition     = join(", ", tolist(keys(var.databases_names_map))) == "sor, sot, spec"
+    error_message = "Variável databases_names_map precisa ser fornecida como um dicionário (map) contendo exatamente as chaves 'sor', 'sot' e 'spec'. O dicionário fornecido não contém exatamente as chaves mencionadas e, portanto, é considerado inválido."
+  }
+}
+
+/*
+variable "tables_names_map" {
+  description = "Dicionário (map) contendo os nomes de todas as tabelas a serem criadas no Glue Data Catalog para armazenamento de dados de indicadores financeiros em todas as camadas SoR, SoT e Spec"
+  type        = map(map(string))
+  default = {
+    "fundamentus" = {
+      "sor_acoes" = "tbsor_fundamentus_ind_financeiros_acoes",
+      "sor_fiis"  = "tbsor_fundamentus_ind_financeiros_fiis"
+    }
+    # ToDo: criar validação de chaves do dicionário (map) presente nesta variável
+    # ToDo: já que existe um vínculo entre o nome das tabelas e o schema em arquivo JSON, ou seja,
+    # o valor desta variável é usado para leitura de arquivo JSOn de mesmo nome, caso o usuário
+    # informe um valor diferente para a tabela desejada, a chamada ao módulo retornará um erro
+    # de arquivo inexistente (afinal, o nome do arquivo JSON terá um valor fixo)... neste caso,
+    # vale estudar se esta informação de nome de tabelas não deve ser chumbado em locals.tf
+    # em outras palavras, o usuário não terá permissões de modificar o nome da tabela
+  }
+}
+*/
+
+variable "bucket_names_map" {
+  description = "Dicionário (map) contendo nomes dos buckets SoR, SoT e Spec da conta AWS alvo de implantação dos recursos. O objetivo desta variável e permitir que o usuário forneça seus próprios buckets para armazenamento dos arquivos gerados. O correto preenchimento desta variável exige que as referências de nomes sejam fornecidas dentro das chaves 'sor', 'sot' e 'spec'. O usuário também pode fornecer o mesmo nome de bucket para as três quebras, caso queira armazenar os dados das tabelas em um único bucket."
+  type        = map(string)
+  default = {
+    "sor" = "pynvest-sor-640314716246-us-east-1"
+    # ToDo: retirar valor default para exigir q o usuário passe essa info
+    # ToDo: criar validação de chaves do dicionário (map) presente nesta variável
+  }
 }
 
 
@@ -64,6 +110,30 @@ variable "sqs_receive_wait_time_seconds" {
   default     = 0
 }
 
+
+/* -------------------------------------------------------
+    VARIABLES: lambda
+    Variáveis aceitas pelo módulo lambda
+------------------------------------------------------- */
+
+variable "functions_python_runtime" {
+  description = "Definição do runtime (versão) da linguagem Python associada às funções"
+  type        = string
+  default     = "python3.10"
+}
+
+variable "functions_timeout" {
+  description = "Timeout das funções Lambda"
+  type        = number
+  default     = 180
+}
+
+variable "cron_expression_to_initialize_process" {
+  description = "Expressão cron responsável por engatilhar todo o processo de obtenção e atualização dos dados"
+  type        = string
+  default     = "cron(0 22 ? * MON-FRI *)"
+}
+
 variable "sqs_lambda_trigger_batch_size" {
   description = "Número máximo de registros a serem enviados para a função em cada batch"
   type        = number
@@ -80,46 +150,4 @@ variable "sqs_lambda_trigger_max_concurrency" {
   description = "Número máximo de funções concorrentes a serem invocadas pelo gatilho"
   type        = number
   default     = 10
-}
-
-
-/* -------------------------------------------------------
-    VARIABLES: S3 e Glue Data Catalog
-    Armazenamento e catalogação dos dados gerados
-------------------------------------------------------- */
-
-variable "bucket_names_map" {
-  description = "Dicionário (map) contendo nomes dos buckets SoR, SoT e Spec da conta AWS alvo de implantação dos recursos. O objetivo desta variável e permitir que o usuário forneça seus próprios buckets para armazenamento dos arquivos gerados. O correto preenchimento desta variável exige que as referências de nomes sejam fornecidas dentro das chaves 'sor', 'sot' e 'spec'. O usuário também pode fornecer o mesmo nome de bucket para as três quebras, caso queira armazenar os dados das tabelas em um único bucket."
-  type        = map(string)
-  default = {
-    "sor" = "value"
-  }
-}
-
-variable "flag_create_databases" {
-  description = "Flag para validar a criação de databases no Glue Data Catalog caso o usuário não tenha ou não queira utilizar databases já existentes para catalogação das tabelas geradas"
-  type        = bool
-  default     = true
-}
-
-variable "databases_names_map" {
-  description = "Dicionário (map) contendo os nomes dos databases no Glue Data Catalog para catalogação de tabelas SoR, SoT e Spec. O correto preenchimento desta variável exige que as referências de nomes sejam fornecidas dentro das chaves 'sor', 'sot' e 'spec'. O usuário também pode fornecer o mesmo nome de database para as três quebras, caso queira armazenar os dados das tabelas em um único database."
-  type        = map(string)
-  default = {
-    "sor"  = "db_pynvest_sor"
-    "sot"  = "db_pynvest_sot"
-    "spec" = "db_pynvest_spec"
-  }
-}
-
-variable "sor_acoes_table_name" {
-  description = "Nome da tabela SoR gerada a partir do processamento de indicadores financeiros de Ações"
-  type        = string
-  default     = "tbl_fundamentus_indicadores_acoes"
-}
-
-variable "sor_fiis_table_name" {
-  description = "Nome da tabela SoR gerada a partir do processamento de indicadores financeiros de Fundos Imobiliários"
-  type        = string
-  default     = "tbl_fundamentus_indicadores_fiis"
 }

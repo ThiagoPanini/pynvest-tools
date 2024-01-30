@@ -40,10 +40,12 @@ def lambda_handler(
     # Instanciando client do SQS
     sqs_client = boto3.client("sqs")
 
-    # Coletando URL de filas SQS para ações e fiis
+    # Coletando URL de fila SQS para armazenamento de tickers de Ações
     sqs_acoes_queue_url = sqs_client.get_queue_url(
         QueueName=sqs_acoes_queue_name
     )['QueueUrl']
+
+    # Coletando URL de fila SQS para armazenamento de tickers de FIIs
     sqs_fiis_queue_url = sqs_client.get_queue_url(
         QueueName=sqs_fiis_queue_name
     )['QueueUrl']

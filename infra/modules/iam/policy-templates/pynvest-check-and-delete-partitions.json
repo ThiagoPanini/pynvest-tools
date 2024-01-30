@@ -11,7 +11,8 @@
 			"Resource": [
                 "arn:aws:glue:${region_name}:${account_id}:catalog",
                 "arn:aws:glue:${region_name}:${account_id}:database/${sor_database_name}",
-                "arn:aws:glue:${region_name}:${account_id}:table/${sor_database_name}/tbl_fundamentus_indicadores_*"
+                "arn:aws:glue:${region_name}:${account_id}:table/${sor_database_name}/${sor_acoes_table_name}",
+				"arn:aws:glue:${region_name}:${account_id}:table/${sor_database_name}/${sor_fiis_table_name}"
             ]
 		}
 	]

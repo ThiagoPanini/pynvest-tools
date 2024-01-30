@@ -1,0 +1,50 @@
+{
+	"Version": "2012-10-17",
+	"Statement": [
+        {
+			"Sid": "SQSPollMessages",
+			"Effect": "Allow",
+			"Action": [
+        		"sqs:ReceiveMessage",
+				"sqs:DeleteMessage",
+				"sqs:GetQueueAttributes"
+			],
+			"Resource": [
+                "arn:aws:sqs:${region_name}:${account_id}:pynvest-tickers-acoes-queue",
+                "arn:aws:sqs:${region_name}:${account_id}:pynvest-tickers-fiis-queue"
+            ]
+		},
+		{
+			"Sid": "PutGetAndDeleteObjects",
+			"Effect": "Allow",
+			"Action": [
+				"s3:ListBucket",
+				"s3:PutObject",
+				"s3:GetObject",
+				"s3:DeleteObject"
+			],
+			"Resource": [
+				"arn:aws:s3:::${sor_bucket_name}",
+				"arn:aws:s3:::${sor_bucket_name}/${sor_acoes_table_name}/*",
+                "arn:aws:s3:::${sor_bucket_name}/${sor_fiis_table_name}/*"
+			]
+		},
+		{
+			"Sid": "SetGlueTablesAccess",
+			"Effect": "Allow",
+			"Action": [
+                "glue:GetDatabase",
+				"glue:CreateTable",
+				"glue:UpdateTable",
+				"glue:GetTable",
+                "glue:BatchCreatePartition"
+            ],
+			"Resource": [
+                "arn:aws:glue:${region_name}:${account_id}:catalog",
+                "arn:aws:glue:${region_name}:${account_id}:database/${sor_database_name}",
+                "arn:aws:glue:${region_name}:${account_id}:table/${sor_database_name}/${sor_acoes_table_name}",
+				"arn:aws:glue:${region_name}:${account_id}:table/${sor_database_name}/${sor_fiis_table_name}"
+            ]
+		}
+	]
+}

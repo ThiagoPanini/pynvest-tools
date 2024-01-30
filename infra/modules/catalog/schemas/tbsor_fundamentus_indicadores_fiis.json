@@ -1,0 +1,244 @@
+{
+    "columns": [
+        {
+            "name": "fii",
+            "type": "string",
+            "comment": "Código do Fundo Imobiliário"
+        },
+        {
+            "name": "nome_fii",
+            "type": "string",
+            "comment": "Nome do Fundo Imobiliário"
+        },
+        {
+            "name": "tipo_mandato",
+            "type": "string",
+            "comment": "Tipo de mandato do fundo. Pode ser: desenvolvimento para renda, desenvolvimento para venda, híbrido, renda, títulos e valores imobiliários"
+        },
+        {
+            "name": "segmento",
+            "type": "string",
+            "comment": "Segmento dos imóveis que compõem o fundo"
+        },
+        {
+            "name": "tipo_gestao",
+            "type": "string",
+            "comment": "Tipo de gestão do fundo (ativa ou passiva)"
+        },
+        {
+            "name": "vlr_cot",
+            "type": "float",
+            "comment": "Cotação de fechamento do ativo no último pregão"
+        },
+        {
+            "name": "data_ult_cot",
+            "type": "date",
+            "comment": "Data do último pregão onde o ativo foi negociado"
+        },
+        {
+            "name": "min_52_sem",
+            "type": "float",
+            "comment": "Menor cotação da ação nos últimos 12 meses"
+        },
+        {
+            "name": "max_52_sem",
+            "type": "float",
+            "comment": "Maior cotação da ação nos últimos 12 meses"
+        },
+        {
+            "name": "vol_med_neg_2m",
+            "type": "int",
+            "comment": "Volume médio diário de negociação do fundo nos últimos 2 meses"
+        },
+        {
+            "name": "vlr_mercado",
+            "type": "float",
+            "comment": "Valor de mercado do FII calculado multiplicando a cotação do papel pelo número total de cotas"
+        },
+        {
+            "name": "num_cotas",
+            "type": "int",
+            "comment": "Número total de cotas"
+        },
+        {
+            "name": "dt_ult_relat_ger",
+            "type": "string",
+            "comment": "Data do último relatório gerencial do fundo"
+        },
+        {
+            "name": "dt_ult_informe_trim",
+            "type": "string",
+            "comment": "Data do último informe trimestral processado"
+        },
+        {
+            "name": "pct_var_dia",
+            "type": "float",
+            "comment": "Percentual de variação/oscilação da ação no dia"
+        },
+        {
+            "name": "pct_var_mes",
+            "type": "float",
+            "comment": "Percentual de variação/oscilação da ação no mês"
+        },
+        {
+            "name": "pct_var_30d",
+            "type": "float",
+            "comment": "Percentual de variação/oscilação da ação nos últimos 30 dias"
+        },
+        {
+            "name": "pct_var_12m",
+            "type": "float",
+            "comment": "Percentual de variação/oscilação da ação nos últimos 12 meses"
+        },
+        {
+            "name": "pct_var_2023",
+            "type": "float",
+            "comment": "Percentual de variação/oscilação da ação em 2023"
+        },
+        {
+            "name": "pct_var_2022",
+            "type": "float",
+            "comment": "Percentual de variação/oscilação da ação em 2022"
+        },
+        {
+            "name": "pct_var_2021",
+            "type": "float",
+            "comment": "Percentual de variação/oscilação da ação em 2021"
+        },
+        {
+            "name": "pct_var_2020",
+            "type": "float",
+            "comment": "Percentual de variação/oscilação da ação em 2020"
+        },
+        {
+            "name": "pct_var_2019",
+            "type": "float",
+            "comment": "Percentual de variação/oscilação da ação em 2019"
+        },
+        {
+            "name": "pct_var_2018",
+            "type": "float",
+            "comment": "Percentual de variação/oscilação da ação em 2018"
+        },
+        {
+            "name": "vlr_ffo_yield",
+            "type": "float",
+            "comment": "FFO (*Funds From Operation*) é o lucro líquido ajustado do FII. Seu cálculo é dado por: Lucro Líquido - Ganhos com a (des)valorização dos imóveis - Ganhos (perdas) na venda de ativos. FFO Yield é o FFO sobre o valor de mercado"
+        },
+        {
+            "name": "vlr_ffo_sobre_cota",
+            "type": "float",
+            "comment": "FFO sobre a cota"
+        },
+        {
+            "name": "vlr_div_yield",
+            "type": "float",
+            "comment": "Rendimento distribuído dividido pelo valor do FII. É o rendimento gerado para o dono da ação pelo pagamento de dividendos"
+        },
+        {
+            "name": "vlr_dividendo_sobre_cota",
+            "type": "float",
+            "comment": "Rendimento distribuído por cota nos últimos 12 meses"
+        },
+        {
+            "name": "vlr_p_sobre_vp",
+            "type": "float",
+            "comment": "Preço dividido pelo valor patrimonial"
+        },
+        {
+            "name": "vlr_vp_sobre_cota",
+            "type": "float",
+            "comment": "Valor patrimonial por cota"
+        },
+        {
+            "name": "vlr_rec_bruta_ult_12m",
+            "type": "float",
+            "comment": "Receita bruta recebida pelo fundo proveniente dos alugueis dos imóveis, distribuição de rendimentos dos seus FIIs e juros das aplicações financeiras. Valor referente aos últimos 12 meses"
+        },
+        {
+            "name": "vlr_vend_ativ_ult_12m",
+            "type": "float",
+            "comment": "Receita da venda de imóveis mais resultado da venda de FIIs e aplicações financeiras. Valor referente aos últimos 12 meses"
+        },
+        {
+            "name": "vlr_ffo_ult_12m",
+            "type": "float",
+            "comment": "FFO dos últimos 12 meses"
+        },
+        {
+            "name": "vlr_rendim_distr_ult_12m",
+            "type": "float",
+            "comment": "Rendimento distribuído nos últimos 12 meses"
+        },
+        {
+            "name": "vlr_rec_bruta_ult_3m",
+            "type": "float",
+            "comment": "Receita bruta recebida pelo fundo proveniente dos alugueis dos imóveis, distribuição de rendimentos dos seus FIIs e juros das aplicações financeiras. Valor referente aos últimos 3 meses"
+        },
+        {
+            "name": "vlr_vend_ativ_ult_3m",
+            "type": "float",
+            "comment": "Receita da venda de imóveis mais resultado da venda de FIIs e aplicações financeiras. Valor referente aos últimos 3 meses"
+        },
+        {
+            "name": "vlr_ffo_ult_3m",
+            "type": "float",
+            "comment": "FFO dos últimos 3 meses"
+        },
+        {
+            "name": "vlr_rendim_distr_ult_3m",
+            "type": "float",
+            "comment": "Rendimento distribuído nos últimos 3 meses"
+        },
+        {
+            "name": "vlr_ativos",
+            "type": "float",
+            "comment": "Ativos"
+        },
+        {
+            "name": "vlr_patrim_liq",
+            "type": "float",
+            "comment": "Patrimônio líquido calculado como a subtração entre ativos e passivos"
+        },
+        {
+            "name": "qtd_imoveis",
+            "type": "float",
+            "comment": "Quantidade de imóveis do fundo"
+        },
+        {
+            "name": "qtd_unidades",
+            "type": "float",
+            "comment": "Número total de unidades do fundo"
+        },
+        {
+            "name": "vlr_imoveis_sobre_pl",
+            "type": "float",
+            "comment": "Porcentagem do patrimônio líquido do FII composto por imóveis físicos"
+        },
+        {
+            "name": "total_area_m2",
+            "type": "float",
+            "comment": "Área total de todos os imóveis em metros quadrados"
+        },
+        {
+            "name": "vlr_aluguel_por_m2",
+            "type": "float",
+            "comment": "Aluguel anual por metro quadrado (em R$)"
+        },
+        {
+            "name": "vlr_do_m2",
+            "type": "float",
+            "comment": "Valor de mercado do FII multiplicado pela porcentagem do patrimônio líquido do FII composto por imóveis físicos dividido pelo total de metros quadrados"
+        },
+        {
+            "name": "vlr_cap_rate",
+            "type": "float",
+            "comment": "Aluguel dos imóveis dividido pelo valor de mercado do fundo"
+        },
+        {
+            "name": "vlr_vacancia_media",
+            "type": "float",
+            "comment": "Vacância média dos imóveis ponderada pela área"
+        }
+    ]
+}

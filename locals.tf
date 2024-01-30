@@ -12,4 +12,12 @@ locals {
   # Extraindo ID da conta e nome da região
   account_id  = data.aws_caller_identity.current.account_id
   region_name = data.aws_region.current.name
+
+  # Definindo mapeamento contendo nomes de tabelas a serem criadas pelo módulo
+  tables_names_map = {
+    "fundamentus" = {
+      "sor_acoes" = "tbsor_fundamentus_indicadores_acoes",
+      "sor_fiis"  = "tbsor_fundamentus_indicadores_fiis"
+    }
+  }
 }
