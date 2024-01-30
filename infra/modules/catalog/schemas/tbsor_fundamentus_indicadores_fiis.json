@@ -47,7 +47,7 @@
         },
         {
             "name": "vol_med_neg_2m",
-            "type": "int",
+            "type": "bigint",
             "comment": "Volume médio diário de negociação do fundo nos últimos 2 meses"
         },
         {
@@ -57,7 +57,7 @@
         },
         {
             "name": "num_cotas",
-            "type": "int",
+            "type": "bigint",
             "comment": "Número total de cotas"
         },
         {

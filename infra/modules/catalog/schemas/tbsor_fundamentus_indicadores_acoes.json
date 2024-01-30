@@ -47,7 +47,7 @@
         },
         {
             "name": "vol_med_neg_2m",
-            "type": "int",
+            "type": "bigint",
             "comment": "Volume médio de negociação da ação nos últimos 2 meses"
         },
         {
@@ -67,7 +67,7 @@
         },
         {
             "name": "num_acoes",
-            "type": "int",
+            "type": "bigint",
             "comment": "Número total de ações somadas todas as espécies (ON, PN, etc)"
         },
         {
