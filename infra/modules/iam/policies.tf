@@ -63,6 +63,7 @@ data "template_file" "pynvest-check-and-delete-partitions" {
     region_name          = var.region_name
     account_id           = var.account_id
     sor_database_name    = var.databases_names_map["sor"]
+    sor_bucket_name      = var.bucket_names_map["sor"]
     sor_acoes_table_name = var.tables_names_map["fundamentus"]["sor_acoes"]
     sor_fiis_table_name  = var.tables_names_map["fundamentus"]["sor_fiis"]
   }
