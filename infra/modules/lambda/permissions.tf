@@ -61,3 +61,43 @@ resource "aws_lambda_function_event_invoke_config" "destination-pynvest-lambda-g
     aws_lambda_permission.invoke-permissions-to-pynvest-lambda-get-tickers
   ]
 }
+
+
+/* -------------------------------------------------------
+    LAMBDA PERMISSIONS
+    From: S3 Bucket
+    To: pynvest-lambda-prep-financial-data-for-acoes
+------------------------------------------------------- */
+
+# Configurando permissões para invocar função Lambda
+resource "aws_lambda_permission" "invoke-permissions-to-pynvest-lambda-prep-financial-data-for-acoes" {
+  statement_id  = "AllowExecutionFromS3"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.pynvest-lambda-prep-financial-data-for-acoes.function_name
+  principal     = "s3.amazonaws.com"
+  source_arn    = "arn:aws:s3:::${var.bucket_names_map["sor"]}"
+
+  depends_on = [
+    aws_lambda_function.pynvest-lambda-prep-financial-data-for-acoes
+  ]
+}
+
+
+/* -------------------------------------------------------
+    LAMBDA PERMISSIONS
+    From: S3 Bucket
+    To: pynvest-lambda-prep-financial-data-for-fiis
+------------------------------------------------------- */
+
+# Configurando permissões para invocar função Lambda
+resource "aws_lambda_permission" "invoke-permissions-to-pynvest-lambda-prep-financial-data-for-fiis" {
+  statement_id  = "AllowExecutionFromS3"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.pynvest-lambda-prep-financial-data-for-fiis.function_name
+  principal     = "s3.amazonaws.com"
+  source_arn    = "arn:aws:s3:::${var.bucket_names_map["sor"]}"
+
+  depends_on = [
+    aws_lambda_function.pynvest-lambda-prep-financial-data-for-fiis
+  ]
+}

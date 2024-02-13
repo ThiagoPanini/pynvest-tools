@@ -79,3 +79,49 @@ resource "aws_lambda_event_source_mapping" "pynvest-tickers-queue-fiis" {
     aws_lambda_function.pynvest-lambda-get-financial-data-for-fiis
   ]
 }
+
+
+/* -------------------------------------------------------
+    TRIGGER
+    From: S3 (PUT event)
+    To: pynvest-lambda-prep-financial-data-for-acoes
+------------------------------------------------------- */
+
+resource "aws_s3_bucket_notification" "s3-put-event-to-invoke-pynvest-lambda-prep-financial-data-for-acoes" {
+  bucket = var.bucket_names_map["sor"]
+  lambda_function {
+    lambda_function_arn = aws_lambda_function.pynvest-lambda-prep-financial-data-for-acoes.arn
+
+    # Configurando tipo de evento mapeado
+    events = [
+      "s3:ObjectCreated:Put"
+    ]
+
+    # Configurando condições de gatilho
+    filter_prefix = "${var.tables_names_map["fundamentus"]["sor_acoes"]}/"
+    filter_suffix = ".parquet"
+  }
+}
+
+
+/* -------------------------------------------------------
+    TRIGGER
+    From: S3 (PUT event)
+    To: pynvest-lambda-prep-financial-data-for-fiis
+------------------------------------------------------- */
+
+resource "aws_s3_bucket_notification" "s3-put-event-to-invoke-pynvest-lambda-prep-financial-data-for-fiis" {
+  bucket = var.bucket_names_map["sor"]
+  lambda_function {
+    lambda_function_arn = aws_lambda_function.pynvest-lambda-prep-financial-data-for-fiis.arn
+
+    # Configurando tipo de evento mapeado
+    events = [
+      "s3:ObjectCreated:Put"
+    ]
+
+    # Configurando condições de gatilho
+    filter_prefix = "${var.tables_names_map["fundamentus"]["sor_fiis"]}/"
+    filter_suffix = ".parquet"
+  }
+}
