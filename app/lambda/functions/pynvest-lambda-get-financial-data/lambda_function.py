@@ -44,8 +44,8 @@ def lambda_handler(
     """
 
     # Coletando variáveis de ambiente para escrita dos dados
-    output_database = os.getenv("DATABASE_NAME")
-    output_table = os.getenv("TABLE_NAME")
+    output_database = os.getenv("OUTPUT_DATABASE_NAME")
+    output_table = os.getenv("OUTPUT_TABLE_NAME")
     s3_sor_bucket_name = os.getenv("OUTPUT_BUCKET")
 
     # Definindo variáveis de saída do S3
@@ -102,11 +102,11 @@ def lambda_handler(
                 f"fisicamente no S3 em {output_path} e catalogados na "
                 f"tabela {output_database}.{output_table} no Data Catalog.")
 
-    return {
+    return json.dumps({
         "status_code": 200,
         "body": {
             "tickers_proccessed": tickers,
             "total_tickers": total_msgs,
             "output_table": f"{output_database}.{output_table}"
         }
-    }
+    })
