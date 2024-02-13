@@ -239,6 +239,11 @@
             "name": "vlr_vacancia_media",
             "type": "string",
             "comment": "Vacância média dos imóveis ponderada pela área"
+        },
+        {
+            "name": "datetime_exec",
+            "type": "string",
+            "comment": "Data e hora exata em que os indicadores financeiros do referido ativo foi capturado pelo scrapper"
         }
     ]
 }
