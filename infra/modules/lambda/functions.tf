@@ -181,3 +181,88 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-fiis" {
     data.archive_file.pynvest-lambda-get-financial-data
   ]
 }
+
+
+/* -------------------------------------------------------
+    ARCHIVE FILE
+    Zip comum a ser utlizado para próximas duas Lambdas
+------------------------------------------------------- */
+
+# Criando pacote zip da função a ser criada
+data "archive_file" "pynvest-lambda-prep-financial-data" {
+  type        = "zip"
+  source_dir  = "${path.module}/../../../app/lambda/functions/pynvest-lambda-prep-financial-data/"
+  output_path = "${path.module}/../../../app/lambda/zip/pynvest-lambda-prep-financial-data.zip"
+}
+
+/* -------------------------------------------------------
+    LAMBDA FUNCTION
+    pynvest-lambda-prep-financial-data-for-acoes
+------------------------------------------------------- */
+
+# Criando função Lambda
+resource "aws_lambda_function" "pynvest-lambda-prep-financial-data-for-acoes" {
+  function_name = "pynvest-lambda-prep-financial-data-for-acoes"
+  description   = "Lê indicadores brutos de Ações já extraídos e armazenados no S3 e prepara tipos primitivos para a camada SoT"
+
+  filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-prep-financial-data.zip"
+  source_code_hash = data.archive_file.pynvest-lambda-prep-financial-data.output_base64sha256
+
+  role    = var.iam_roles_arns_map["pynvest-lambda-share-sot-financial-data"]
+  handler = "lambda_function.lambda_handler"
+  runtime = var.functions_python_runtime
+  timeout = var.functions_timeout
+
+  layers = [
+    "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
+  ]
+
+  environment {
+    variables = {
+      OUTPUT_BUCKET        = var.bucket_names_map["sot"],
+      OUTPUT_DATABASE_NAME = var.databases_names_map["sot"],
+      OUTPUT_TABLE_NAME    = var.tables_names_map["fundamentus"]["sot_acoes"]
+    }
+  }
+
+  depends_on = [
+    data.archive_file.pynvest-lambda-get-financial-data
+  ]
+}
+
+
+/* -------------------------------------------------------
+    LAMBDA FUNCTION
+    pynvest-lambda-prep-financial-data-for-fiis
+------------------------------------------------------- */
+
+# Criando função Lambda
+resource "aws_lambda_function" "pynvest-lambda-prep-financial-data-for-fiis" {
+  function_name = "pynvest-lambda-prep-financial-data-for-fiis"
+  description   = "Lê indicadores brutos de FIIs já extraídos e armazenados no S3 e prepara tipos primitivos para a camada SoT"
+
+  filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-prep-financial-data.zip"
+  source_code_hash = data.archive_file.pynvest-lambda-prep-financial-data.output_base64sha256
+
+  role    = var.iam_roles_arns_map["pynvest-lambda-share-sot-financial-data"]
+  handler = "lambda_function.lambda_handler"
+  runtime = var.functions_python_runtime
+  timeout = var.functions_timeout
+
+  layers = [
+    "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
+  ]
+
+  environment {
+    variables = {
+      OUTPUT_BUCKET        = var.bucket_names_map["sot"],
+      OUTPUT_DATABASE_NAME = var.databases_names_map["sot"],
+      OUTPUT_TABLE_NAME    = var.tables_names_map["fundamentus"]["sot_fiis"]
+    }
+  }
+
+  depends_on = [
+    data.archive_file.pynvest-lambda-get-financial-data
+  ]
+}
+
