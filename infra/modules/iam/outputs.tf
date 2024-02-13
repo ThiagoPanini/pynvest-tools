@@ -12,6 +12,7 @@ output "iam_roles_arns_map" {
   value = {
     "pynvest-lambda-check-and-delete-partitions" = aws_iam_role.pynvest-lambda-check-and-delete-partitions.arn,
     "pynvest-lambda-send-msgs-to-tickers-queue"  = aws_iam_role.pynvest-lambda-send-msgs-to-tickers-queue.arn,
-    "pynvest-lambda-share-raw-financial-data"    = aws_iam_role.pynvest-lambda-share-raw-financial-data.arn
+    "pynvest-lambda-share-sor-financial-data"    = aws_iam_role.pynvest-lambda-share-sor-financial-data.arn,
+    "pynvest-lambda-share-sot-financial-data"    = aws_iam_role.pynvest-lambda-share-sot-financial-data.arn
   }
 }

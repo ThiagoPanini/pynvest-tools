@@ -50,7 +50,7 @@ resource "aws_iam_policy" "pynvest-invoke-lambda-functions" {
 }
 
 
-/* -------------------------------------------------------
+/* ------------------------------------------------------- 
     IAM POLICY
     Definindo policy para deleção de partições
 ------------------------------------------------------- */
@@ -60,11 +60,14 @@ data "template_file" "pynvest-check-and-delete-partitions" {
   template = file("${path.module}/policy-templates/pynvest-check-and-delete-partitions.json")
 
   vars = {
-    region_name          = var.region_name
-    account_id           = var.account_id
-    sor_bucket_name      = var.bucket_names_map["sor"]
-    sot_bucket_name      = var.bucket_names_map["sot"]
-    spec_bucket_name      = var.bucket_names_map["spec"]
+    region_name        = var.region_name
+    account_id         = var.account_id
+    sor_database_name  = var.databases_names_map["sor"]
+    sot_database_name  = var.databases_names_map["sot"]
+    spec_database_name = var.databases_names_map["spec"]
+    sor_bucket_name    = var.bucket_names_map["sor"]
+    sot_bucket_name    = var.bucket_names_map["sot"]
+    spec_bucket_name   = var.bucket_names_map["spec"]
   }
 }
 
@@ -105,21 +108,45 @@ resource "aws_iam_policy" "pynvest-send-msgs-to-tickers-queues" {
 ------------------------------------------------------- */
 
 # Definindo template file para policy
-data "template_file" "pynvest-share-raw-financial-data" {
-  template = file("${path.module}/policy-templates/pynvest-share-raw-financial-data.json")
+data "template_file" "pynvest-share-sor-financial-data" {
+  template = file("${path.module}/policy-templates/pynvest-share-sor-financial-data.json")
 
   vars = {
-    region_name          = var.region_name
-    account_id           = var.account_id
-    sor_bucket_name      = var.bucket_names_map["sor"]
-    sor_database_name    = var.databases_names_map["sor"]
-    sor_acoes_table_name = var.tables_names_map["fundamentus"]["sor_acoes"]
-    sor_fiis_table_name  = var.tables_names_map["fundamentus"]["sor_fiis"]
+    region_name       = var.region_name
+    account_id        = var.account_id
+    sor_bucket_name   = var.bucket_names_map["sor"]
+    sor_database_name = var.databases_names_map["sor"]
   }
 }
 
 # Definindo policy
-resource "aws_iam_policy" "pynvest-share-raw-financial-data" {
-  name   = "pynvest-share-raw-financial-data"
-  policy = data.template_file.pynvest-share-raw-financial-data.rendered
+resource "aws_iam_policy" "pynvest-share-sor-financial-data" {
+  name   = "pynvest-share-sor-financial-data"
+  policy = data.template_file.pynvest-share-sor-financial-data.rendered
+}
+
+
+/* -------------------------------------------------------
+    IAM POLICY
+    Definindo policy para coleta, armazenamento e catalogação
+    de dados brutos na camada SoT
+------------------------------------------------------- */
+
+# Definindo template file para policy
+data "template_file" "pynvest-share-sot-financial-data" {
+  template = file("${path.module}/policy-templates/pynvest-share-sot-financial-data.json")
+
+  vars = {
+    region_name       = var.region_name
+    account_id        = var.account_id
+    sor_bucket_name   = var.bucket_names_map["sor"]
+    sot_bucket_name   = var.bucket_names_map["sot"]
+    sot_database_name = var.databases_names_map["sot"]
+  }
+}
+
+# Definindo policy
+resource "aws_iam_policy" "pynvest-share-sot-financial-data" {
+  name   = "pynvest-share-sot-financial-data"
+  policy = data.template_file.pynvest-share-sot-financial-data.rendered
 }
