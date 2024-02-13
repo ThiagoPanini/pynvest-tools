@@ -49,7 +49,7 @@ resource "aws_lambda_function" "pynvest-lambda-check-and-delete-partitions" {
           flatten(
             [
               for element in var.tables_info_map :
-                "${element.database}.${element.table}"
+              "${element.database}.${element.table}"
             ]
           )
         )
@@ -124,7 +124,7 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-acoes" {
   filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-get-financial-data.zip"
   source_code_hash = data.archive_file.pynvest-lambda-get-financial-data.output_base64sha256
 
-  role    = var.iam_roles_arns_map["pynvest-lambda-share-raw-financial-data"]
+  role    = var.iam_roles_arns_map["pynvest-lambda-share-sor-financial-data"]
   handler = "lambda_function.lambda_handler"
   runtime = var.functions_python_runtime
   timeout = var.functions_timeout
@@ -135,9 +135,9 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-acoes" {
 
   environment {
     variables = {
-      OUTPUT_BUCKET = var.bucket_names_map["sor"],
-      DATABASE_NAME = var.databases_names_map["sor"],
-      TABLE_NAME    = var.tables_names_map["fundamentus"]["sor_acoes"]
+      OUTPUT_BUCKET        = var.bucket_names_map["sor"],
+      OUTPUT_DATABASE_NAME = var.databases_names_map["sor"],
+      OUTPUT_TABLE_NAME    = var.tables_names_map["fundamentus"]["sor_acoes"]
     }
   }
 
@@ -160,7 +160,7 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-fiis" {
   filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-get-financial-data.zip"
   source_code_hash = data.archive_file.pynvest-lambda-get-financial-data.output_base64sha256
 
-  role    = var.iam_roles_arns_map["pynvest-lambda-share-raw-financial-data"]
+  role    = var.iam_roles_arns_map["pynvest-lambda-share-sor-financial-data"]
   handler = "lambda_function.lambda_handler"
   runtime = var.functions_python_runtime
   timeout = var.functions_timeout
@@ -171,9 +171,9 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-fiis" {
 
   environment {
     variables = {
-      OUTPUT_BUCKET = var.bucket_names_map["sor"],
-      DATABASE_NAME = var.databases_names_map["sor"],
-      TABLE_NAME    = var.tables_names_map["fundamentus"]["sor_fiis"]
+      OUTPUT_BUCKET        = var.bucket_names_map["sor"],
+      OUTPUT_DATABASE_NAME = var.databases_names_map["sor"],
+      OUTPUT_TABLE_NAME    = var.tables_names_map["fundamentus"]["sor_fiis"]
     }
   }
 
