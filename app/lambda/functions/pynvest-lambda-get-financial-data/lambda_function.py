@@ -102,11 +102,11 @@ def lambda_handler(
                 f"fisicamente no S3 em {output_path} e catalogados na "
                 f"tabela {output_database}.{output_table} no Data Catalog.")
 
-    return json.dumps({
+    return {
         "status_code": 200,
         "body": {
             "tickers_proccessed": tickers,
             "total_tickers": total_msgs,
             "output_table": f"{output_database}.{output_table}"
         }
-    })
+    }

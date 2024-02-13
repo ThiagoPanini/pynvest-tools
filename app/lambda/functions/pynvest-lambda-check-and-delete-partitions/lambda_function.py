@@ -1,5 +1,4 @@
 # Importando bibliotecas
-import json
 import os
 from datetime import datetime, timezone, timedelta
 
@@ -124,9 +123,9 @@ def lambda_handler(
                         f"{partition_col_name}={partition_value} encontrada "
                         f"na tabela {table_name}")
 
-    return json.dumps({
+    return {
         "status_code": 200,
         "body": {
             "dropped_partitions": dropped_partitions
         }
-    })
+    }

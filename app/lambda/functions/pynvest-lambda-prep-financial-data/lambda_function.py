@@ -1,5 +1,4 @@
 # Importando bibliotecas
-import json
 import os
 from datetime import datetime, timezone, timedelta
 
@@ -124,10 +123,10 @@ def lambda_handler(
                 f"fisicamente no S3 em {output_path} e catalogados na "
                 f"tabela {output_database}.{output_table} no Data Catalog.")
 
-    return json.dumps({
+    return {
         "status_code": 200,
         "body": {
             "total_rows": len(df_prep),
             "output_table": f"{output_database}.{output_table}"
         }
-    })
+    }
