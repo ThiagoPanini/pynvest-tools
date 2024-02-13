@@ -29,6 +29,7 @@ module "catalog" {
   databases_names_map   = var.databases_names_map
   tables_names_map      = local.tables_names_map
   bucket_names_map      = var.bucket_names_map
+  tables_info_map       = local.tables_info_map
 }
 
 # Chamando módulo sqs
