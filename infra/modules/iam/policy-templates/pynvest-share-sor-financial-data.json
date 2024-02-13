@@ -15,18 +15,17 @@
             ]
 		},
 		{
-			"Sid": "PutObjectsOnS3",
+			"Sid": "S3PutSoRData",
 			"Effect": "Allow",
 			"Action": [
 				"s3:PutObject"
 			],
 			"Resource": [
-				"arn:aws:s3:::${sor_bucket_name}/${sor_acoes_table_name}/*",
-                "arn:aws:s3:::${sor_bucket_name}/${sor_fiis_table_name}/*"
+				"arn:aws:s3:::${sor_bucket_name}/tbsor_fundamentus_*/*"
 			]
 		},
 		{
-			"Sid": "SetGlueTablesAccess",
+			"Sid": "GlueAccessOnSoRTables",
 			"Effect": "Allow",
 			"Action": [
                 "glue:GetDatabase",
@@ -38,8 +37,7 @@
 			"Resource": [
                 "arn:aws:glue:${region_name}:${account_id}:catalog",
                 "arn:aws:glue:${region_name}:${account_id}:database/${sor_database_name}",
-                "arn:aws:glue:${region_name}:${account_id}:table/${sor_database_name}/${sor_acoes_table_name}",
-				"arn:aws:glue:${region_name}:${account_id}:table/${sor_database_name}/${sor_fiis_table_name}"
+                "arn:aws:glue:${region_name}:${account_id}:table/${sor_database_name}/tbsor_fundamentus_*"
             ]
 		}
 	]

@@ -10,8 +10,12 @@
             ],
 			"Resource": [
                 "arn:aws:glue:${region_name}:${account_id}:catalog",
-                "arn:aws:glue:${region_name}:${account_id}:database/db_pynvest_*",
-                "arn:aws:glue:${region_name}:${account_id}:table/db_pynvest_*/tb*_fundamentus_*"
+                "arn:aws:glue:${region_name}:${account_id}:database/${sor_database_name}",
+				"arn:aws:glue:${region_name}:${account_id}:database/${sot_database_name}",
+				"arn:aws:glue:${region_name}:${account_id}:database/${spec_database_name}",
+                "arn:aws:glue:${region_name}:${account_id}:table/${sor_database_name}/tbsor_fundamentus_*",
+				"arn:aws:glue:${region_name}:${account_id}:table/${sot_database_name}/tbsot_fundamentus_*",
+				"arn:aws:glue:${region_name}:${account_id}:table/${spec_database_name}/tbspec_fundamentus_*"
             ]
 		},
 		{
