@@ -43,3 +43,16 @@ locals {
     ) : "${element.scrapper}.${element.table}" => element
   }
 }
+
+
+output "tables_names" {
+  value = join(",", distinct(
+    flatten(
+      [
+        for scrapper in keys(local.tables_names_map) : [
+          for table_name in values(local.tables_names_map[scrapper]) : table_name
+        ]
+      ]
+    )
+  ))
+}

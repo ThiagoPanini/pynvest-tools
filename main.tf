@@ -66,6 +66,7 @@ module "lambda" {
   # Dicionários de databases, tabelas, buckets no S3, ARNs de roles IAM e ARNs de filas SQS para uso nas funções
   databases_names_map = var.databases_names_map
   tables_names_map    = local.tables_names_map
+  tables_info_map     = local.tables_info_map
   bucket_names_map    = var.bucket_names_map
   iam_roles_arns_map  = module.iam.iam_roles_arns_map
   sqs_queues_arn_map  = module.sqs.sqs_queues_arn_map

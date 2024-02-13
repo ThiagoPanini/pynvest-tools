@@ -44,7 +44,18 @@ resource "aws_lambda_function" "pynvest-lambda-check-and-delete-partitions" {
   environment {
     variables = {
       DATABASE_NAME = var.databases_names_map["sor"],
-      TABLE_NAMES   = "${var.tables_names_map["fundamentus"]["sor_acoes"]},${var.tables_names_map["fundamentus"]["sor_fiis"]}"
+      TABLE_NAMES   = join(
+        ",",
+        distinct(
+          flatten(
+            [
+              for scrapper in keys(var.tables_names_map) : [
+                for table_name in values(var.tables_names_map[scrapper]) : table_name
+              ]
+            ]
+          )
+        )
+      )
     }
   }
 

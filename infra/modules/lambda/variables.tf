@@ -30,6 +30,11 @@ variable "tables_names_map" {
   type        = map(map(string))
 }
 
+variable "tables_info_map" {
+  description = "Dicionário (map) com todas as informações das tabelas a serem criadas no Glue Data Catalog em todas as camadas do projeto (SoR, SoT e Spec)"
+  type        = map(map(string))
+}
+
 variable "iam_roles_arns_map" {
   description = "Dicionário (map) contendo informações sobre todas as ARNs de roles criadas no módulo IAM para serem vinculadas às funções Lambda criadas neste módulo"
   type        = map(string)
