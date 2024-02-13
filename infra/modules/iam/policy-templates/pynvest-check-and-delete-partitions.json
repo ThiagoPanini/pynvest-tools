@@ -10,9 +10,8 @@
             ],
 			"Resource": [
                 "arn:aws:glue:${region_name}:${account_id}:catalog",
-                "arn:aws:glue:${region_name}:${account_id}:database/${sor_database_name}",
-                "arn:aws:glue:${region_name}:${account_id}:table/${sor_database_name}/${sor_acoes_table_name}",
-				"arn:aws:glue:${region_name}:${account_id}:table/${sor_database_name}/${sor_fiis_table_name}"
+                "arn:aws:glue:${region_name}:${account_id}:database/db_pynvest_*",
+                "arn:aws:glue:${region_name}:${account_id}:table/db_pynvest_*/tb*_fundamentus_*"
             ]
 		},
 		{
@@ -25,8 +24,11 @@
 			],
 			"Resource": [
 				"arn:aws:s3:::${sor_bucket_name}",
-				"arn:aws:s3:::${sor_bucket_name}/${sor_acoes_table_name}/*",
-				"arn:aws:s3:::${sor_bucket_name}/${sor_fiis_table_name}/*"
+				"arn:aws:s3:::${sot_bucket_name}",
+				"arn:aws:s3:::${spec_bucket_name}",
+				"arn:aws:s3:::${sor_bucket_name}/tbsor_fundamentus_*/*",
+				"arn:aws:s3:::${sot_bucket_name}/tbsot_fundamentus_*/*",
+				"arn:aws:s3:::${spec_bucket_name}/tbpec_fundamentus_*/*"
 			]
 		}
 	]
