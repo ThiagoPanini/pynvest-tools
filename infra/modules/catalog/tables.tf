@@ -9,10 +9,11 @@ pynvest aplicada ao site Fundamentus.
 -------------------------------------------------------- */
 
 # Criando tabela no Glue Data Catalog
-resource "aws_glue_catalog_table" "tbsor_fundamentus_indicadores_brutos_acoes" {
-  name          = var.tables_names_map["fundamentus"]["sor_acoes"]
-  database_name = var.databases_names_map["sor"]
-  description   = "Tabela responsável por armazenar dados de indicadores de ações financeiras extraídos através de um motor de web scrapping apontado para o site Fundamentus"
+resource "aws_glue_catalog_table" "all_catalog_tables" {
+  for_each      = var.tables_info_map
+  name          = each.value["table"]
+  database_name = each.value["database"]
+  description   = "Tabela ${each.value["table"]} criada na camada ${each.value["layer"]} para armazenar dados extraídos do scrapper ${each.value["scrapper"]}"
 
   table_type = "EXTERNAL_TABLE"
 
@@ -22,12 +23,12 @@ resource "aws_glue_catalog_table" "tbsor_fundamentus_indicadores_brutos_acoes" {
   }
 
   storage_descriptor {
-    location      = "s3://${var.bucket_names_map["sor"]}/${var.tables_names_map["fundamentus"]["sor_acoes"]}"
+    location      = each.value["bucket_location"]
     input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
     output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
 
     ser_de_info {
-      name                  = "stream-${var.tables_names_map["fundamentus"]["sor_acoes"]}"
+      name                  = "stream-${each.value["table"]}"
       serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
 
       parameters = {
@@ -36,7 +37,7 @@ resource "aws_glue_catalog_table" "tbsor_fundamentus_indicadores_brutos_acoes" {
     }
 
     dynamic "columns" {
-      for_each = jsondecode(file("${path.module}/schemas/${var.tables_names_map["fundamentus"]["sor_acoes"]}.json"))["columns"]
+      for_each = jsondecode(file("${path.module}/schemas/${each.value["table"]}.json"))["columns"]
       content {
         name    = columns.value["name"]
         type    = columns.value["type"]
@@ -46,9 +47,9 @@ resource "aws_glue_catalog_table" "tbsor_fundamentus_indicadores_brutos_acoes" {
   }
 
   partition_keys {
-    name    = "anomesdia_scrapper_exec"
+    name    = "anomesdia_exec"
     type    = "int"
-    comment = "Referência de data exata (no formato '%Y%m%d' ou 'yyyMMdd') em que os indicadores foram processados"
+    comment = "Referência de data exata (no formato '%Y%m%d' ou 'yyyMMdd') em que os dados foram processados"
   }
 
   # Explicitando dependência
