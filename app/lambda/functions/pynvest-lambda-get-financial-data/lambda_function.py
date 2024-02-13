@@ -1,11 +1,10 @@
 # Importando bibliotecas
 import json
 import os
+from datetime import datetime, timezone, timedelta
 
 import awswrangler as wr
 import pandas as pd
-import numpy as np
-import boto3
 
 from pynvest.scrappers.fundamentus import Fundamentus
 from pynvest.utils.log import log_config
@@ -24,41 +23,12 @@ pynvest_scrapper = Fundamentus(logger_level=logging.INFO)
 pynvest_scrapper.logger.propagate = False
 
 
-# Função auxiliar para transformação de colunas numéricas
-def parse_numeric_cols(df: pd.DataFrame, cols_list: list):
-    # Iterando sobre colunas
-    for col in cols_list:
-        # Substituindo todos os caracteres não numéricos para string vazia
-        df[col] = df[col].replace('[^0-9,]', '', regex=True)
-
-        # Substituindo strings vazias por nulos
-        df[col] = df[col].replace("", np.nan)
-
-        # Substituindo delimitador de vírgula por ponto
-        df[col] = df[col].replace(",", ".", regex=True)
-
-        # Convertendo string para float
-        df[col] = df[col].astype(float)
-
-    return df
-
-
-# Função auxiliar para transformação de colunas com percentual
-def parse_percent_cols(df: pd.DataFrame, cols_list: list):
-    # Iterando sobre colunas
-    for col in cols_list:
-        # Dividindo valor percentual por 100
-        df[col] = df[col] / 100
-
-    return df
-
-
 # Definindo função handler
 def lambda_handler(
     event,
     context,
     pynvest_scrapper: Fundamentus = pynvest_scrapper,
-    partition_cols: list = ["anomesdia_scrapper_exec"]
+    partition_cols: list = ["anomesdia_exec"]
 ):
     """
     Extração de indicadores de financeiros de Ações e FIIs listados na B3.
@@ -81,36 +51,6 @@ def lambda_handler(
     # Definindo variáveis de saída do S3
     output_path = f"s3://{s3_sor_bucket_name}/{output_table}"
 
-    # Criando client do Glue
-    glue_client = boto3.client("glue")
-
-    # Coletando dados da tabela no s3
-    r = glue_client.get_table(
-        DatabaseName=output_database,
-        Name=output_table
-    )
-
-    # Extraindo nome e tipo primitivo de cada atributo
-    table_columns = [
-        {
-            "name": col["Name"],
-            "type": col["Type"]
-        }
-        for col in r["Table"]["StorageDescriptor"]["Columns"]
-    ]
-
-    # Extraindo colunas numéricas a serem transformadas
-    numeric_cols_to_parse = [
-        col["name"] for col in table_columns if col["type"] in (
-            "float", "int", "bigint"
-        )
-    ]
-
-    # Extraindo colunas contendo valor percentual para serem transformadas
-    percent_cols_to_parse = [
-        col for col in numeric_cols_to_parse if col[:4] == "pct_"
-    ]
-
     # Informando total de mensagens recebidas para processamento
     total_msgs = len(event["Records"])
     logger.info(f"Mensagens recebidas para processamento: {total_msgs}")
@@ -132,24 +72,9 @@ def lambda_handler(
         # Iniciando extração de indicadores de ativo
         df = pynvest_scrapper.coleta_indicadores_de_ativo(ticker=ticker)
 
-        # Aplicando transformações específicas em colunas
-        df = parse_numeric_cols(df=df, cols_list=numeric_cols_to_parse)
-        df = parse_percent_cols(df=df, cols_list=percent_cols_to_parse)
-
-        # Iterando sobre os tipos primitivos das colunas e aplicando casting
-        for col_info in table_columns:
-            # Extraindo nome e tipo primitivo da coluna
-            col_name = col_info["name"]
-            col_type = col_info["type"]
-
-            # Aplicando casting no DataFrame final
-            if col_type not in ("date", "datetime", "timestamp", "bigint"):
-                df[col_name] = df[col_name].astype(col_type)
-
         # Criando coluna de partição
-        df["anomesdia_scrapper_exec"] = pd.to_datetime(
-            df["date_exec"], format="%d-%m-%Y"
-        ).apply(lambda x: int(str(x).replace("-", "")[:8]))
+        now = datetime.now(timezone(timedelta(hours=-3)))
+        df["anomesdia_exec"] = now.strftime("%Y%m%d")
 
         # Appendando em DataFrame final
         df_financial_data = pd.concat(objs=[df_financial_data, df])
