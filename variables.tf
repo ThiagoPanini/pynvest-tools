@@ -131,7 +131,7 @@ variable "functions_python_runtime" {
 variable "functions_timeout" {
   description = "Timeout das funções Lambda"
   type        = number
-  default     = 180
+  default     = 360
 }
 
 variable "cron_expression_to_initialize_process" {
