@@ -84,44 +84,39 @@ resource "aws_lambda_event_source_mapping" "pynvest-tickers-queue-fiis" {
 /* -------------------------------------------------------
     TRIGGER
     From: S3 (PUT event)
-    To: pynvest-lambda-prep-financial-data-for-acoes
+    To: pynvest-lambda-prep-financial-data-for-acoes/fiis
 ------------------------------------------------------- */
 
 resource "aws_s3_bucket_notification" "s3-put-event-to-invoke-pynvest-lambda-prep-financial-data-for-acoes" {
   bucket = var.bucket_names_map["sor"]
+
+  # Configurando gatilho para função pynvest-lambda-prep-financial-data-for-acoes
   lambda_function {
     lambda_function_arn = aws_lambda_function.pynvest-lambda-prep-financial-data-for-acoes.arn
 
-    # Configurando tipo de evento mapeado
+    # Configurando gatilho
     events = [
       "s3:ObjectCreated:Put"
     ]
-
-    # Configurando condições de gatilho
     filter_prefix = "${var.tables_names_map["fundamentus"]["sor_acoes"]}/"
     filter_suffix = ".parquet"
   }
-}
 
-
-/* -------------------------------------------------------
-    TRIGGER
-    From: S3 (PUT event)
-    To: pynvest-lambda-prep-financial-data-for-fiis
-------------------------------------------------------- */
-
-resource "aws_s3_bucket_notification" "s3-put-event-to-invoke-pynvest-lambda-prep-financial-data-for-fiis" {
-  bucket = var.bucket_names_map["sor"]
+  # Configurando gatilho para função pynvest-lambda-prep-financial-data-for-fiis
   lambda_function {
     lambda_function_arn = aws_lambda_function.pynvest-lambda-prep-financial-data-for-fiis.arn
 
-    # Configurando tipo de evento mapeado
+    # Configurando gatilho
     events = [
       "s3:ObjectCreated:Put"
     ]
-
-    # Configurando condições de gatilho
     filter_prefix = "${var.tables_names_map["fundamentus"]["sor_fiis"]}/"
     filter_suffix = ".parquet"
   }
+
+  # Explicitando dependências de permissionamento
+  depends_on = [
+    aws_lambda_permission.invoke-permissions-from-s3-to-pynvest-lambda-prep-financial-data-for-acoes,
+    aws_lambda_permission.invoke-permissions-from-s3-to-pynvest-lambda-prep-financial-data-for-fiis
+  ]
 }

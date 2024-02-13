@@ -70,7 +70,7 @@ resource "aws_lambda_function_event_invoke_config" "destination-pynvest-lambda-g
 ------------------------------------------------------- */
 
 # Configurando permissões para invocar função Lambda
-resource "aws_lambda_permission" "invoke-permissions-to-pynvest-lambda-prep-financial-data-for-acoes" {
+resource "aws_lambda_permission" "invoke-permissions-from-s3-to-pynvest-lambda-prep-financial-data-for-acoes" {
   statement_id  = "AllowExecutionFromS3"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.pynvest-lambda-prep-financial-data-for-acoes.function_name
@@ -90,7 +90,7 @@ resource "aws_lambda_permission" "invoke-permissions-to-pynvest-lambda-prep-fina
 ------------------------------------------------------- */
 
 # Configurando permissões para invocar função Lambda
-resource "aws_lambda_permission" "invoke-permissions-to-pynvest-lambda-prep-financial-data-for-fiis" {
+resource "aws_lambda_permission" "invoke-permissions-from-s3-to-pynvest-lambda-prep-financial-data-for-fiis" {
   statement_id  = "AllowExecutionFromS3"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.pynvest-lambda-prep-financial-data-for-fiis.function_name
