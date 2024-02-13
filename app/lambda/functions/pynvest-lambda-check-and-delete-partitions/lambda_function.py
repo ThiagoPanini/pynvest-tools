@@ -20,7 +20,7 @@ logger.propagate = False
 def lambda_handler(
     event,
     context,
-    partition_col_name: str = "anomesdia_scrapper_exec",
+    partition_col_name: str = "anomesdia_exec",
     partition_date_format: str = "%Y%m%d",
     timezone_hours: int = -3
 ):
