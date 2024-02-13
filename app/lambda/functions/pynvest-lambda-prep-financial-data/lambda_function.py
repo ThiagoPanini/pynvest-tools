@@ -52,7 +52,7 @@ def lambda_handler(
     # Coletando informações do evento de PUT no S3
     s3_event_info = event["Records"][0]["s3"]
     bucket_name = s3_event_info["bucket"]["name"]
-    object_key = s3_event_info["object"]["key"]
+    object_key = s3_event_info["object"]["key"].replace('%3D', '=')
 
     print(object_key)
 
