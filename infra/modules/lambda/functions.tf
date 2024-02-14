@@ -136,9 +136,9 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-acoes" {
 
   environment {
     variables = {
-      OUTPUT_BUCKET        = var.bucket_names_map["sor"],
-      OUTPUT_DATABASE_NAME = var.databases_names_map["sor"],
-      OUTPUT_TABLE_NAME    = var.tables_names_map["fundamentus"]["sor_acoes"]
+      OUTPUT_BUCKET   = var.bucket_names_map["sor"],
+      OUTPUT_DATABASE = var.databases_names_map["sor"],
+      OUTPUT_TABLE    = var.tables_names_map["fundamentus"]["sor_acoes"]
     }
   }
 
@@ -172,9 +172,9 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-fiis" {
 
   environment {
     variables = {
-      OUTPUT_BUCKET        = var.bucket_names_map["sor"],
-      OUTPUT_DATABASE_NAME = var.databases_names_map["sor"],
-      OUTPUT_TABLE_NAME    = var.tables_names_map["fundamentus"]["sor_fiis"]
+      OUTPUT_BUCKET   = var.bucket_names_map["sor"],
+      OUTPUT_DATABASE = var.databases_names_map["sor"],
+      OUTPUT_TABLE    = var.tables_names_map["fundamentus"]["sor_fiis"]
     }
   }
 
@@ -221,9 +221,9 @@ resource "aws_lambda_function" "pynvest-lambda-prep-financial-data-for-acoes" {
 
   environment {
     variables = {
-      OUTPUT_BUCKET        = var.bucket_names_map["sot"],
-      OUTPUT_DATABASE_NAME = var.databases_names_map["sot"],
-      OUTPUT_TABLE_NAME    = var.tables_names_map["fundamentus"]["sot_acoes"]
+      OUTPUT_BUCKET   = var.bucket_names_map["sot"],
+      OUTPUT_DATABASE = var.databases_names_map["sot"],
+      OUTPUT_TABLE    = var.tables_names_map["fundamentus"]["sot_acoes"]
     }
   }
 
@@ -257,9 +257,9 @@ resource "aws_lambda_function" "pynvest-lambda-prep-financial-data-for-fiis" {
 
   environment {
     variables = {
-      OUTPUT_BUCKET        = var.bucket_names_map["sot"],
-      OUTPUT_DATABASE_NAME = var.databases_names_map["sot"],
-      OUTPUT_TABLE_NAME    = var.tables_names_map["fundamentus"]["sot_fiis"]
+      OUTPUT_BUCKET   = var.bucket_names_map["sot"],
+      OUTPUT_DATABASE = var.databases_names_map["sot"],
+      OUTPUT_TABLE    = var.tables_names_map["fundamentus"]["sot_fiis"]
     }
   }
 
@@ -300,9 +300,9 @@ resource "aws_lambda_function" "pynvest-lambda-specialize-financial-data" {
 
   environment {
     variables = {
-      OUTPUT_BUCKET        = var.bucket_names_map["spec"],
-      OUTPUT_DATABASE_NAME = var.databases_names_map["spec"],
-      OUTPUT_TABLE_NAME    = var.tables_names_map["fundamentus"]["spec_ativos"]
+      OUTPUT_BUCKET   = var.bucket_names_map["spec"],
+      OUTPUT_DATABASE = var.databases_names_map["spec"],
+      OUTPUT_TABLE    = var.tables_names_map["fundamentus"]["spec_ativos"]
     }
   }
 
