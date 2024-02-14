@@ -111,6 +111,7 @@ data "archive_file" "pynvest-lambda-get-financial-data" {
   output_path = "${path.module}/../../../app/lambda/zip/pynvest-lambda-get-financial-data.zip"
 }
 
+
 /* -------------------------------------------------------
     LAMBDA FUNCTION
     pynvest-lambda-get-financial-data-for-acoes
@@ -195,6 +196,7 @@ data "archive_file" "pynvest-lambda-prep-financial-data" {
   output_path = "${path.module}/../../../app/lambda/zip/pynvest-lambda-prep-financial-data.zip"
 }
 
+
 /* -------------------------------------------------------
     LAMBDA FUNCTION
     pynvest-lambda-prep-financial-data-for-acoes
@@ -258,6 +260,49 @@ resource "aws_lambda_function" "pynvest-lambda-prep-financial-data-for-fiis" {
       OUTPUT_BUCKET        = var.bucket_names_map["sot"],
       OUTPUT_DATABASE_NAME = var.databases_names_map["sot"],
       OUTPUT_TABLE_NAME    = var.tables_names_map["fundamentus"]["sot_fiis"]
+    }
+  }
+
+  depends_on = [
+    data.archive_file.pynvest-lambda-get-financial-data
+  ]
+}
+
+
+/* -------------------------------------------------------
+    LAMBDA FUNCTION
+    pynvest-lambda-specialize-financial-data
+------------------------------------------------------- */
+
+# Criando pacote zip da função a ser criada
+data "archive_file" "pynvest-lambda-specialize-financial-data" {
+  type        = "zip"
+  source_dir  = "${path.module}/../../../app/lambda/functions/pynvest-lambda-specialize-financial-data/"
+  output_path = "${path.module}/../../../app/lambda/zip/pynvest-lambda-specialize-financial-data.zip"
+}
+
+# Criando função Lambda
+resource "aws_lambda_function" "pynvest-lambda-specialize-financial-data" {
+  function_name = "pynvest-lambda-specialize-financial-data"
+  description   = "Lê indicadores de Ações ou FIIs para criar uma visão especializada de ativos de ambos os tipos"
+
+  filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-specialize-financial-data.zip"
+  source_code_hash = data.archive_file.pynvest-lambda-specialize-financial-data.output_base64sha256
+
+  role    = var.iam_roles_arns_map["pynvest-lambda-share-spec-financial-data"]
+  handler = "lambda_function.lambda_handler"
+  runtime = var.functions_python_runtime
+  timeout = var.functions_timeout
+
+  layers = [
+    "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
+  ]
+
+  environment {
+    variables = {
+      OUTPUT_BUCKET        = var.bucket_names_map["spec"],
+      OUTPUT_DATABASE_NAME = var.databases_names_map["spec"],
+      OUTPUT_TABLE_NAME    = var.tables_names_map["fundamentus"]["spec_ativos"]
     }
   }
 
