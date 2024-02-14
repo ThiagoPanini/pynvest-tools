@@ -20,6 +20,42 @@ logger.propagate = False
 pynvest_scrapper = Fundamentus(logger_level=logging.INFO)
 pynvest_scrapper.logger.propagate = False
 
+# Definindo mapeamento específico de colunas na tabela de Ações
+SPECIFIC_ACOES_COLS_MAP = {
+    "nome_papel": "codigo_ticker_ativo",
+    "nome_empresa": "nome_ativo",
+    "nome_setor": "nome_setor_segmento"
+}
+
+# Definindo mapeamento específico de colunas na tabela de FIIs
+SPECIFIC_FIIS_COLS_MAP = {
+    "fii": "codigo_ticker_ativo",
+    "nome_fii": "nome_ativo",
+    "segmento": "nome_setor_segmento"
+}
+
+# Definindo lista de colunas comuns em ambas as tabelas que permanecem
+COMMON_COLS = [
+    "codigo_ticker_ativo",
+    "tipo_ativo",
+    "nome_ativo",
+    "nome_setor_segmento",
+    "vlr_cot",
+    "dt_ult_cot",
+    "vlr_min_52_sem",
+    "vlr_max_52_sem",
+    "pct_var_dia",
+    "pct_var_mes",
+    "pct_var_30d",
+    "pct_var_12m",
+    "pct_var_2023",
+    "pct_var_2022",
+    "pct_var_2021",
+    "pct_var_2020",
+    "pct_var_2019",
+    "pct_var_2018"
+]
+
 
 # Definindo função handler
 def lambda_handler(
@@ -44,58 +80,47 @@ def lambda_handler(
     # Coletando variáveis de ambiente para escrita dos dados
     output_database = os.getenv("OUTPUT_DATABASE_NAME")
     output_table = os.getenv("OUTPUT_TABLE_NAME")
-    s3_sor_bucket_name = os.getenv("OUTPUT_BUCKET")
+    output_bucket = os.getenv("OUTPUT_BUCKET")
 
     # Definindo variáveis de saída do S3
-    output_path = f"s3://{s3_sor_bucket_name}/{output_table}"
+    output_s3_path = f"s3://{output_bucket}/{output_table}"
 
     # Coletando informações do evento de PUT no S3
     s3_event_info = event["Records"][0]["s3"]
     bucket_name = s3_event_info["bucket"]["name"]
     object_key = s3_event_info["object"]["key"].replace('%3D', '=')
 
-    print(object_key)
-
     # Lendo arquivo parquet como DataFrame do pandas
-    df_sor = wr.s3.read_parquet(
+    df_sot = wr.s3.read_parquet(
         path=f"s3://{bucket_name}/{object_key}"
     )
 
     # Coletando tickers do batch
     try:
-        tickers = list(df_sor["nome_papel"].values)
+        tickers = list(df_sot["nome_papel"].values)
     except KeyError:
-        tickers = list(df_sor["fii"].values)
+        tickers = list(df_sot["fii"].values)
 
     # Comunicando extração de tickers coletados da fila
     tickers_info = ", ".join(tickers)
     logger.info(f"Ativos a terem seus indicadores preparados: {tickers_info}")
 
-    # Coletando atributos de string que representam números
-    float_cols_to_parse = [
-        col for col in list(df_sor.columns)
-        if col[:4] in (
-            "vlr_", "vol_", "num_", "pct_", "qtd_", "max_", "min_",
-            "total_"
-        )
-    ]
+    # Verificando tipo de informação vinda da camada SoT (Ações ou FIIs)
+    if 'fii' in df_sot.columns:
+        # Renomando colunas específicas
+        df_sot = df_sot.rename(columns=SPECIFIC_FIIS_COLS_MAP)
 
-    # Coletando apenas atributos que representam percentuais
-    percent_cols_to_parse = [
-        col for col in float_cols_to_parse if col[:4] in ("pct_")
-    ]
+        # Adicionando coluna de indicativo de ativo
+        df_sot["tipo_ativo"] = "Fundo Imobiliário"
+    else:
+        # Renomando colunas específicas
+        df_sot = df_sot.rename(columns=SPECIFIC_ACOES_COLS_MAP)
 
-    # Transformando strings que representam números
-    df_float_prep = pynvest_scrapper._parse_float_cols(
-        df=df_sor,
-        cols_list=float_cols_to_parse
-    )
+        # Adicionando coluna de indicativo de ativo
+        df_sot["tipo_ativo"] = "Ação"
 
-    # Transformando percentuais que representam números
-    df_prep = pynvest_scrapper._parse_pct_cols(
-        df=df_float_prep,
-        cols_list=percent_cols_to_parse
-    )
+    # Selecionando colunas comuns
+    df_prep = df_sot.loc[:, COMMON_COLS]
 
     # Criando coluna de partição
     now = datetime.now(timezone(timedelta(hours=-3)))
@@ -108,7 +133,7 @@ def lambda_handler(
     # Escrevendo dados no s3 e catalogando no Glue Data Catalog
     wr.s3.to_parquet(
         df=df_prep,
-        path=output_path,
+        path=output_s3_path,
         dataset=True,
         database=output_database,
         table=output_table,
@@ -118,9 +143,9 @@ def lambda_handler(
     )
 
     # Comunicando sucesso da operação
-    logger.info("Dados brutos de indicadores financeiros lidos e preparados "
+    logger.info("Dados preparados foram lidos e especializados "
                 "com sucesso. Os dados de saída foram armazenados "
-                f"fisicamente no S3 em {output_path} e catalogados na "
+                f"fisicamente no S3 em {output_s3_path} e catalogados na "
                 f"tabela {output_database}.{output_table} no Data Catalog.")
 
     return {
