@@ -14,6 +14,7 @@ output "iam_roles_arns_map" {
     "pynvest-lambda-send-msgs-to-tickers-queue"  = aws_iam_role.pynvest-lambda-send-msgs-to-tickers-queue.arn,
     "pynvest-lambda-share-sor-financial-data"    = aws_iam_role.pynvest-lambda-share-sor-financial-data.arn,
     "pynvest-lambda-share-sot-financial-data"    = aws_iam_role.pynvest-lambda-share-sot-financial-data.arn,
-    "pynvest-lambda-share-spec-financial-data"   = aws_iam_role.pynvest-lambda-share-spec-financial-data.arn
+    "pynvest-lambda-share-spec-financial-data"   = aws_iam_role.pynvest-lambda-share-spec-financial-data.arn,
+    "pynvest-lambda-dedup-financial-data"        = aws_iam_role.pynvest-lambda-dedup-financial-data.arn
   }
 }

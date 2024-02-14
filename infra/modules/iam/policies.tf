@@ -176,3 +176,30 @@ resource "aws_iam_policy" "pynvest-share-spec-financial-data" {
   name   = "pynvest-share-spec-financial-data"
   policy = data.template_file.pynvest-share-spec-financial-data.rendered
 }
+
+
+/* -------------------------------------------------------
+    IAM POLICY
+    Definindo policy para leitura e escrita de dados nas
+    camadas SoT e Spec como parte de processo de deduplicação
+------------------------------------------------------- */
+
+# Definindo template file para policy
+data "template_file" "pynvest-dedup-financial-data" {
+  template = file("${path.module}/policy-templates/pynvest-dedup-financial-data.json")
+
+  vars = {
+    region_name        = var.region_name
+    account_id         = var.account_id
+    sot_bucket_name    = var.bucket_names_map["sot"]
+    sot_database_name  = var.databases_names_map["sot"]
+    spec_bucket_name   = var.bucket_names_map["spec"]
+    spec_database_name = var.databases_names_map["spec"]
+  }
+}
+
+# Definindo policy
+resource "aws_iam_policy" "pynvest-dedup-financial-data" {
+  name   = "pynvest-dedup-financial-data"
+  policy = data.template_file.pynvest-dedup-financial-data.rendered
+}
