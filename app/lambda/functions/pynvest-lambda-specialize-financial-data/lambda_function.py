@@ -78,8 +78,8 @@ def lambda_handler(
     """
 
     # Coletando variáveis de ambiente para escrita dos dados
-    output_database = os.getenv("OUTPUT_DATABASE_NAME")
-    output_table = os.getenv("OUTPUT_TABLE_NAME")
+    output_database = os.getenv("OUTPUT_DATABASE")
+    output_table = os.getenv("OUTPUT_TABLE")
     output_bucket = os.getenv("OUTPUT_BUCKET")
 
     # Definindo variáveis de saída do S3
