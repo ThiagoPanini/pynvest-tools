@@ -32,7 +32,7 @@
 				"arn:aws:s3:::${spec_bucket_name}",
 				"arn:aws:s3:::${sor_bucket_name}/tbsor_fundamentus_*/*",
 				"arn:aws:s3:::${sot_bucket_name}/tbsot_fundamentus_*/*",
-				"arn:aws:s3:::${spec_bucket_name}/tbpec_fundamentus_*/*"
+				"arn:aws:s3:::${spec_bucket_name}/tbspec_fundamentus_*/*"
 			]
 		}
 	]
