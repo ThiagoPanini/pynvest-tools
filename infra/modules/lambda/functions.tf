@@ -314,3 +314,123 @@ resource "aws_lambda_function" "pynvest-lambda-specialize-financial-data" {
   ]
 }
 
+
+/* -------------------------------------------------------
+    ARCHIVE FILE
+    Zip comum a ser utlizado para próximas três Lambdas
+------------------------------------------------------- */
+
+# Criando pacote zip da função a ser criada
+data "archive_file" "pynvest-lambda-dedup-financial-data" {
+  type        = "zip"
+  source_dir  = "${path.module}/../../../app/lambda/functions/pynvest-lambda-dedup-financial-data/"
+  output_path = "${path.module}/../../../app/lambda/zip/pynvest-lambda-dedup-financial-data.zip"
+}
+
+
+/* -------------------------------------------------------
+    LAMBDA FUNCTION
+    pynvest-lambda-dedup-financial-data-for-acoes
+------------------------------------------------------- */
+
+# Criando função Lambda
+resource "aws_lambda_function" "pynvest-lambda-dedup-financial-data-for-acoes" {
+  function_name = "pynvest-lambda-dedup-financial-data-for-acoes"
+  description   = "Realiza a leitura da tabela SoT de Ações e realiza a remoção de dados duplicados"
+
+  filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-dedup-financial-data.zip"
+  source_code_hash = data.archive_file.pynvest-lambda-dedup-financial-data.output_base64sha256
+
+  role    = var.iam_roles_arns_map["pynvest-lambda-dedup-financial-data"]
+  handler = "lambda_function.lambda_handler"
+  runtime = var.functions_python_runtime
+  timeout = var.functions_timeout
+
+  layers = [
+    "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
+  ]
+
+  environment {
+    variables = {
+      TARGET_BUCKET   = var.bucket_names_map["sot"],
+      TARGET_DATABASE = var.databases_names_map["sot"],
+      TARGET_TABLE    = var.tables_names_map["fundamentus"]["sot_acoes"]
+    }
+  }
+
+  depends_on = [
+    data.archive_file.pynvest-lambda-dedup-financial-data
+  ]
+}
+
+
+/* -------------------------------------------------------
+    LAMBDA FUNCTION
+    pynvest-lambda-dedup-financial-data-for-fiis
+------------------------------------------------------- */
+
+# Criando função Lambda
+resource "aws_lambda_function" "pynvest-lambda-dedup-financial-data-for-fiis" {
+  function_name = "pynvest-lambda-dedup-financial-data-for-fiis"
+  description   = "Realiza a leitura da tabela SoT de FIIs e realiza a remoção de dados duplicados"
+
+  filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-dedup-financial-data.zip"
+  source_code_hash = data.archive_file.pynvest-lambda-dedup-financial-data.output_base64sha256
+
+  role    = var.iam_roles_arns_map["pynvest-lambda-dedup-financial-data"]
+  handler = "lambda_function.lambda_handler"
+  runtime = var.functions_python_runtime
+  timeout = var.functions_timeout
+
+  layers = [
+    "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
+  ]
+
+  environment {
+    variables = {
+      TARGET_BUCKET   = var.bucket_names_map["sot"],
+      TARGET_DATABASE = var.databases_names_map["sot"],
+      TARGET_TABLE    = var.tables_names_map["fundamentus"]["sot_fiis"]
+    }
+  }
+
+  depends_on = [
+    data.archive_file.pynvest-lambda-dedup-financial-data
+  ]
+}
+
+
+/* -------------------------------------------------------
+    LAMBDA FUNCTION
+    pynvest-lambda-dedup-financial-data-for-spec-ativos
+------------------------------------------------------- */
+
+# Criando função Lambda
+resource "aws_lambda_function" "pynvest-lambda-dedup-financial-data-for-spec-ativos" {
+  function_name = "pynvest-lambda-dedup-financial-data-for-spec-ativos"
+  description   = "Realiza a leitura da tabela Spec de cotação de ativos e realiza a remoção de dados duplicados"
+
+  filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-dedup-financial-data.zip"
+  source_code_hash = data.archive_file.pynvest-lambda-dedup-financial-data.output_base64sha256
+
+  role    = var.iam_roles_arns_map["pynvest-lambda-dedup-financial-data"]
+  handler = "lambda_function.lambda_handler"
+  runtime = var.functions_python_runtime
+  timeout = var.functions_timeout
+
+  layers = [
+    "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
+  ]
+
+  environment {
+    variables = {
+      TARGET_BUCKET   = var.bucket_names_map["spec"],
+      TARGET_DATABASE = var.databases_names_map["spec"],
+      TARGET_TABLE    = var.tables_names_map["fundamentus"]["spec_ativos"]
+    }
+  }
+
+  depends_on = [
+    data.archive_file.pynvest-lambda-dedup-financial-data
+  ]
+}
