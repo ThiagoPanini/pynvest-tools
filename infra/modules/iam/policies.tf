@@ -103,8 +103,8 @@ resource "aws_iam_policy" "pynvest-send-msgs-to-tickers-queues" {
 
 /* -------------------------------------------------------
     IAM POLICY
-    Definindo policy para coleta, armazenamento e catalogação
-    de dados brutos na camada SoR
+    Definindo policy para coleta, armazenamento e
+    catalogação de dados brutos na camada SoR
 ------------------------------------------------------- */
 
 # Definindo template file para policy
@@ -128,8 +128,8 @@ resource "aws_iam_policy" "pynvest-share-sor-financial-data" {
 
 /* -------------------------------------------------------
     IAM POLICY
-    Definindo policy para coleta, armazenamento e catalogação
-    de dados brutos na camada SoT
+    Definindo policy para coleta, armazenamento e
+    catalogação de dados preparados na camada SoT
 ------------------------------------------------------- */
 
 # Definindo template file para policy
@@ -149,4 +149,30 @@ data "template_file" "pynvest-share-sot-financial-data" {
 resource "aws_iam_policy" "pynvest-share-sot-financial-data" {
   name   = "pynvest-share-sot-financial-data"
   policy = data.template_file.pynvest-share-sot-financial-data.rendered
+}
+
+
+/* -------------------------------------------------------
+    IAM POLICY
+    Definindo policy para coleta, armazenamento e
+    catalogação de dados especializados na camada Spec
+------------------------------------------------------- */
+
+# Definindo template file para policy
+data "template_file" "pynvest-share-spec-financial-data" {
+  template = file("${path.module}/policy-templates/pynvest-share-spec-financial-data.json")
+
+  vars = {
+    region_name        = var.region_name
+    account_id         = var.account_id
+    sot_bucket_name    = var.bucket_names_map["sot"]
+    spec_bucket_name   = var.bucket_names_map["spec"]
+    spec_database_name = var.databases_names_map["spec"]
+  }
+}
+
+# Definindo policy
+resource "aws_iam_policy" "pynvest-share-spec-financial-data" {
+  name   = "pynvest-share-spec-financial-data"
+  policy = data.template_file.pynvest-share-spec-financial-data.rendered
 }

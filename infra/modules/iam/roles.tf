@@ -97,3 +97,26 @@ resource "aws_iam_role" "pynvest-lambda-share-sot-financial-data" {
     aws_iam_policy.pynvest-share-sot-financial-data
   ]
 }
+
+
+/* -------------------------------------------------------
+    IAM ROLE
+    pynvest-share-spec-financial-data
+------------------------------------------------------- */
+
+# Definindo role IAM
+resource "aws_iam_role" "pynvest-lambda-share-spec-financial-data" {
+  name                  = "pynvest-lambda-share-spec-financial-data"
+  assume_role_policy    = file("${path.module}/trust/trust-lambda.json")
+  force_detach_policies = true
+
+  managed_policy_arns = [
+    "arn:aws:iam::${var.account_id}:policy/pynvest-store-cloudwatch-logs",
+    "arn:aws:iam::${var.account_id}:policy/pynvest-share-spec-financial-data"
+  ]
+
+  depends_on = [
+    aws_iam_policy.pynvest-store-cloudwatch-logs,
+    aws_iam_policy.pynvest-share-spec-financial-data
+  ]
+}
