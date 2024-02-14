@@ -12,6 +12,20 @@ Lambda do módulo.
     To: pynvest-lambda-check-and-delete-partitions
 ------------------------------------------------------- */
 
+# Configurando permissões para invocação da função via Eventbridge
+resource "aws_lambda_permission" "allow-eventbridge-to-pynvest-lambda-check-and-delete-partitions" {
+  statement_id  = "AllowExecutionFromEventbridge"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.pynvest-lambda-check-and-delete-partitions.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.trigger-pynvest-lambda-check-and-delete-partitions.arn
+
+  depends_on = [
+    aws_lambda_function.pynvest-lambda-check-and-delete-partitions,
+    aws_cloudwatch_event_rule.trigger-pynvest-lambda-check-and-delete-partitions
+  ]
+}
+
 # Definindo regra de execução agendada via Eventbridge
 resource "aws_cloudwatch_event_rule" "trigger-pynvest-lambda-check-and-delete-partitions" {
   name                = "trigger-${aws_lambda_function.pynvest-lambda-check-and-delete-partitions.function_name}"
@@ -27,6 +41,42 @@ resource "aws_cloudwatch_event_target" "trigger-pynvest-lambda-check-and-delete-
   depends_on = [
     aws_lambda_function.pynvest-lambda-check-and-delete-partitions,
     aws_cloudwatch_event_rule.trigger-pynvest-lambda-check-and-delete-partitions
+  ]
+}
+
+
+/* -------------------------------------------------------
+    TRIGGER
+    From: pynvest-lambda-check-and-delete-partitions
+    To: pynvest-lambda-get-tickers
+------------------------------------------------------- */
+
+# Configurando permissões para invocar função Lambda
+resource "aws_lambda_permission" "invoke-permissions-to-pynvest-lambda-get-tickers" {
+  statement_id  = "AllowExecutionFromSourceLambda"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.pynvest-lambda-get-tickers.function_name
+  principal     = "lambda.amazonaws.com"
+  source_arn    = aws_lambda_function.pynvest-lambda-check-and-delete-partitions.arn
+
+  depends_on = [
+    aws_lambda_function.pynvest-lambda-check-and-delete-partitions,
+    aws_lambda_function.pynvest-lambda-get-tickers
+  ]
+}
+
+# Configurando invocação da Lambda através de outra Lambda (em caso de sucesso)
+resource "aws_lambda_function_event_invoke_config" "destination-pynvest-lambda-get-tickers" {
+  function_name = aws_lambda_function.pynvest-lambda-check-and-delete-partitions.function_name
+
+  destination_config {
+    on_success {
+      destination = aws_lambda_function.pynvest-lambda-get-tickers.arn
+    }
+  }
+
+  depends_on = [
+    aws_lambda_permission.invoke-permissions-to-pynvest-lambda-get-tickers
   ]
 }
 
@@ -87,6 +137,33 @@ resource "aws_lambda_event_source_mapping" "pynvest-tickers-queue-fiis" {
     To: pynvest-lambda-prep-financial-data-for-acoes/fiis
 ------------------------------------------------------- */
 
+# Configurando permissões para invocar função Lambda (SoT Ações)
+resource "aws_lambda_permission" "invoke-permissions-from-s3-to-pynvest-lambda-prep-financial-data-for-acoes" {
+  statement_id  = "AllowExecutionFromS3"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.pynvest-lambda-prep-financial-data-for-acoes.function_name
+  principal     = "s3.amazonaws.com"
+  source_arn    = "arn:aws:s3:::${var.bucket_names_map["sor"]}"
+
+  depends_on = [
+    aws_lambda_function.pynvest-lambda-prep-financial-data-for-acoes
+  ]
+}
+
+# Configurando permissões para invocar função Lambda (SoT FIIs)
+resource "aws_lambda_permission" "invoke-permissions-from-s3-to-pynvest-lambda-prep-financial-data-for-fiis" {
+  statement_id  = "AllowExecutionFromS3"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.pynvest-lambda-prep-financial-data-for-fiis.function_name
+  principal     = "s3.amazonaws.com"
+  source_arn    = "arn:aws:s3:::${var.bucket_names_map["sor"]}"
+
+  depends_on = [
+    aws_lambda_function.pynvest-lambda-prep-financial-data-for-fiis
+  ]
+}
+
+# Definindo notificação do bucket para execução de funções Lambda para preparação dos dados (Ações e FIIs)
 resource "aws_s3_bucket_notification" "s3-put-event-to-invoke-pynvest-lambda-prep-financial-data-for-acoes" {
   bucket = var.bucket_names_map["sor"]
 
