@@ -197,3 +197,57 @@ resource "aws_s3_bucket_notification" "s3-put-event-to-invoke-pynvest-lambda-pre
     aws_lambda_permission.invoke-permissions-from-s3-to-pynvest-lambda-prep-financial-data-for-fiis
   ]
 }
+
+
+/* -------------------------------------------------------
+    TRIGGER
+    From: S3 (PUT event)
+    To: pynvest-lambda-specialize-financial-data
+------------------------------------------------------- */
+
+# Configurando permissões para invocar função Lambda (Spec Ativos)
+resource "aws_lambda_permission" "invoke-permissions-from-s3-to-pynvest-lambda-specialize-financial-data" {
+  statement_id  = "AllowExecutionFromS3"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.pynvest-lambda-specialize-financial-data.function_name
+  principal     = "s3.amazonaws.com"
+  source_arn    = "arn:aws:s3:::${var.bucket_names_map["sot"]}"
+
+  depends_on = [
+    aws_lambda_function.pynvest-lambda-specialize-financial-data
+  ]
+}
+
+# Definindo notificação do bucket para execução de funções Lambda para especialização dos dados
+resource "aws_s3_bucket_notification" "s3-put-event-to-invoke-pynvest-lambda-specialize-financial-data" {
+  bucket = var.bucket_names_map["sot"]
+
+  # Configurando gatilho para função pynvest-lambda-specialize-financial-data
+  lambda_function {
+    lambda_function_arn = aws_lambda_function.pynvest-lambda-specialize-financial-data.arn
+
+    # Configurando gatilho
+    events = [
+      "s3:ObjectCreated:Put"
+    ]
+    filter_prefix = "${var.tables_names_map["fundamentus"]["sot_acoes"]}/"
+    filter_suffix = ".parquet"
+  }
+
+  # Configurando gatilho para função pynvest-lambda-specialize-financial-data
+  lambda_function {
+    lambda_function_arn = aws_lambda_function.pynvest-lambda-specialize-financial-data.arn
+
+    # Configurando gatilho
+    events = [
+      "s3:ObjectCreated:Put"
+    ]
+    filter_prefix = "${var.tables_names_map["fundamentus"]["sot_fiis"]}/"
+    filter_suffix = ".parquet"
+  }
+
+  # Explicitando dependências de permissionamento
+  depends_on = [
+    aws_lambda_permission.invoke-permissions-from-s3-to-pynvest-lambda-specialize-financial-data
+  ]
+}
