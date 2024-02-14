@@ -35,6 +35,9 @@ resource "aws_lambda_function" "pynvest-lambda-check-and-delete-partitions" {
   runtime = var.functions_python_runtime
   timeout = var.functions_timeout
 
+  # Configurando memória específica para essa função por conta de necessidades
+  memory_size = 192
+
   # Layers
   layers = [
     "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
