@@ -125,6 +125,7 @@ def lambda_handler(
         "status_code": 200,
         "body": {
             "total_rows": len(df_prep),
-            "output_table": f"{output_database}.{output_table}"
+            "output_table": f"{output_database}.{output_table}",
+            "output_s3_uri": output_s3_path
         }
     }

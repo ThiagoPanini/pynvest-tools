@@ -4,7 +4,6 @@ from datetime import datetime, timezone, timedelta
 
 import awswrangler as wr
 
-from pynvest.scrappers.fundamentus import Fundamentus
 from pynvest.utils.log import log_config
 import logging
 
@@ -15,10 +14,6 @@ filterwarnings("ignore")
 # Configurando objeto logger
 logger = log_config(logger_name=__file__, logger_level=logging.INFO)
 logger.propagate = False
-
-# Instanciando objeto de scrapper do pynvest
-pynvest_scrapper = Fundamentus(logger_level=logging.INFO)
-pynvest_scrapper.logger.propagate = False
 
 # Definindo mapeamento específico de colunas na tabela de Ações
 SPECIFIC_ACOES_COLS_MAP = {
@@ -61,7 +56,6 @@ COMMON_COLS = [
 def lambda_handler(
     event,
     context,
-    pynvest_scrapper: Fundamentus = pynvest_scrapper,
     partition_cols: list = ["anomesdia_exec"]
 ):
     """
@@ -70,7 +64,6 @@ def lambda_handler(
     Args:
         event (dict): Evento de entrada da chamada da função (Put do S3)
         context (LambdaContext): Metadados da própria função
-        pynvest_scrapper (Fundamentus): objeto para scrapper dos dados
         partition_cols (list): Referência de colunas de partição da tabela
 
     Return:
@@ -152,6 +145,7 @@ def lambda_handler(
         "status_code": 200,
         "body": {
             "total_rows": len(df_prep),
-            "output_table": f"{output_database}.{output_table}"
+            "output_table": f"{output_database}.{output_table}",
+            "output_s3_uri": output_s3_path
         }
     }

@@ -107,6 +107,7 @@ def lambda_handler(
         "body": {
             "tickers_proccessed": tickers,
             "total_tickers": total_msgs,
-            "output_table": f"{output_database}.{output_table}"
+            "output_table": f"{output_database}.{output_table}",
+            "output_s3_uri": output_s3_path
         }
     }
