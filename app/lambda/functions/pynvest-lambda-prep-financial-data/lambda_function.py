@@ -42,19 +42,17 @@ def lambda_handler(
     """
 
     # Coletando variáveis de ambiente para escrita dos dados
-    output_database = os.getenv("OUTPUT_DATABASE_NAME")
-    output_table = os.getenv("OUTPUT_TABLE_NAME")
-    s3_sor_bucket_name = os.getenv("OUTPUT_BUCKET")
+    output_database = os.getenv("OUTPUT_DATABASE")
+    output_table = os.getenv("OUTPUT_TABLE")
+    output_bucket = os.getenv("OUTPUT_BUCKET")
 
     # Definindo variáveis de saída do S3
-    output_path = f"s3://{s3_sor_bucket_name}/{output_table}"
+    output_s3_path = f"s3://{output_bucket}/{output_table}"
 
     # Coletando informações do evento de PUT no S3
     s3_event_info = event["Records"][0]["s3"]
     bucket_name = s3_event_info["bucket"]["name"]
     object_key = s3_event_info["object"]["key"].replace('%3D', '=')
-
-    print(object_key)
 
     # Lendo arquivo parquet como DataFrame do pandas
     df_sor = wr.s3.read_parquet(
@@ -108,7 +106,7 @@ def lambda_handler(
     # Escrevendo dados no s3 e catalogando no Glue Data Catalog
     wr.s3.to_parquet(
         df=df_prep,
-        path=output_path,
+        path=output_s3_path,
         dataset=True,
         database=output_database,
         table=output_table,
@@ -120,7 +118,7 @@ def lambda_handler(
     # Comunicando sucesso da operação
     logger.info("Dados brutos de indicadores financeiros lidos e preparados "
                 "com sucesso. Os dados de saída foram armazenados "
-                f"fisicamente no S3 em {output_path} e catalogados na "
+                f"fisicamente no S3 em {output_s3_path} e catalogados na "
                 f"tabela {output_database}.{output_table} no Data Catalog.")
 
     return {

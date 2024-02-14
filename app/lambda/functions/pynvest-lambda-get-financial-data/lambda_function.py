@@ -44,12 +44,12 @@ def lambda_handler(
     """
 
     # Coletando variáveis de ambiente para escrita dos dados
-    output_database = os.getenv("OUTPUT_DATABASE_NAME")
-    output_table = os.getenv("OUTPUT_TABLE_NAME")
-    s3_sor_bucket_name = os.getenv("OUTPUT_BUCKET")
+    output_database = os.getenv("OUTPUT_DATABASE")
+    output_table = os.getenv("OUTPUT_TABLE")
+    output_bucket = os.getenv("OUTPUT_BUCKET")
 
     # Definindo variáveis de saída do S3
-    output_path = f"s3://{s3_sor_bucket_name}/{output_table}"
+    output_s3_path = f"s3://{output_bucket}/{output_table}"
 
     # Informando total de mensagens recebidas para processamento
     total_msgs = len(event["Records"])
@@ -87,7 +87,7 @@ def lambda_handler(
     # Escrevendo dados no s3 e catalogando no Glue Data Catalog
     wr.s3.to_parquet(
         df=df_financial_data,
-        path=output_path,
+        path=output_s3_path,
         dataset=True,
         database=output_database,
         table=output_table,
@@ -99,7 +99,7 @@ def lambda_handler(
     # Comunicando sucesso da operação
     logger.info(f"Indicadores financeiros dos ativos {tickers_info} "
                 f"({len(tickers)}) foram extraídos com sucesso e armazenados "
-                f"fisicamente no S3 em {output_path} e catalogados na "
+                f"fisicamente no S3 em {output_s3_path} e catalogados na "
                 f"tabela {output_database}.{output_table} no Data Catalog.")
 
     return {
