@@ -34,43 +34,38 @@ def lambda_handler(
         Dicionário contendo informações sobre o resultado de execução da função
     """
 
-    # Definindo template de query para consulta
-    query_template = """
-        SELECT DISTINCT
-            *
-
-        FROM <target_table>
-
-        WHERE anomesdia_exec = <partition_filter>
-    """
-
     # Coletando variáveis de ambiente para escrita dos dados
     target_database = os.getenv("TARGET_DATABASE")
     target_table = os.getenv("TARGET_TABLE")
     target_bucket = os.getenv("TARGET_BUCKET")
-
-    # Definindo variáveis de saída do S3
-    output_s3_path = f"s3://{target_bucket}/{target_table}"
+    partition_name = os.getenv("PARTITION_NAME")
+    subset_col_to_dedup = os.getenv("SUBSET_COL_TO_DEDUP")
 
     # Criando coluna de partição
     now = datetime.now(timezone(timedelta(hours=-3)))
-    partition_filter = now.strftime("%Y%m%d")
+    partition_value = now.strftime("%Y%m%d")
 
-    # Substituindo informações no template de query
-    query = query_template.replace("<target_table>", target_table)\
-        .replace("<partition_filter>", partition_filter)
+    # Definindo variáveis de saída do S3
+    partition_suffix = f"{partition_name}={partition_value}/"
+    input_s3_path = f"s3://{target_bucket}/{target_table}/{partition_suffix}"
+    output_s3_path = f"s3://{target_bucket}/{target_table}"
 
-    # Realizando a leitura de tabela via Athena
-    df_dedup = wr.athena.read_sql_query(
-        sql=query,
-        database=target_database
+    # Lendo arquivo parquet como DataFrame do pandas
+    df = wr.s3.read_parquet(
+        path=input_s3_path
     )
 
+    # Removendo dados duplicados
+    df_dedup = df.drop_duplicates(subset=[subset_col_to_dedup])
+
+    # Adicionando coluna de partição no DataFrame deduplicado
+    df_dedup["anomesdia_exec"] = partition_value
+
     # Comunicando resultado
-    logger.info("Consulta de remoção de dados duplicados realizada com "
-                f"sucesso na tabela {target_database}.{target_table}. Foram "
-                f"retornados {len(df_dedup)} registros a serem sobrescritos "
-                "na tabela alvo")
+    logger.info("Remoção de dados duplicados realizada com sucesso nos "
+                f"arquivos presentes em s3://{target_bucket}/{target_table}. "
+                f"Quantidade original de registros: {len(df)}. "
+                f"Quantidade atualizada de registros: {len(df_dedup)}")
 
     # Escrevendo dados no s3 e catalogando no Glue Data Catalog
     wr.s3.to_parquet(
@@ -91,7 +86,8 @@ def lambda_handler(
     return {
         "status_code": 200,
         "body": {
-            "total_rows": len(df_dedup),
+            "total_rows_pre_dedup": len(df),
+            "total_rows_pos_dedup": len(df_dedup),
             "output_table": f"{target_database}.{target_table}",
             "output_s3_uri": output_s3_path
         }
