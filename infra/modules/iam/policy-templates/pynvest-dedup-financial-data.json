@@ -16,10 +16,11 @@
             ]
 		},
 		{
-			"Sid": "S3PutSpecData",
+			"Sid": "S3OverwriteData",
 			"Effect": "Allow",
 			"Action": [
-				"s3:PutObject"
+				"s3:PutObject",
+				"s3:DeleteObject"
 			],
 			"Resource": [
 				"arn:aws:s3:::${sot_bucket_name}/tbsot_fundamentus_*/*",
@@ -27,13 +28,15 @@
 			]
 		},
 		{
-			"Sid": "GlueAccessOnSpecTables",
+			"Sid": "GlueAccessOnTables",
 			"Effect": "Allow",
 			"Action": [
                 "glue:GetDatabase",
 				"glue:CreateTable",
 				"glue:UpdateTable",
 				"glue:GetTable",
+				"glue:GetPartitions",
+				"glue:BatchDeletePartition",
                 "glue:BatchCreatePartition"
             ],
 			"Resource": [
