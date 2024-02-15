@@ -297,6 +297,9 @@ resource "aws_lambda_function" "pynvest-lambda-specialize-financial-data" {
   runtime = var.functions_python_runtime
   timeout = var.functions_timeout
 
+  # Configurando memória específica para essa função por conta de necessidades
+  memory_size = 192
+
   layers = [
     "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
   ]
@@ -346,15 +349,20 @@ resource "aws_lambda_function" "pynvest-lambda-dedup-financial-data-for-acoes" {
   runtime = var.functions_python_runtime
   timeout = var.functions_timeout
 
+  # Configurando memória específica para essa função por conta de necessidades
+  memory_size = 192
+
   layers = [
     "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
   ]
 
   environment {
     variables = {
-      TARGET_BUCKET   = var.bucket_names_map["sot"],
-      TARGET_DATABASE = var.databases_names_map["sot"],
-      TARGET_TABLE    = var.tables_names_map["fundamentus"]["sot_acoes"]
+      TARGET_BUCKET       = var.bucket_names_map["sot"],
+      TARGET_DATABASE     = var.databases_names_map["sot"],
+      TARGET_TABLE        = var.tables_names_map["fundamentus"]["sot_acoes"]
+      PARTITION_NAME      = "anomesdia_exec"
+      SUBSET_COL_TO_DEDUP = "nome_papel"
     }
   }
 
@@ -382,15 +390,20 @@ resource "aws_lambda_function" "pynvest-lambda-dedup-financial-data-for-fiis" {
   runtime = var.functions_python_runtime
   timeout = var.functions_timeout
 
+  # Configurando memória específica para essa função por conta de necessidades
+  memory_size = 192
+
   layers = [
     "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
   ]
 
   environment {
     variables = {
-      TARGET_BUCKET   = var.bucket_names_map["sot"],
-      TARGET_DATABASE = var.databases_names_map["sot"],
-      TARGET_TABLE    = var.tables_names_map["fundamentus"]["sot_fiis"]
+      TARGET_BUCKET       = var.bucket_names_map["sot"],
+      TARGET_DATABASE     = var.databases_names_map["sot"],
+      TARGET_TABLE        = var.tables_names_map["fundamentus"]["sot_fiis"]
+      PARTITION_NAME      = "anomesdia_exec"
+      SUBSET_COL_TO_DEDUP = "fii"
     }
   }
 
@@ -418,15 +431,20 @@ resource "aws_lambda_function" "pynvest-lambda-dedup-financial-data-for-spec-ati
   runtime = var.functions_python_runtime
   timeout = var.functions_timeout
 
+  # Configurando memória específica para essa função por conta de necessidades
+  memory_size = 192
+
   layers = [
     "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
   ]
 
   environment {
     variables = {
-      TARGET_BUCKET   = var.bucket_names_map["spec"],
-      TARGET_DATABASE = var.databases_names_map["spec"],
-      TARGET_TABLE    = var.tables_names_map["fundamentus"]["spec_ativos"]
+      TARGET_BUCKET       = var.bucket_names_map["spec"],
+      TARGET_DATABASE     = var.databases_names_map["spec"],
+      TARGET_TABLE        = var.tables_names_map["fundamentus"]["spec_ativos"]
+      PARTITION_NAME      = "anomesdia_exec"
+      SUBSET_COL_TO_DEDUP = "codigo_ticker_ativo"
     }
   }
 
