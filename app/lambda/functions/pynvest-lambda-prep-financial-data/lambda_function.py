@@ -73,8 +73,7 @@ def lambda_handler(
     float_cols_to_parse = [
         col for col in list(df_sor.columns)
         if col[:4] in (
-            "vlr_", "vol_", "num_", "pct_", "qtd_", "max_", "min_",
-            "total_"
+            "vlr_", "vol_", "num_", "pct_", "qtd_", "max_", "min_"
         )
     ]
 

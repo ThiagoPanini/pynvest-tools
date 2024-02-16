@@ -217,7 +217,7 @@
         },
         {
             "name": "total_area_m2",
-            "type": "float",
+            "type": "string",
             "comment": "Área total de todos os imóveis em metros quadrados"
         },
         {
