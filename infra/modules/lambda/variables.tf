@@ -15,6 +15,11 @@ variable "functions_timeout" {
   type        = number
 }
 
+variable "functions_memory_size" {
+  description = "Quantidade de memória (MB) a ser alocada para as funções Lambda"
+  type        = number
+}
+
 variable "region_name" {
   description = "Nome da região alvo da implantação utilizado para composição de ARNs de recursos mapeados às funções Lambda"
   type        = string

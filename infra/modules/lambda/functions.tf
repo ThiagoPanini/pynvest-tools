@@ -30,13 +30,11 @@ resource "aws_lambda_function" "pynvest-lambda-check-and-delete-partitions" {
   source_code_hash = data.archive_file.pynvest-lambda-check-and-delete-partitions.output_base64sha256
 
   # Configurações adicionais
-  role    = var.iam_roles_arns_map["pynvest-lambda-check-and-delete-partitions"]
-  handler = "lambda_function.lambda_handler"
-  runtime = var.functions_python_runtime
-  timeout = var.functions_timeout
-
-  # Configurando memória específica para essa função por conta de necessidades
-  memory_size = 192
+  role        = var.iam_roles_arns_map["pynvest-lambda-check-and-delete-partitions"]
+  handler     = "lambda_function.lambda_handler"
+  runtime     = var.functions_python_runtime
+  timeout     = var.functions_timeout
+  memory_size = var.functions_memory_size
 
   # Layers
   layers = [
@@ -87,10 +85,11 @@ resource "aws_lambda_function" "pynvest-lambda-get-tickers" {
   filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-get-tickers.zip"
   source_code_hash = data.archive_file.pynvest-lambda-get-tickers.output_base64sha256
 
-  role    = var.iam_roles_arns_map["pynvest-lambda-send-msgs-to-tickers-queue"]
-  handler = "lambda_function.lambda_handler"
-  runtime = var.functions_python_runtime
-  timeout = var.functions_timeout
+  role        = var.iam_roles_arns_map["pynvest-lambda-send-msgs-to-tickers-queue"]
+  handler     = "lambda_function.lambda_handler"
+  runtime     = var.functions_python_runtime
+  timeout     = var.functions_timeout
+  memory_size = var.functions_memory_size
 
   layers = [
     "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
@@ -128,13 +127,11 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-acoes" {
   filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-get-financial-data.zip"
   source_code_hash = data.archive_file.pynvest-lambda-get-financial-data.output_base64sha256
 
-  role    = var.iam_roles_arns_map["pynvest-lambda-share-sor-financial-data"]
-  handler = "lambda_function.lambda_handler"
-  runtime = var.functions_python_runtime
-  timeout = var.functions_timeout
-
-  # Configurando memória específica para essa função por conta de necessidades
-  memory_size = 192
+  role        = var.iam_roles_arns_map["pynvest-lambda-share-sor-financial-data"]
+  handler     = "lambda_function.lambda_handler"
+  runtime     = var.functions_python_runtime
+  timeout     = var.functions_timeout
+  memory_size = var.functions_memory_size
 
   layers = [
     "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
@@ -167,13 +164,11 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-fiis" {
   filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-get-financial-data.zip"
   source_code_hash = data.archive_file.pynvest-lambda-get-financial-data.output_base64sha256
 
-  role    = var.iam_roles_arns_map["pynvest-lambda-share-sor-financial-data"]
-  handler = "lambda_function.lambda_handler"
-  runtime = var.functions_python_runtime
-  timeout = var.functions_timeout
-
-  # Configurando memória específica para essa função por conta de necessidades
-  memory_size = 192
+  role        = var.iam_roles_arns_map["pynvest-lambda-share-sor-financial-data"]
+  handler     = "lambda_function.lambda_handler"
+  runtime     = var.functions_python_runtime
+  timeout     = var.functions_timeout
+  memory_size = var.functions_memory_size
 
   layers = [
     "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
@@ -219,13 +214,11 @@ resource "aws_lambda_function" "pynvest-lambda-prep-financial-data-for-acoes" {
   filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-prep-financial-data.zip"
   source_code_hash = data.archive_file.pynvest-lambda-prep-financial-data.output_base64sha256
 
-  role    = var.iam_roles_arns_map["pynvest-lambda-share-sot-financial-data"]
-  handler = "lambda_function.lambda_handler"
-  runtime = var.functions_python_runtime
-  timeout = var.functions_timeout
-
-  # Configurando memória específica para essa função por conta de necessidades
-  memory_size = 192
+  role        = var.iam_roles_arns_map["pynvest-lambda-share-sot-financial-data"]
+  handler     = "lambda_function.lambda_handler"
+  runtime     = var.functions_python_runtime
+  timeout     = var.functions_timeout
+  memory_size = var.functions_memory_size
 
   layers = [
     "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
@@ -258,13 +251,11 @@ resource "aws_lambda_function" "pynvest-lambda-prep-financial-data-for-fiis" {
   filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-prep-financial-data.zip"
   source_code_hash = data.archive_file.pynvest-lambda-prep-financial-data.output_base64sha256
 
-  role    = var.iam_roles_arns_map["pynvest-lambda-share-sot-financial-data"]
-  handler = "lambda_function.lambda_handler"
-  runtime = var.functions_python_runtime
-  timeout = var.functions_timeout
-
-  # Configurando memória específica para essa função por conta de necessidades
-  memory_size = 192
+  role        = var.iam_roles_arns_map["pynvest-lambda-share-sot-financial-data"]
+  handler     = "lambda_function.lambda_handler"
+  runtime     = var.functions_python_runtime
+  timeout     = var.functions_timeout
+  memory_size = var.functions_memory_size
 
   layers = [
     "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
@@ -304,13 +295,11 @@ resource "aws_lambda_function" "pynvest-lambda-specialize-financial-data" {
   filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-specialize-financial-data.zip"
   source_code_hash = data.archive_file.pynvest-lambda-specialize-financial-data.output_base64sha256
 
-  role    = var.iam_roles_arns_map["pynvest-lambda-share-spec-financial-data"]
-  handler = "lambda_function.lambda_handler"
-  runtime = var.functions_python_runtime
-  timeout = var.functions_timeout
-
-  # Configurando memória específica para essa função por conta de necessidades
-  memory_size = 192
+  role        = var.iam_roles_arns_map["pynvest-lambda-share-spec-financial-data"]
+  handler     = "lambda_function.lambda_handler"
+  runtime     = var.functions_python_runtime
+  timeout     = var.functions_timeout
+  memory_size = var.functions_memory_size
 
   layers = [
     "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
@@ -356,13 +345,11 @@ resource "aws_lambda_function" "pynvest-lambda-dedup-financial-data-for-acoes" {
   filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-dedup-financial-data.zip"
   source_code_hash = data.archive_file.pynvest-lambda-dedup-financial-data.output_base64sha256
 
-  role    = var.iam_roles_arns_map["pynvest-lambda-dedup-financial-data"]
-  handler = "lambda_function.lambda_handler"
-  runtime = var.functions_python_runtime
-  timeout = var.functions_timeout
-
-  # Configurando memória específica para essa função por conta de necessidades
-  memory_size = 192
+  role        = var.iam_roles_arns_map["pynvest-lambda-dedup-financial-data"]
+  handler     = "lambda_function.lambda_handler"
+  runtime     = var.functions_python_runtime
+  timeout     = var.functions_timeout
+  memory_size = var.functions_memory_size
 
   layers = [
     "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
@@ -397,13 +384,11 @@ resource "aws_lambda_function" "pynvest-lambda-dedup-financial-data-for-fiis" {
   filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-dedup-financial-data.zip"
   source_code_hash = data.archive_file.pynvest-lambda-dedup-financial-data.output_base64sha256
 
-  role    = var.iam_roles_arns_map["pynvest-lambda-dedup-financial-data"]
-  handler = "lambda_function.lambda_handler"
-  runtime = var.functions_python_runtime
-  timeout = var.functions_timeout
-
-  # Configurando memória específica para essa função por conta de necessidades
-  memory_size = 192
+  role        = var.iam_roles_arns_map["pynvest-lambda-dedup-financial-data"]
+  handler     = "lambda_function.lambda_handler"
+  runtime     = var.functions_python_runtime
+  timeout     = var.functions_timeout
+  memory_size = var.functions_memory_size
 
   layers = [
     "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
@@ -438,13 +423,11 @@ resource "aws_lambda_function" "pynvest-lambda-dedup-financial-data-for-spec-ati
   filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-dedup-financial-data.zip"
   source_code_hash = data.archive_file.pynvest-lambda-dedup-financial-data.output_base64sha256
 
-  role    = var.iam_roles_arns_map["pynvest-lambda-dedup-financial-data"]
-  handler = "lambda_function.lambda_handler"
-  runtime = var.functions_python_runtime
-  timeout = var.functions_timeout
-
-  # Configurando memória específica para essa função por conta de necessidades
-  memory_size = 192
+  role        = var.iam_roles_arns_map["pynvest-lambda-dedup-financial-data"]
+  handler     = "lambda_function.lambda_handler"
+  runtime     = var.functions_python_runtime
+  timeout     = var.functions_timeout
+  memory_size = var.functions_memory_size
 
   layers = [
     "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"

@@ -71,9 +71,10 @@ module "lambda" {
   iam_roles_arns_map  = module.iam.iam_roles_arns_map
   sqs_queues_arn_map  = module.sqs.sqs_queues_arn_map
 
-  # Características das funções (versão do Python e timeout)
+  # Características das funções
   functions_python_runtime = var.functions_python_runtime
   functions_timeout        = var.functions_timeout
+  functions_memory_size    = var.functions_memory_size
 
   # Expressão cron para agendamento do processo
   cron_expression_to_initialize_process = var.cron_expression_to_initialize_process

@@ -114,6 +114,12 @@ variable "functions_timeout" {
   default     = 900
 }
 
+variable "functions_memory_size" {
+  description = "Quantidade de memória (MB) a ser alocada para as funções Lambda"
+  type        = number
+  default     = 192
+}
+
 variable "cron_expression_to_initialize_process" {
   description = "Expressão cron responsável por engatilhar todo o processo de obtenção e atualização dos dados"
   type        = string
