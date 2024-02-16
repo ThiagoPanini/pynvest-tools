@@ -123,17 +123,17 @@ variable "cron_expression_to_initialize_process" {
 variable "sqs_lambda_trigger_batch_size" {
   description = "Número máximo de registros a serem enviados para a função em cada batch"
   type        = number
-  default     = 10
+  default     = 100
 }
 
 variable "sqs_lambda_trigger_batch_window" {
   description = "Valor máximo de tempo (em segundos) que a função irá aguardar para a coleta de registros antes da invocação"
   type        = number
-  default     = 5
+  default     = 10
 }
 
 variable "sqs_lambda_trigger_max_concurrency" {
   description = "Número máximo de funções concorrentes a serem invocadas pelo gatilho"
   type        = number
-  default     = 10
+  default     = 3
 }
