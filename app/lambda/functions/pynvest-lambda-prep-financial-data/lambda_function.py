@@ -112,7 +112,8 @@ def lambda_handler(
         table=output_table,
         partition_cols=partition_cols,
         mode="append",
-        schema_evolution=True
+        schema_evolution=True,
+        compression=None
     )
 
     # Comunicando sucesso da operação

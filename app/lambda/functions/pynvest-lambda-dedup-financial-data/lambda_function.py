@@ -76,7 +76,8 @@ def lambda_handler(
         table=target_table,
         partition_cols=partition_cols,
         mode="overwrite",
-        schema_evolution=True
+        schema_evolution=True,
+        compression=None
     )
 
     logger.info("Dados escritos com sucesso na tabela "

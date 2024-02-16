@@ -68,6 +68,9 @@ def lambda_handler(
     now = datetime.now(timezone(timedelta(hours=timezone_hours)))
     partition_value = now.strftime(partition_date_format)
 
+    # Criando lista de controle para partições dropadas
+    dropped_partitions = []
+
     # Iterando sobre tabelas SoRs mapeadas
     for table_info in databases_and_tables:
         # Extraindo informações de database e tabela
@@ -85,7 +88,6 @@ def lambda_handler(
         partition_values = list(partitions.values())
 
         # Validando existência de partição processada
-        dropped_partitions = []
         if [partition_value] in partition_values:
             logger.info(f"Partição {partition_col_name}={partition_value} "
                         f"existente na tabela {table_name}. "
