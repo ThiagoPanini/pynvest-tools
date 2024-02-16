@@ -98,8 +98,8 @@ def lambda_handler(
     )
 
     # Comunicando sucesso da operação
-    logger.info(f"Indicadores financeiros dos ativos {tickers_info} "
-                f"({len(tickers)}) foram extraídos com sucesso e armazenados "
+    logger.info(f"Indicadores financeiros dos ativos {len(tickers)} "
+                f"foram extraídos com sucesso e armazenados "
                 f"fisicamente no S3 em {output_s3_path} e catalogados na "
                 f"tabela {output_database}.{output_table} no Data Catalog.")
 
