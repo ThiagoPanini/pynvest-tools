@@ -104,7 +104,7 @@ resource "aws_lambda_function" "pynvest-lambda-get-tickers" {
 
 /* -------------------------------------------------------
     ARCHIVE FILE
-    Zip comum a ser utlizado para próximas duas Lambdas
+    Zip comum a ser utilizado para próximas duas Lambdas
 ------------------------------------------------------- */
 
 # Criando pacote zip da função a ser criada
@@ -132,6 +132,9 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-acoes" {
   handler = "lambda_function.lambda_handler"
   runtime = var.functions_python_runtime
   timeout = var.functions_timeout
+
+  # Configurando memória específica para essa função por conta de necessidades
+  memory_size = 192
 
   layers = [
     "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
@@ -169,6 +172,9 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-fiis" {
   runtime = var.functions_python_runtime
   timeout = var.functions_timeout
 
+  # Configurando memória específica para essa função por conta de necessidades
+  memory_size = 192
+
   layers = [
     "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
   ]
@@ -189,7 +195,7 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-fiis" {
 
 /* -------------------------------------------------------
     ARCHIVE FILE
-    Zip comum a ser utlizado para próximas duas Lambdas
+    Zip comum a ser utilizado para próximas duas Lambdas
 ------------------------------------------------------- */
 
 # Criando pacote zip da função a ser criada
@@ -217,6 +223,9 @@ resource "aws_lambda_function" "pynvest-lambda-prep-financial-data-for-acoes" {
   handler = "lambda_function.lambda_handler"
   runtime = var.functions_python_runtime
   timeout = var.functions_timeout
+
+  # Configurando memória específica para essa função por conta de necessidades
+  memory_size = 192
 
   layers = [
     "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
@@ -253,6 +262,9 @@ resource "aws_lambda_function" "pynvest-lambda-prep-financial-data-for-fiis" {
   handler = "lambda_function.lambda_handler"
   runtime = var.functions_python_runtime
   timeout = var.functions_timeout
+
+  # Configurando memória específica para essa função por conta de necessidades
+  memory_size = 192
 
   layers = [
     "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
@@ -320,7 +332,7 @@ resource "aws_lambda_function" "pynvest-lambda-specialize-financial-data" {
 
 /* -------------------------------------------------------
     ARCHIVE FILE
-    Zip comum a ser utlizado para próximas três Lambdas
+    Zip comum a ser utilizado para próximas três Lambdas
 ------------------------------------------------------- */
 
 # Criando pacote zip da função a ser criada
