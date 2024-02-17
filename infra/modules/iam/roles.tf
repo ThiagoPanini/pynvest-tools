@@ -143,3 +143,24 @@ resource "aws_iam_role" "pynvest-lambda-dedup-financial-data" {
     aws_iam_policy.pynvest-dedup-financial-data
   ]
 }
+
+
+/* -------------------------------------------------------
+    IAM ROLE
+    pynvest-stepfunctions-invoke-lambda-functions
+------------------------------------------------------- */
+
+# Definindo role IAM
+resource "aws_iam_role" "pynvest-stepfunctions-invoke-lambda-functions" {
+  name                  = "pynvest-stepfunctions-invoke-lambda-functions"
+  assume_role_policy    = file("${path.module}/trust/trust-stepfunctions.json")
+  force_detach_policies = true
+
+  managed_policy_arns = [
+    "arn:aws:iam::${var.account_id}:policy/pynvest-invoke-lambda-functions"
+  ]
+
+  depends_on = [
+    aws_iam_policy.pynvest-invoke-lambda-functions
+  ]
+}
