@@ -16,5 +16,6 @@ output "iam_roles_arns_map" {
     "pynvest-lambda-share-sot-financial-data"    = aws_iam_role.pynvest-lambda-share-sot-financial-data.arn,
     "pynvest-lambda-share-spec-financial-data"   = aws_iam_role.pynvest-lambda-share-spec-financial-data.arn,
     "pynvest-lambda-dedup-financial-data"        = aws_iam_role.pynvest-lambda-dedup-financial-data.arn
+    "pynvest-sfn-invoke-lambda-functions"        = aws_iam_role.pynvest-sfn-invoke-lambda-functions.arn
   }
 }
