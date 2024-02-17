@@ -117,7 +117,7 @@ def lambda_handler(
 
     # Criando coluna de partição
     now = datetime.now(timezone(timedelta(hours=-3)))
-    df_prep["anomesdia_exec"] = now.strftime("%Y%m%d")
+    df_prep["anomesdia_exec"] = int(now.strftime("%Y%m%d"))
 
     # Comunicando processamento de ativos
     logger.info("Quantidade de registros na base de indicadores financeiros "

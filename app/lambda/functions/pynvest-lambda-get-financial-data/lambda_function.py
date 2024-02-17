@@ -74,7 +74,7 @@ def lambda_handler(
 
         # Criando coluna de partição
         now = datetime.now(timezone(timedelta(hours=-3)))
-        df["anomesdia_exec"] = now.strftime("%Y%m%d")
+        df["anomesdia_exec"] = int(now.strftime("%Y%m%d"))
 
         # Appendando em DataFrame final
         df_financial_data = pd.concat(objs=[df_financial_data, df])
