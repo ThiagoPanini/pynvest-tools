@@ -147,13 +147,13 @@ resource "aws_iam_role" "pynvest-lambda-dedup-financial-data" {
 
 /* -------------------------------------------------------
     IAM ROLE
-    pynvest-stepfunctions-invoke-lambda-functions
+    pynvest-sfn-invoke-lambda-functions
 ------------------------------------------------------- */
 
 # Definindo role IAM
-resource "aws_iam_role" "pynvest-stepfunctions-invoke-lambda-functions" {
-  name                  = "pynvest-stepfunctions-invoke-lambda-functions"
-  assume_role_policy    = file("${path.module}/trust/trust-stepfunctions.json")
+resource "aws_iam_role" "pynvest-sfn-invoke-lambda-functions" {
+  name                  = "pynvest-sfn-invoke-lambda-functions"
+  assume_role_policy    = file("${path.module}/trust/trust-sfn.json")
   force_detach_policies = true
 
   managed_policy_arns = [
