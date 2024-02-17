@@ -42,4 +42,10 @@ locals {
       )
     ) : "${element.scrapper}.${element.table}" => element
   }
+
+  # Definindo expressão cron de agendamento de processos: Lambda
+  cron_expression_to_initialize_process = "cron(30 21 ? * MON-FRI *)"
+
+  # Definindo expressão cron de agendamento de processos: Step Functions
+  cron_expression_to_start_sfn_workflow = "cron(0 22 ? * MON-FRI *)"
 }

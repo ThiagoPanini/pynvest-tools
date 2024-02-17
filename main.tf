@@ -77,7 +77,7 @@ module "lambda" {
   functions_memory_size    = var.functions_memory_size
 
   # Expressão cron para agendamento do processo
-  cron_expression_to_initialize_process = var.cron_expression_to_initialize_process
+  cron_expression_to_initialize_process = local.cron_expression_to_initialize_process
 
   # Configuração de triggers SQS para Lambdas de processamento de SoRs
   sqs_lambda_trigger_batch_size      = var.sqs_lambda_trigger_batch_size
@@ -90,4 +90,12 @@ module "lambda" {
     module.sqs,
     module.catalog
   ]
+}
+
+# Chamando módulo sfn
+module "sfn" {
+  source = "./infra/modules/sfn"
+
+  iam_roles_arns_map                    = module.iam.iam_roles_arns_map
+  cron_expression_to_start_sfn_workflow = local.cron_expression_to_start_sfn_workflow
 }
