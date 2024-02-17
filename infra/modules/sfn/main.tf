@@ -7,10 +7,10 @@ Step Functions são criados
 -------------------------------------------------------- */
 
 # Definindo máquina de estado
-resource "aws_sfn_state_machine" "sfn-dedup-sot-spec-tables" {
-  name     = "sfn-dedup-sot-spec-tables"
+resource "aws_sfn_state_machine" "pynvest-sfn-dedup-sot-spec-tables" {
+  name     = "pynvest-sfn-dedup-sot-spec-tables"
   type     = "STANDARD"
   role_arn = var.iam_roles_arns_map["pynvest-sfn-invoke-lambda-functions"]
 
-  definition = file("${path.module}/workflows/sfn-dedup-sot-spec.json")
+  definition = file("${path.module}/workflows/pynvest-sfn-dedup-sot-spec.json")
 }
