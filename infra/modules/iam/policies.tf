@@ -203,3 +203,25 @@ resource "aws_iam_policy" "pynvest-dedup-financial-data" {
   name   = "pynvest-dedup-financial-data"
   policy = data.template_file.pynvest-dedup-financial-data.rendered
 }
+
+
+/* -------------------------------------------------------
+    IAM POLICY
+    Definindo policy para invocação de state machines
+------------------------------------------------------- */
+
+# Definindo template file para policy
+data "template_file" "pynvest-invoke-state-machines" {
+  template = file("${path.module}/policy-templates/pynvest-invoke-state-machines.json")
+
+  vars = {
+    region_name = var.region_name
+    account_id  = var.account_id
+  }
+}
+
+# Definindo policy
+resource "aws_iam_policy" "pynvest-invoke-state-machines" {
+  name   = "pynvest-invoke-state-machines"
+  policy = data.template_file.pynvest-invoke-state-machines.rendered
+}

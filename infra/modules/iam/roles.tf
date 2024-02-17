@@ -157,10 +157,12 @@ resource "aws_iam_role" "pynvest-sfn-invoke-lambda-functions" {
   force_detach_policies = true
 
   managed_policy_arns = [
-    "arn:aws:iam::${var.account_id}:policy/pynvest-invoke-lambda-functions"
+    "arn:aws:iam::${var.account_id}:policy/pynvest-invoke-lambda-functions",
+    "arn:aws:iam::${var.account_id}:policy/pynvest-invoke-state-machines"
   ]
 
   depends_on = [
-    aws_iam_policy.pynvest-invoke-lambda-functions
+    aws_iam_policy.pynvest-invoke-lambda-functions,
+    aws_iam_policy.pynvest-invoke-state-machines
   ]
 }
