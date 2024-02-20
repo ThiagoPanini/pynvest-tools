@@ -59,7 +59,7 @@ def lambda_handler(
     df_dedup = df.drop_duplicates(subset=[subset_col_to_dedup])
 
     # Adicionando coluna de partição no DataFrame deduplicado
-    df_dedup["anomesdia_exec"] = partition_value
+    df_dedup["anomesdia_exec"] = int(partition_value)
 
     # Comunicando resultado
     logger.info("Remoção de dados duplicados realizada com sucesso nos "
