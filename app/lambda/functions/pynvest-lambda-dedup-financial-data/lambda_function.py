@@ -75,7 +75,7 @@ def lambda_handler(
         database=target_database,
         table=target_table,
         partition_cols=partition_cols,
-        mode="overwrite",
+        mode="overwrite_partitions",
         schema_evolution=True,
         compression=None
     )
