@@ -114,12 +114,6 @@ variable "functions_memory_size" {
   default     = 192
 }
 
-variable "cron_expression_to_initialize_process" {
-  description = "Expressão cron responsável por engatilhar todo o processo de obtenção e atualização dos dados"
-  type        = string
-  default     = "cron(0 22 ? * MON-FRI *)"
-}
-
 variable "sqs_lambda_trigger_batch_size" {
   description = "Número máximo de registros a serem enviados para a função em cada batch"
   type        = number
