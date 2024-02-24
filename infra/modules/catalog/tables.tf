@@ -56,5 +56,4 @@ resource "aws_glue_catalog_table" "all_catalog_tables" {
   depends_on = [
     aws_glue_catalog_database.databases_fundamentus
   ]
-
 }

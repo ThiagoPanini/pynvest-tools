@@ -12,4 +12,7 @@ resource "aws_glue_catalog_database" "databases_fundamentus" {
   for_each    = var.flag_create_databases ? var.databases_names_map : {}
   name        = each.value
   description = "Armazenamento de dados ${upper(each.key)} do projeto pynvest"
+
+  # Tagueamento
+  tags = var.module_default_tags
 }

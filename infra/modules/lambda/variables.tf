@@ -74,3 +74,8 @@ variable "sqs_lambda_trigger_max_concurrency" {
   description = "Número máximo de funções concorrentes a serem invocadas pelo gatilho"
   type        = number
 }
+
+variable "module_default_tags" {
+  description = "Conjunto de tags padrão a serem associadas aos recursos do módulo"
+  type        = map(string)
+}

@@ -25,6 +25,7 @@ data "template_file" "pynvest-store-cloudwatch-logs" {
 resource "aws_iam_policy" "pynvest-store-cloudwatch-logs" {
   name   = "pynvest-store-cloudwatch-logs"
   policy = data.template_file.pynvest-store-cloudwatch-logs.rendered
+  tags   = var.module_default_tags
 }
 
 
@@ -47,6 +48,7 @@ data "template_file" "pynvest-invoke-lambda-functions" {
 resource "aws_iam_policy" "pynvest-invoke-lambda-functions" {
   name   = "pynvest-invoke-lambda-functions"
   policy = data.template_file.pynvest-invoke-lambda-functions.rendered
+  tags   = var.module_default_tags
 }
 
 
@@ -75,6 +77,7 @@ data "template_file" "pynvest-check-and-delete-partitions" {
 resource "aws_iam_policy" "pynvest-check-and-delete-partitions" {
   name   = "pynvest-check-and-delete-partitions"
   policy = data.template_file.pynvest-check-and-delete-partitions.rendered
+  tags   = var.module_default_tags
 }
 
 
@@ -98,6 +101,7 @@ data "template_file" "pynvest-send-msgs-to-tickers-queues" {
 resource "aws_iam_policy" "pynvest-send-msgs-to-tickers-queues" {
   name   = "pynvest-send-msgs-to-tickers-queues"
   policy = data.template_file.pynvest-send-msgs-to-tickers-queues.rendered
+  tags   = var.module_default_tags
 }
 
 
@@ -123,6 +127,7 @@ data "template_file" "pynvest-share-sor-financial-data" {
 resource "aws_iam_policy" "pynvest-share-sor-financial-data" {
   name   = "pynvest-share-sor-financial-data"
   policy = data.template_file.pynvest-share-sor-financial-data.rendered
+  tags   = var.module_default_tags
 }
 
 
@@ -149,6 +154,7 @@ data "template_file" "pynvest-share-sot-financial-data" {
 resource "aws_iam_policy" "pynvest-share-sot-financial-data" {
   name   = "pynvest-share-sot-financial-data"
   policy = data.template_file.pynvest-share-sot-financial-data.rendered
+  tags   = var.module_default_tags
 }
 
 
@@ -175,6 +181,7 @@ data "template_file" "pynvest-share-spec-financial-data" {
 resource "aws_iam_policy" "pynvest-share-spec-financial-data" {
   name   = "pynvest-share-spec-financial-data"
   policy = data.template_file.pynvest-share-spec-financial-data.rendered
+  tags   = var.module_default_tags
 }
 
 
@@ -202,6 +209,7 @@ data "template_file" "pynvest-dedup-financial-data" {
 resource "aws_iam_policy" "pynvest-dedup-financial-data" {
   name   = "pynvest-dedup-financial-data"
   policy = data.template_file.pynvest-dedup-financial-data.rendered
+  tags   = var.module_default_tags
 }
 
 
@@ -224,4 +232,5 @@ data "template_file" "pynvest-invoke-state-machines" {
 resource "aws_iam_policy" "pynvest-invoke-state-machines" {
   name   = "pynvest-invoke-state-machines"
   policy = data.template_file.pynvest-invoke-state-machines.rendered
+  tags   = var.module_default_tags
 }

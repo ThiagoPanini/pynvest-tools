@@ -30,6 +30,7 @@ module "catalog" {
   tables_names_map      = local.tables_names_map
   bucket_names_map      = var.bucket_names_map
   tables_info_map       = local.tables_info_map
+  module_default_tags   = var.module_default_tags
 }
 
 # Chamando módulo sqs
@@ -42,6 +43,7 @@ module "sqs" {
   sqs_max_message_size           = var.sqs_max_message_size
   sqs_delay_seconds              = var.sqs_delay_seconds
   sqs_receive_wait_time_seconds  = var.sqs_receive_wait_time_seconds
+  module_default_tags            = var.module_default_tags
 }
 
 # Chamando módulo iam
@@ -54,6 +56,7 @@ module "iam" {
   databases_names_map = var.databases_names_map
   tables_names_map    = local.tables_names_map
   bucket_names_map    = var.bucket_names_map
+  module_default_tags = var.module_default_tags
 }
 
 # Chamando módulo lambda
@@ -84,6 +87,9 @@ module "lambda" {
   sqs_lambda_trigger_batch_window    = var.sqs_lambda_trigger_batch_window
   sqs_lambda_trigger_max_concurrency = var.sqs_lambda_trigger_max_concurrency
 
+  # Tags
+  module_default_tags = var.module_default_tags
+
   # Explicitando dependências
   depends_on = [
     module.iam,
@@ -96,6 +102,8 @@ module "lambda" {
 module "sfn" {
   source = "./infra/modules/sfn"
 
+  # Configurando workflow
   iam_roles_arns_map                    = module.iam.iam_roles_arns_map
   cron_expression_to_start_sfn_workflow = local.cron_expression_to_start_sfn_workflow
+  module_default_tags                   = var.module_default_tags
 }

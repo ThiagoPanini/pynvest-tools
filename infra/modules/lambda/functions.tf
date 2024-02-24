@@ -58,6 +58,9 @@ resource "aws_lambda_function" "pynvest-lambda-check-and-delete-partitions" {
     }
   }
 
+  # Tags
+  tags = var.module_default_tags
+
   # Dependências de recursos
   depends_on = [
     data.archive_file.pynvest-lambda-check-and-delete-partitions
@@ -94,6 +97,8 @@ resource "aws_lambda_function" "pynvest-lambda-get-tickers" {
   layers = [
     "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
   ]
+
+  tags = var.module_default_tags
 
   depends_on = [
     data.archive_file.pynvest-lambda-get-tickers
@@ -145,6 +150,8 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-acoes" {
     }
   }
 
+  tags = var.module_default_tags
+
   depends_on = [
     data.archive_file.pynvest-lambda-get-financial-data
   ]
@@ -181,6 +188,8 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-fiis" {
       OUTPUT_TABLE    = var.tables_names_map["fundamentus"]["sor_fiis"]
     }
   }
+
+  tags = var.module_default_tags
 
   depends_on = [
     data.archive_file.pynvest-lambda-get-financial-data
@@ -232,6 +241,8 @@ resource "aws_lambda_function" "pynvest-lambda-prep-financial-data-for-acoes" {
     }
   }
 
+  tags = var.module_default_tags
+
   depends_on = [
     data.archive_file.pynvest-lambda-get-financial-data
   ]
@@ -268,6 +279,8 @@ resource "aws_lambda_function" "pynvest-lambda-prep-financial-data-for-fiis" {
       OUTPUT_TABLE    = var.tables_names_map["fundamentus"]["sot_fiis"]
     }
   }
+
+  tags = var.module_default_tags
 
   depends_on = [
     data.archive_file.pynvest-lambda-get-financial-data
@@ -312,6 +325,8 @@ resource "aws_lambda_function" "pynvest-lambda-specialize-financial-data" {
       OUTPUT_TABLE    = var.tables_names_map["fundamentus"]["spec_ativos"]
     }
   }
+
+  tags = var.module_default_tags
 
   depends_on = [
     data.archive_file.pynvest-lambda-get-financial-data
@@ -365,6 +380,8 @@ resource "aws_lambda_function" "pynvest-lambda-dedup-financial-data-for-acoes" {
     }
   }
 
+  tags = var.module_default_tags
+
   depends_on = [
     data.archive_file.pynvest-lambda-dedup-financial-data
   ]
@@ -404,6 +421,8 @@ resource "aws_lambda_function" "pynvest-lambda-dedup-financial-data-for-fiis" {
     }
   }
 
+  tags = var.module_default_tags
+
   depends_on = [
     data.archive_file.pynvest-lambda-dedup-financial-data
   ]
@@ -442,6 +461,8 @@ resource "aws_lambda_function" "pynvest-lambda-dedup-financial-data-for-spec-ati
       SUBSET_COL_TO_DEDUP = "codigo_ticker_ativo"
     }
   }
+
+  tags = var.module_default_tags
 
   depends_on = [
     data.archive_file.pynvest-lambda-dedup-financial-data

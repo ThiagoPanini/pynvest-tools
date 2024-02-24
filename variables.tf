@@ -131,3 +131,18 @@ variable "sqs_lambda_trigger_max_concurrency" {
   type        = number
   default     = 3
 }
+
+
+/* -------------------------------------------------------
+    VARIABLES: tags
+    Variáveis gerais relacionadas ao tagueamento
+------------------------------------------------------- */
+
+variable "module_default_tags" {
+  description = "Conjunto de tags padrão a serem associadas aos recursos do módulo"
+  type        = map(string)
+  default = {
+    "projeto"     = "pynvest-tools"
+    "iac-runtime" = "terraform"
+  }
+}

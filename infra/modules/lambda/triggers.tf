@@ -31,6 +31,7 @@ resource "aws_cloudwatch_event_rule" "trigger-pynvest-lambda-check-and-delete-pa
   name                = "trigger-${aws_lambda_function.pynvest-lambda-check-and-delete-partitions.function_name}"
   description         = "Regra de execução agendada da função ${aws_lambda_function.pynvest-lambda-check-and-delete-partitions.function_name}"
   schedule_expression = var.cron_expression_to_initialize_process
+  tags                = var.module_default_tags
 }
 
 # Vinculando regra de agendamento à função

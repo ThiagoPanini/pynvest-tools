@@ -18,6 +18,8 @@ resource "aws_sqs_queue" "pynvest-tickers-acoes-queue" {
   receive_wait_time_seconds  = var.sqs_receive_wait_time_seconds
 
   sqs_managed_sse_enabled = true
+
+  tags = var.module_default_tags
 }
 
 # Definindo fila SQS para recebimento de tickers de fiis
@@ -31,4 +33,6 @@ resource "aws_sqs_queue" "pynvest-tickers-fiis-queue" {
   receive_wait_time_seconds  = var.sqs_receive_wait_time_seconds
 
   sqs_managed_sse_enabled = true
+
+  tags = var.module_default_tags
 }

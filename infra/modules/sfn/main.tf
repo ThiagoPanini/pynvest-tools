@@ -13,4 +13,6 @@ resource "aws_sfn_state_machine" "pynvest-sfn-dedup-sot-spec-tables" {
   role_arn = var.iam_roles_arns_map["pynvest-sfn-invoke-lambda-functions"]
 
   definition = file("${path.module}/workflows/pynvest-sfn-dedup-sot-spec.json")
+
+  tags = var.module_default_tags
 }

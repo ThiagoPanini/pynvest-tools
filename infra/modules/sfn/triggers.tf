@@ -18,6 +18,7 @@ resource "aws_cloudwatch_event_rule" "trigger-pynvest-sfn-dedup-sot-spec-tables"
   name                = "trigger-${aws_sfn_state_machine.pynvest-sfn-dedup-sot-spec-tables.name}"
   description         = "Regra de execução agendada do workflow Step Functions ${aws_sfn_state_machine.pynvest-sfn-dedup-sot-spec-tables.name}"
   schedule_expression = var.cron_expression_to_start_sfn_workflow
+  tags                = var.module_default_tags
 }
 
 # Vinculando regra de agendamento à função

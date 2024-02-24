@@ -22,6 +22,8 @@ resource "aws_iam_role" "pynvest-lambda-check-and-delete-partitions" {
     "arn:aws:iam::${var.account_id}:policy/pynvest-check-and-delete-partitions"
   ]
 
+  tags = var.module_default_tags
+
   depends_on = [
     aws_iam_policy.pynvest-store-cloudwatch-logs,
     aws_iam_policy.pynvest-invoke-lambda-functions,
@@ -46,6 +48,8 @@ resource "aws_iam_role" "pynvest-lambda-send-msgs-to-tickers-queue" {
     "arn:aws:iam::${var.account_id}:policy/pynvest-send-msgs-to-tickers-queues"
   ]
 
+  tags = var.module_default_tags
+
   depends_on = [
     aws_iam_policy.pynvest-store-cloudwatch-logs,
     aws_iam_policy.pynvest-send-msgs-to-tickers-queues
@@ -68,6 +72,8 @@ resource "aws_iam_role" "pynvest-lambda-share-sor-financial-data" {
     "arn:aws:iam::${var.account_id}:policy/pynvest-store-cloudwatch-logs",
     "arn:aws:iam::${var.account_id}:policy/pynvest-share-sor-financial-data"
   ]
+
+  tags = var.module_default_tags
 
   depends_on = [
     aws_iam_policy.pynvest-store-cloudwatch-logs,
@@ -92,6 +98,8 @@ resource "aws_iam_role" "pynvest-lambda-share-sot-financial-data" {
     "arn:aws:iam::${var.account_id}:policy/pynvest-share-sot-financial-data"
   ]
 
+  tags = var.module_default_tags
+
   depends_on = [
     aws_iam_policy.pynvest-store-cloudwatch-logs,
     aws_iam_policy.pynvest-share-sot-financial-data
@@ -114,6 +122,8 @@ resource "aws_iam_role" "pynvest-lambda-share-spec-financial-data" {
     "arn:aws:iam::${var.account_id}:policy/pynvest-store-cloudwatch-logs",
     "arn:aws:iam::${var.account_id}:policy/pynvest-share-spec-financial-data"
   ]
+
+  tags = var.module_default_tags
 
   depends_on = [
     aws_iam_policy.pynvest-store-cloudwatch-logs,
@@ -138,6 +148,8 @@ resource "aws_iam_role" "pynvest-lambda-dedup-financial-data" {
     "arn:aws:iam::${var.account_id}:policy/pynvest-dedup-financial-data"
   ]
 
+  tags = var.module_default_tags
+
   depends_on = [
     aws_iam_policy.pynvest-store-cloudwatch-logs,
     aws_iam_policy.pynvest-dedup-financial-data
@@ -160,6 +172,8 @@ resource "aws_iam_role" "pynvest-sfn-invoke-lambda-functions" {
     "arn:aws:iam::${var.account_id}:policy/pynvest-invoke-lambda-functions",
     "arn:aws:iam::${var.account_id}:policy/pynvest-invoke-state-machines"
   ]
+
+  tags = var.module_default_tags
 
   depends_on = [
     aws_iam_policy.pynvest-invoke-lambda-functions,
