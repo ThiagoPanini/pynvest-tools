@@ -33,12 +33,12 @@
         {
             "name": "vlr_min_52_sem",
             "type": "float",
-            "comment": "Menor cotação da ação nos últimos 12 meses"
+            "comment": "Menor cotação do ativo nos últimos 12 meses"
         },
         {
             "name": "vlr_max_52_sem",
             "type": "float",
-            "comment": "Maior cotação da ação nos últimos 12 meses"
+            "comment": "Maior cotação do ativo nos últimos 12 meses"
         },
         {
             "name": "pct_var_dia",
@@ -61,34 +61,34 @@
             "comment": "Percentual de variação/oscilação do ativo nos últimos 12 meses"
         },
         {
-            "name": "pct_var_2023",
-            "type": "string",
-            "comment": "Percentual de variação/oscilação do ativo em 2023"
+            "name": "pct_var_ano_a0",
+            "type": "float",
+            "comment": "Percentual de variação/oscilação do ativo no ano atual"
         },
         {
-            "name": "pct_var_2022",
-            "type": "string",
-            "comment": "Percentual de variação/oscilação do ativo em 2022"
+            "name": "pct_var_ano_a1",
+            "type": "float",
+            "comment": "Percentual de variação/oscilação do ativo no ano passado"
         },
         {
-            "name": "pct_var_2021",
-            "type": "string",
-            "comment": "Percentual de variação/oscilação do ativo em 2021"
+            "name": "pct_var_ano_a2",
+            "type": "float",
+            "comment": "Percentual de variação/oscilação do ativo no ano retrasado"
         },
         {
-            "name": "pct_var_2020",
-            "type": "string",
-            "comment": "Percentual de variação/oscilação do ativo em 2020"
+            "name": "pct_var_ano_a3",
+            "type": "float",
+            "comment": "Percentual de variação/oscilação do ativo no anteano (anterior ao retrasado)"
         },
         {
-            "name": "pct_var_2019",
-            "type": "string",
-            "comment": "Percentual de variação/oscilação do ativo em 2019"
+            "name": "pct_var_ano_a4",
+            "type": "float",
+            "comment": "Percentual de variação/oscilação do ativo 4 anos antes do ano atual"
         },
         {
-            "name": "pct_var_2018",
-            "type": "string",
-            "comment": "Percentual de variação/oscilação do ativo em 2018"
+            "name": "pct_var_ano_a5",
+            "type": "float",
+            "comment": "Percentual de variação/oscilação do ativo 5 anos antes do ano atual"
         }
     ]
 }

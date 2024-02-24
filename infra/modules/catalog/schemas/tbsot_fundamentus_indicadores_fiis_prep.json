@@ -91,34 +91,34 @@
             "comment": "Percentual de variação/oscilação da ação nos últimos 12 meses"
         },
         {
-            "name": "pct_var_2023",
+            "name": "pct_var_ano_a0",
             "type": "float",
-            "comment": "Percentual de variação/oscilação da ação em 2023"
+            "comment": "Percentual de variação/oscilação do FII no ano atual"
         },
         {
-            "name": "pct_var_2022",
+            "name": "pct_var_ano_a1",
             "type": "float",
-            "comment": "Percentual de variação/oscilação da ação em 2022"
+            "comment": "Percentual de variação/oscilação do FII no ano passado"
         },
         {
-            "name": "pct_var_2021",
+            "name": "pct_var_ano_a2",
             "type": "float",
-            "comment": "Percentual de variação/oscilação da ação em 2021"
+            "comment": "Percentual de variação/oscilação do FII no ano retrasado"
         },
         {
-            "name": "pct_var_2020",
+            "name": "pct_var_ano_a3",
             "type": "float",
-            "comment": "Percentual de variação/oscilação da ação em 2020"
+            "comment": "Percentual de variação/oscilação do FII no anteano (anterior ao retrasado)"
         },
         {
-            "name": "pct_var_2019",
+            "name": "pct_var_ano_a4",
             "type": "float",
-            "comment": "Percentual de variação/oscilação da ação em 2019"
+            "comment": "Percentual de variação/oscilação do FII 4 anos antes do ano atual"
         },
         {
-            "name": "pct_var_2018",
+            "name": "pct_var_ano_a5",
             "type": "float",
-            "comment": "Percentual de variação/oscilação da ação em 2018"
+            "comment": "Percentual de variação/oscilação do FII 5 anos antes do ano atual"
         },
         {
             "name": "vlr_ffo_yield",

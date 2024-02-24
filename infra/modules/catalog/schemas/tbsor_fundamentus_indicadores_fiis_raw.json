@@ -38,12 +38,12 @@
         {
             "name": "vlr_min_52_sem",
             "type": "string",
-            "comment": "Menor cotação da ação nos últimos 12 meses"
+            "comment": "Menor cotação do FII nos últimos 12 meses"
         },
         {
             "name": "vlr_max_52_sem",
             "type": "string",
-            "comment": "Maior cotação da ação nos últimos 12 meses"
+            "comment": "Maior cotação do FII nos últimos 12 meses"
         },
         {
             "name": "vol_med_neg_2m",
@@ -73,52 +73,52 @@
         {
             "name": "pct_var_dia",
             "type": "string",
-            "comment": "Percentual de variação/oscilação da ação no dia"
+            "comment": "Percentual de variação/oscilação do FII no dia"
         },
         {
             "name": "pct_var_mes",
             "type": "string",
-            "comment": "Percentual de variação/oscilação da ação no mês"
+            "comment": "Percentual de variação/oscilação do FII no mês"
         },
         {
             "name": "pct_var_30d",
             "type": "string",
-            "comment": "Percentual de variação/oscilação da ação nos últimos 30 dias"
+            "comment": "Percentual de variação/oscilação do FII nos últimos 30 dias"
         },
         {
             "name": "pct_var_12m",
             "type": "string",
-            "comment": "Percentual de variação/oscilação da ação nos últimos 12 meses"
+            "comment": "Percentual de variação/oscilação do FII nos últimos 12 meses"
         },
         {
-            "name": "pct_var_2023",
+            "name": "pct_var_ano_a0",
             "type": "string",
-            "comment": "Percentual de variação/oscilação da ação em 2023"
+            "comment": "Percentual de variação/oscilação do FII no ano atual"
         },
         {
-            "name": "pct_var_2022",
+            "name": "pct_var_ano_a1",
             "type": "string",
-            "comment": "Percentual de variação/oscilação da ação em 2022"
+            "comment": "Percentual de variação/oscilação do FII no ano passado"
         },
         {
-            "name": "pct_var_2021",
+            "name": "pct_var_ano_a2",
             "type": "string",
-            "comment": "Percentual de variação/oscilação da ação em 2021"
+            "comment": "Percentual de variação/oscilação do FII no ano retrasado"
         },
         {
-            "name": "pct_var_2020",
+            "name": "pct_var_ano_a3",
             "type": "string",
-            "comment": "Percentual de variação/oscilação da ação em 2020"
+            "comment": "Percentual de variação/oscilação do FII no anteano (anterior ao retrasado)"
         },
         {
-            "name": "pct_var_2019",
+            "name": "pct_var_ano_a4",
             "type": "string",
-            "comment": "Percentual de variação/oscilação da ação em 2019"
+            "comment": "Percentual de variação/oscilação do FII 4 anos antes do ano atual"
         },
         {
-            "name": "pct_var_2018",
+            "name": "pct_var_ano_a5",
             "type": "string",
-            "comment": "Percentual de variação/oscilação da ação em 2018"
+            "comment": "Percentual de variação/oscilação do FII 5 anos antes do ano atual"
         },
         {
             "name": "vlr_ffo_yield",
@@ -133,7 +133,7 @@
         {
             "name": "vlr_div_yield",
             "type": "string",
-            "comment": "Rendimento distribuído dividido pelo valor do FII. É o rendimento gerado para o dono da ação pelo pagamento de dividendos"
+            "comment": "Rendimento distribuído dividido pelo valor do FII. É o rendimento gerado para o dono do FII pelo pagamento de dividendos"
         },
         {
             "name": "vlr_dividendo_sobre_cota",
