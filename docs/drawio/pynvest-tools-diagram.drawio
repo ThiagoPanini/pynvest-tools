@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram name="pynvest-tools" id="QcfjFlC14eD7CDKg3b7T">
-        <mxGraphModel dx="2562" dy="1373" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" background="#18141D" math="0" shadow="0">
+        <mxGraphModel dx="1681" dy="1179" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" background="#18141D" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -418,7 +418,7 @@
         </mxGraphModel>
     </diagram>
     <diagram name="etapa-01" id="jnv71-IhIvaaI8o6lauT">
-        <mxGraphModel dx="2238" dy="1227" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" background="#18141D" math="0" shadow="0">
+        <mxGraphModel dx="1681" dy="1179" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" background="#18141D" math="0" shadow="0">
             <root>
                 <mxCell id="WKIQeWskLEmGQsnxSITi-0"/>
                 <mxCell id="WKIQeWskLEmGQsnxSITi-1" parent="WKIQeWskLEmGQsnxSITi-0"/>
