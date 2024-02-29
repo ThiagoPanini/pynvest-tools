@@ -66,7 +66,14 @@ module "pynvest-tools" {
 }
 ```
 
-## Saiba Mais
+## Readthedocs
 
-> **Note**
-> Uma página completa de documentação da `pynvest-tools` está disponível no [readthedocs](https://pynvest.readthedocs.io/pt/latest/tools/tools/) com detalhes mais aprofundados sobre essa solução.
+📚 Para saber mais sobre essa iniciativa, acesse a [página oficial de documentação do módulo](https://pynvest.readthedocs.io/pt/latest/tools/tools/). Lá, os usuários poderão encontrar todos os detalhes de construção da solução, demonstração de etapas e até mesmo ideias de análises financeiras que podem ser feitas utilizando o Athena!
+
+
+## Entre em Contato
+
+- GitHub: [@ThiagoPanini](https://github.com/ThiagoPanini)
+- LinkedIn: [Thiago Panini](https://www.linkedin.com/in/thiago-panini/)
+- Hashnode: [panini-tech-lab](https://panini.hashnode.dev/)
+- DevTo: [thiagopanini](https://dev.to/thiagopanini)
