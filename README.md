@@ -19,6 +19,7 @@
   <a href="https://github.com/">
     <img src="https://img.shields.io/badge/github-grey?style=for-the-badge&logo=github&logoColor=B252D0">
   </a>
+</div>
 
 ___
 
