@@ -29,6 +29,8 @@ module "catalog" {
   databases_names_map   = var.databases_names_map
   tables_names_map      = local.tables_names_map
   bucket_names_map      = var.bucket_names_map
+  tables_info_map       = local.tables_info_map
+  module_default_tags   = var.module_default_tags
 }
 
 # Chamando módulo sqs
@@ -41,6 +43,7 @@ module "sqs" {
   sqs_max_message_size           = var.sqs_max_message_size
   sqs_delay_seconds              = var.sqs_delay_seconds
   sqs_receive_wait_time_seconds  = var.sqs_receive_wait_time_seconds
+  module_default_tags            = var.module_default_tags
 }
 
 # Chamando módulo iam
@@ -53,6 +56,7 @@ module "iam" {
   databases_names_map = var.databases_names_map
   tables_names_map    = local.tables_names_map
   bucket_names_map    = var.bucket_names_map
+  module_default_tags = var.module_default_tags
 }
 
 # Chamando módulo lambda
@@ -65,21 +69,26 @@ module "lambda" {
   # Dicionários de databases, tabelas, buckets no S3, ARNs de roles IAM e ARNs de filas SQS para uso nas funções
   databases_names_map = var.databases_names_map
   tables_names_map    = local.tables_names_map
+  tables_info_map     = local.tables_info_map
   bucket_names_map    = var.bucket_names_map
   iam_roles_arns_map  = module.iam.iam_roles_arns_map
   sqs_queues_arn_map  = module.sqs.sqs_queues_arn_map
 
-  # Características das funções (versão do Python e timeout)
+  # Características das funções
   functions_python_runtime = var.functions_python_runtime
   functions_timeout        = var.functions_timeout
+  functions_memory_size    = var.functions_memory_size
 
   # Expressão cron para agendamento do processo
-  cron_expression_to_initialize_process = var.cron_expression_to_initialize_process
+  cron_expression_to_initialize_process = local.cron_expression_to_initialize_process
 
   # Configuração de triggers SQS para Lambdas de processamento de SoRs
   sqs_lambda_trigger_batch_size      = var.sqs_lambda_trigger_batch_size
   sqs_lambda_trigger_batch_window    = var.sqs_lambda_trigger_batch_window
   sqs_lambda_trigger_max_concurrency = var.sqs_lambda_trigger_max_concurrency
+
+  # Tags
+  module_default_tags = var.module_default_tags
 
   # Explicitando dependências
   depends_on = [
@@ -87,4 +96,14 @@ module "lambda" {
     module.sqs,
     module.catalog
   ]
+}
+
+# Chamando módulo sfn
+module "sfn" {
+  source = "./infra/modules/sfn"
+
+  # Configurando workflow
+  iam_roles_arns_map                    = module.iam.iam_roles_arns_map
+  cron_expression_to_start_sfn_workflow = local.cron_expression_to_start_sfn_workflow
+  module_default_tags                   = var.module_default_tags
 }

@@ -22,6 +22,8 @@ resource "aws_iam_role" "pynvest-lambda-check-and-delete-partitions" {
     "arn:aws:iam::${var.account_id}:policy/pynvest-check-and-delete-partitions"
   ]
 
+  tags = var.module_default_tags
+
   depends_on = [
     aws_iam_policy.pynvest-store-cloudwatch-logs,
     aws_iam_policy.pynvest-invoke-lambda-functions,
@@ -46,6 +48,8 @@ resource "aws_iam_role" "pynvest-lambda-send-msgs-to-tickers-queue" {
     "arn:aws:iam::${var.account_id}:policy/pynvest-send-msgs-to-tickers-queues"
   ]
 
+  tags = var.module_default_tags
+
   depends_on = [
     aws_iam_policy.pynvest-store-cloudwatch-logs,
     aws_iam_policy.pynvest-send-msgs-to-tickers-queues
@@ -55,22 +59,124 @@ resource "aws_iam_role" "pynvest-lambda-send-msgs-to-tickers-queue" {
 
 /* -------------------------------------------------------
     IAM ROLE
-    pynvest-lambda-share-raw-financial-data
+    pynvest-lambda-share-sor-financial-data
 ------------------------------------------------------- */
 
 # Definindo role IAM
-resource "aws_iam_role" "pynvest-lambda-share-raw-financial-data" {
-  name                  = "pynvest-lambda-share-raw-financial-data"
+resource "aws_iam_role" "pynvest-lambda-share-sor-financial-data" {
+  name                  = "pynvest-lambda-share-sor-financial-data"
   assume_role_policy    = file("${path.module}/trust/trust-lambda.json")
   force_detach_policies = true
 
   managed_policy_arns = [
     "arn:aws:iam::${var.account_id}:policy/pynvest-store-cloudwatch-logs",
-    "arn:aws:iam::${var.account_id}:policy/pynvest-share-raw-financial-data"
+    "arn:aws:iam::${var.account_id}:policy/pynvest-share-sor-financial-data"
   ]
+
+  tags = var.module_default_tags
 
   depends_on = [
     aws_iam_policy.pynvest-store-cloudwatch-logs,
-    aws_iam_policy.pynvest-share-raw-financial-data
+    aws_iam_policy.pynvest-share-sor-financial-data
+  ]
+}
+
+
+/* -------------------------------------------------------
+    IAM ROLE
+    pynvest-lambda-share-sot-financial-data
+------------------------------------------------------- */
+
+# Definindo role IAM
+resource "aws_iam_role" "pynvest-lambda-share-sot-financial-data" {
+  name                  = "pynvest-lambda-share-sot-financial-data"
+  assume_role_policy    = file("${path.module}/trust/trust-lambda.json")
+  force_detach_policies = true
+
+  managed_policy_arns = [
+    "arn:aws:iam::${var.account_id}:policy/pynvest-store-cloudwatch-logs",
+    "arn:aws:iam::${var.account_id}:policy/pynvest-share-sot-financial-data"
+  ]
+
+  tags = var.module_default_tags
+
+  depends_on = [
+    aws_iam_policy.pynvest-store-cloudwatch-logs,
+    aws_iam_policy.pynvest-share-sot-financial-data
+  ]
+}
+
+
+/* -------------------------------------------------------
+    IAM ROLE
+    pynvest-lambda-share-spec-financial-data
+------------------------------------------------------- */
+
+# Definindo role IAM
+resource "aws_iam_role" "pynvest-lambda-share-spec-financial-data" {
+  name                  = "pynvest-lambda-share-spec-financial-data"
+  assume_role_policy    = file("${path.module}/trust/trust-lambda.json")
+  force_detach_policies = true
+
+  managed_policy_arns = [
+    "arn:aws:iam::${var.account_id}:policy/pynvest-store-cloudwatch-logs",
+    "arn:aws:iam::${var.account_id}:policy/pynvest-share-spec-financial-data"
+  ]
+
+  tags = var.module_default_tags
+
+  depends_on = [
+    aws_iam_policy.pynvest-store-cloudwatch-logs,
+    aws_iam_policy.pynvest-share-spec-financial-data
+  ]
+}
+
+
+/* -------------------------------------------------------
+    IAM ROLE
+    pynvest-lambda-dedup-financial-data
+------------------------------------------------------- */
+
+# Definindo role IAM
+resource "aws_iam_role" "pynvest-lambda-dedup-financial-data" {
+  name                  = "pynvest-lambda-dedup-financial-data"
+  assume_role_policy    = file("${path.module}/trust/trust-lambda.json")
+  force_detach_policies = true
+
+  managed_policy_arns = [
+    "arn:aws:iam::${var.account_id}:policy/pynvest-store-cloudwatch-logs",
+    "arn:aws:iam::${var.account_id}:policy/pynvest-dedup-financial-data"
+  ]
+
+  tags = var.module_default_tags
+
+  depends_on = [
+    aws_iam_policy.pynvest-store-cloudwatch-logs,
+    aws_iam_policy.pynvest-dedup-financial-data
+  ]
+}
+
+
+/* -------------------------------------------------------
+    IAM ROLE
+    pynvest-sfn-invoke-lambda-functions
+------------------------------------------------------- */
+
+# Definindo role IAM
+resource "aws_iam_role" "pynvest-sfn-invoke-lambda-functions" {
+  name                  = "pynvest-sfn-invoke-lambda-functions"
+  assume_role_policy    = file("${path.module}/trust/trust-sfn.json")
+  force_detach_policies = true
+
+  managed_policy_arns = [
+    "arn:aws:iam::${var.account_id}:policy/pynvest-invoke-lambda-functions",
+    "arn:aws:iam::${var.account_id}:policy/pynvest-invoke-state-machines"
+  ]
+
+  tags = var.module_default_tags
+
+  depends_on = [
+    aws_iam_policy.pynvest-invoke-lambda-functions,
+    aws_iam_policy.pynvest-invoke-state-machines
   ]
 }

@@ -15,6 +15,11 @@ variable "functions_timeout" {
   type        = number
 }
 
+variable "functions_memory_size" {
+  description = "Quantidade de memória (MB) a ser alocada para as funções Lambda"
+  type        = number
+}
+
 variable "region_name" {
   description = "Nome da região alvo da implantação utilizado para composição de ARNs de recursos mapeados às funções Lambda"
   type        = string
@@ -27,6 +32,11 @@ variable "databases_names_map" {
 
 variable "tables_names_map" {
   description = "Dicionário (map) contendo os nomes de todas as tabelas a serem criadas no Glue Data Catalog para armazenamento de dados de indicadores financeiros em todas as camadas SoR, SoT e Spec"
+  type        = map(map(string))
+}
+
+variable "tables_info_map" {
+  description = "Dicionário (map) com todas as informações das tabelas a serem criadas no Glue Data Catalog em todas as camadas do projeto (SoR, SoT e Spec)"
   type        = map(map(string))
 }
 
@@ -63,4 +73,9 @@ variable "sqs_lambda_trigger_batch_window" {
 variable "sqs_lambda_trigger_max_concurrency" {
   description = "Número máximo de funções concorrentes a serem invocadas pelo gatilho"
   type        = number
+}
+
+variable "module_default_tags" {
+  description = "Conjunto de tags padrão a serem associadas aos recursos do módulo"
+  type        = map(string)
 }

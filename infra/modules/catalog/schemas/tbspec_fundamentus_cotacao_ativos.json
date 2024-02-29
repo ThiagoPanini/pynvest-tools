@@ -1,0 +1,94 @@
+{
+    "columns": [
+        {
+            "name": "codigo_ticker_ativo",
+            "type": "string",
+            "comment": "Código de representação do ativo (Ação ou Fundo Imobiliário)"
+        },
+        {
+            "name": "tipo_ativo",
+            "type": "string",
+            "comment": "Tipo do ativo (Ação ou Fundo Imobiliário)"
+        },
+        {
+            "name": "nome_ativo",
+            "type": "string",
+            "comment": "Nome de identificação do ativo"
+        },
+        {
+            "name": "nome_setor_segmento",
+            "type": "string",
+            "comment": "Classificação setorial do ativo ou identificação do segmento de atuação"
+        },
+        {
+            "name": "vlr_cot",
+            "type": "float",
+            "comment": "Cotação de fechamento do ativo no último pregão"
+        },
+        {
+            "name": "dt_ult_cot",
+            "type": "string",
+            "comment": "Data do último pregão onde o ativo foi negociado"
+        },
+        {
+            "name": "vlr_min_52_sem",
+            "type": "float",
+            "comment": "Menor cotação do ativo nos últimos 12 meses"
+        },
+        {
+            "name": "vlr_max_52_sem",
+            "type": "float",
+            "comment": "Maior cotação do ativo nos últimos 12 meses"
+        },
+        {
+            "name": "pct_var_dia",
+            "type": "string",
+            "comment": "Percentual de variação/oscilação do ativo no dia"
+        },
+        {
+            "name": "pct_var_mes",
+            "type": "string",
+            "comment": "Percentual de variação/oscilação do ativo no mês"
+        },
+        {
+            "name": "pct_var_30d",
+            "type": "string",
+            "comment": "Percentual de variação/oscilação do ativo nos últimos 30 dias"
+        },
+        {
+            "name": "pct_var_12m",
+            "type": "string",
+            "comment": "Percentual de variação/oscilação do ativo nos últimos 12 meses"
+        },
+        {
+            "name": "pct_var_ano_a0",
+            "type": "float",
+            "comment": "Percentual de variação/oscilação do ativo no ano atual"
+        },
+        {
+            "name": "pct_var_ano_a1",
+            "type": "float",
+            "comment": "Percentual de variação/oscilação do ativo no ano passado"
+        },
+        {
+            "name": "pct_var_ano_a2",
+            "type": "float",
+            "comment": "Percentual de variação/oscilação do ativo no ano retrasado"
+        },
+        {
+            "name": "pct_var_ano_a3",
+            "type": "float",
+            "comment": "Percentual de variação/oscilação do ativo no anteano (anterior ao retrasado)"
+        },
+        {
+            "name": "pct_var_ano_a4",
+            "type": "float",
+            "comment": "Percentual de variação/oscilação do ativo 4 anos antes do ano atual"
+        },
+        {
+            "name": "pct_var_ano_a5",
+            "type": "float",
+            "comment": "Percentual de variação/oscilação do ativo 5 anos antes do ano atual"
+        }
+    ]
+}

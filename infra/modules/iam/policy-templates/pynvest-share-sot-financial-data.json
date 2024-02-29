@@ -1,0 +1,43 @@
+{
+	"Version": "2012-10-17",
+	"Statement": [
+        {
+			"Sid": "S3GetSoRData",
+			"Effect": "Allow",
+			"Action": [
+				"s3:ListBucket",
+        		"s3:GetObject"
+			],
+			"Resource": [
+				"arn:aws:s3:::${sor_bucket_name}",
+                "arn:aws:s3:::${sor_bucket_name}/tbsor_fundamentus_*/*"
+            ]
+		},
+		{
+			"Sid": "S3PutSoTData",
+			"Effect": "Allow",
+			"Action": [
+				"s3:PutObject"
+			],
+			"Resource": [
+				"arn:aws:s3:::${sot_bucket_name}/tbsot_fundamentus_*/*"
+			]
+		},
+		{
+			"Sid": "GlueAccessOnSoTTables",
+			"Effect": "Allow",
+			"Action": [
+                "glue:GetDatabase",
+				"glue:CreateTable",
+				"glue:UpdateTable",
+				"glue:GetTable",
+                "glue:BatchCreatePartition"
+            ],
+			"Resource": [
+                "arn:aws:glue:${region_name}:${account_id}:catalog",
+                "arn:aws:glue:${region_name}:${account_id}:database/${sot_database_name}",
+                "arn:aws:glue:${region_name}:${account_id}:table/${sot_database_name}/tbsot_fundamentus_*"
+            ]
+		}
+	]
+}

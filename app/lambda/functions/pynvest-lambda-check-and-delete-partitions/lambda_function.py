@@ -20,7 +20,7 @@ logger.propagate = False
 def lambda_handler(
     event,
     context,
-    partition_col_name: str = "anomesdia_scrapper_exec",
+    partition_col_name: str = "anomesdia_exec",
     partition_date_format: str = "%Y%m%d",
     timezone_hours: int = -3
 ):
@@ -62,19 +62,25 @@ def lambda_handler(
     """
 
     # Coletando variáveis de ambiente para escrita dos dados
-    database_name = os.getenv("DATABASE_NAME")
-    tables = os.getenv("TABLE_NAMES").split(",")
+    databases_and_tables = os.getenv("DATABASES_AND_TABLES").split(",")
 
     # Montando partição de data de execução
     now = datetime.now(timezone(timedelta(hours=timezone_hours)))
     partition_value = now.strftime(partition_date_format)
 
+    # Criando lista de controle para partições dropadas
+    dropped_partitions = []
+
     # Iterando sobre tabelas SoRs mapeadas
-    for table in tables:
+    for table_info in databases_and_tables:
+        # Extraindo informações de database e tabela
+        database_name = table_info.split(".")[0]
+        table_name = table_info.split(".")[-1]
+
         # Coletando partições existentes em tabela
         partitions = wr.catalog.get_parquet_partitions(
             database=database_name,
-            table=table
+            table=table_name
         )
 
         # Obtendo lista de chaves e valores das partições
@@ -82,15 +88,15 @@ def lambda_handler(
         partition_values = list(partitions.values())
 
         # Validando existência de partição processada
-        dropped_partitions = []
         if [partition_value] in partition_values:
             logger.info(f"Partição {partition_col_name}={partition_value} "
-                        f"existente na tabela {table}. Eliminando partição.")
+                        f"existente na tabela {table_name}. "
+                        "Eliminando partição.")
 
             # Dropando partição
             wr.catalog.delete_partitions(
                 database=database_name,
-                table=table,
+                table=table_name,
                 partitions_values=[[partition_value]]
             )
 
@@ -108,7 +114,7 @@ def lambda_handler(
             # Adicionando informação à lista de partições dropadas
             dropped_partitions.append({
                 "database": database_name,
-                "table": table,
+                "table": table_name,
                 "partition_value": partition_value,
                 "s3_partition_path": partition_path,
             })
@@ -117,7 +123,7 @@ def lambda_handler(
         else:
             logger.info("Nenhuma partição de data com referência "
                         f"{partition_col_name}={partition_value} encontrada "
-                        f"na tabela {table}")
+                        f"na tabela {table_name}")
 
     return {
         "status_code": 200,

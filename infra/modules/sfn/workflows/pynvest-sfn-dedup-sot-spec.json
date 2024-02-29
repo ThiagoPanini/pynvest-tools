@@ -1,0 +1,91 @@
+{
+    "Comment": "Workflow para deduplicação de registros em tabelas originalmente geradas com dados financeiros de ativos nas camadas SoT e Spec. Na arquitetura proposta, este processo de deduplicaçãos e faz necessário por conta de invocações simultâneas das funções Lambda originalmente criadas em uma arquitetura de eventos para processamento de registros.",
+    "StartAt": "Deduplicação de tabelas na camada SoT",
+    "States": {
+      "Deduplicação de tabelas na camada SoT": {
+        "Type": "Parallel",
+        "Branches": [
+          {
+            "StartAt": "Dedup SoT Ações",
+            "States": {
+              "Dedup SoT Ações": {
+                "Type": "Task",
+                "Resource": "arn:aws:states:::lambda:invoke",
+                "OutputPath": "$.Payload",
+                "Parameters": {
+                  "FunctionName": "arn:aws:lambda:sa-east-1:596533897380:function:pynvest-lambda-dedup-financial-data-for-acoes:$LATEST"
+                },
+                "Retry": [
+                  {
+                    "ErrorEquals": [
+                      "Lambda.ServiceException",
+                      "Lambda.AWSLambdaException",
+                      "Lambda.SdkClientException",
+                      "Lambda.TooManyRequestsException"
+                    ],
+                    "IntervalSeconds": 1,
+                    "MaxAttempts": 3,
+                    "BackoffRate": 2
+                  }
+                ],
+                "End": true
+              }
+            }
+          },
+          {
+            "StartAt": "Dedup SoT FIIs",
+            "States": {
+              "Dedup SoT FIIs": {
+                "Type": "Task",
+                "Resource": "arn:aws:states:::lambda:invoke",
+                "OutputPath": "$.Payload",
+                "Parameters": {
+                  "FunctionName": "arn:aws:lambda:sa-east-1:596533897380:function:pynvest-lambda-dedup-financial-data-for-fiis:$LATEST"
+                },
+                "Retry": [
+                  {
+                    "ErrorEquals": [
+                      "Lambda.ServiceException",
+                      "Lambda.AWSLambdaException",
+                      "Lambda.SdkClientException",
+                      "Lambda.TooManyRequestsException"
+                    ],
+                    "IntervalSeconds": 1,
+                    "MaxAttempts": 3,
+                    "BackoffRate": 2
+                  }
+                ],
+                "End": true
+              }
+            }
+          }
+        ],
+        "Next": "Dedup Spec Ativos"
+      },
+      "Dedup Spec Ativos": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "OutputPath": "$.Payload",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:sa-east-1:596533897380:function:pynvest-lambda-dedup-financial-data-for-spec-ativos:$LATEST"
+        },
+        "Retry": [
+          {
+            "ErrorEquals": [
+              "Lambda.ServiceException",
+              "Lambda.AWSLambdaException",
+              "Lambda.SdkClientException",
+              "Lambda.TooManyRequestsException"
+            ],
+            "IntervalSeconds": 1,
+            "MaxAttempts": 3,
+            "BackoffRate": 2
+          }
+        ],
+        "Next": "Success"
+      },
+      "Success": {
+        "Type": "Succeed"
+      }
+    }
+  }

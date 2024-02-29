@@ -1,0 +1,51 @@
+{
+	"Version": "2012-10-17",
+	"Statement": [
+        {
+			"Sid": "S3GetData",
+			"Effect": "Allow",
+			"Action": [
+				"s3:ListBucket",
+        		"s3:GetObject"
+			],
+			"Resource": [
+				"arn:aws:s3:::${sot_bucket_name}",
+				"arn:aws:s3:::${spec_bucket_name}",
+                "arn:aws:s3:::${sot_bucket_name}/tbsot_fundamentus_*/*",
+				"arn:aws:s3:::${spec_bucket_name}/tbspec_fundamentus_*/*"
+            ]
+		},
+		{
+			"Sid": "S3OverwriteData",
+			"Effect": "Allow",
+			"Action": [
+				"s3:PutObject",
+				"s3:DeleteObject"
+			],
+			"Resource": [
+				"arn:aws:s3:::${sot_bucket_name}/tbsot_fundamentus_*/*",
+				"arn:aws:s3:::${spec_bucket_name}/tbspec_fundamentus_*/*"
+			]
+		},
+		{
+			"Sid": "GlueAccessOnTables",
+			"Effect": "Allow",
+			"Action": [
+                "glue:GetDatabase",
+				"glue:CreateTable",
+				"glue:UpdateTable",
+				"glue:GetTable",
+				"glue:GetPartitions",
+				"glue:BatchDeletePartition",
+                "glue:BatchCreatePartition"
+            ],
+			"Resource": [
+                "arn:aws:glue:${region_name}:${account_id}:catalog",
+                "arn:aws:glue:${region_name}:${account_id}:database/${sot_database_name}",
+				"arn:aws:glue:${region_name}:${account_id}:database/${spec_database_name}",
+				"arn:aws:glue:${region_name}:${account_id}:table/${sot_database_name}/tbsot_fundamentus_*",
+                "arn:aws:glue:${region_name}:${account_id}:table/${spec_database_name}/tbspec_fundamentus_*"
+            ]
+		}
+	]
+}

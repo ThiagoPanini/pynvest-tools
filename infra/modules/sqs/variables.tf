@@ -29,3 +29,8 @@ variable "sqs_receive_wait_time_seconds" {
   description = "Tempo máximo (em segundos) que processos de pooling irão aguardar por mensagens disponíveis (Short Pooling versus Long Pooling)"
   type        = number
 }
+
+variable "module_default_tags" {
+  description = "Conjunto de tags padrão a serem associadas aos recursos do módulo"
+  type        = map(string)
+}

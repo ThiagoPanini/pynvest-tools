@@ -25,6 +25,7 @@ data "template_file" "pynvest-store-cloudwatch-logs" {
 resource "aws_iam_policy" "pynvest-store-cloudwatch-logs" {
   name   = "pynvest-store-cloudwatch-logs"
   policy = data.template_file.pynvest-store-cloudwatch-logs.rendered
+  tags   = var.module_default_tags
 }
 
 
@@ -47,10 +48,11 @@ data "template_file" "pynvest-invoke-lambda-functions" {
 resource "aws_iam_policy" "pynvest-invoke-lambda-functions" {
   name   = "pynvest-invoke-lambda-functions"
   policy = data.template_file.pynvest-invoke-lambda-functions.rendered
+  tags   = var.module_default_tags
 }
 
 
-/* -------------------------------------------------------
+/* ------------------------------------------------------- 
     IAM POLICY
     Definindo policy para deleção de partições
 ------------------------------------------------------- */
@@ -60,11 +62,14 @@ data "template_file" "pynvest-check-and-delete-partitions" {
   template = file("${path.module}/policy-templates/pynvest-check-and-delete-partitions.json")
 
   vars = {
-    region_name          = var.region_name
-    account_id           = var.account_id
-    sor_database_name    = var.databases_names_map["sor"]
-    sor_acoes_table_name = var.tables_names_map["fundamentus"]["sor_acoes"]
-    sor_fiis_table_name  = var.tables_names_map["fundamentus"]["sor_fiis"]
+    region_name        = var.region_name
+    account_id         = var.account_id
+    sor_database_name  = var.databases_names_map["sor"]
+    sot_database_name  = var.databases_names_map["sot"]
+    spec_database_name = var.databases_names_map["spec"]
+    sor_bucket_name    = var.bucket_names_map["sor"]
+    sot_bucket_name    = var.bucket_names_map["sot"]
+    spec_bucket_name   = var.bucket_names_map["spec"]
   }
 }
 
@@ -72,6 +77,7 @@ data "template_file" "pynvest-check-and-delete-partitions" {
 resource "aws_iam_policy" "pynvest-check-and-delete-partitions" {
   name   = "pynvest-check-and-delete-partitions"
   policy = data.template_file.pynvest-check-and-delete-partitions.rendered
+  tags   = var.module_default_tags
 }
 
 
@@ -95,31 +101,136 @@ data "template_file" "pynvest-send-msgs-to-tickers-queues" {
 resource "aws_iam_policy" "pynvest-send-msgs-to-tickers-queues" {
   name   = "pynvest-send-msgs-to-tickers-queues"
   policy = data.template_file.pynvest-send-msgs-to-tickers-queues.rendered
+  tags   = var.module_default_tags
 }
 
 
 /* -------------------------------------------------------
     IAM POLICY
-    Definindo policy para coleta, armazenamento e catalogação
-    de dados brutos na camada SoR
+    Definindo policy para coleta, armazenamento e
+    catalogação de dados brutos na camada SoR
 ------------------------------------------------------- */
 
 # Definindo template file para policy
-data "template_file" "pynvest-share-raw-financial-data" {
-  template = file("${path.module}/policy-templates/pynvest-share-raw-financial-data.json")
+data "template_file" "pynvest-share-sor-financial-data" {
+  template = file("${path.module}/policy-templates/pynvest-share-sor-financial-data.json")
 
   vars = {
-    region_name          = var.region_name
-    account_id           = var.account_id
-    sor_bucket_name      = var.bucket_names_map["sor"]
-    sor_database_name    = var.databases_names_map["sor"]
-    sor_acoes_table_name = var.tables_names_map["fundamentus"]["sor_acoes"]
-    sor_fiis_table_name  = var.tables_names_map["fundamentus"]["sor_fiis"]
+    region_name       = var.region_name
+    account_id        = var.account_id
+    sor_bucket_name   = var.bucket_names_map["sor"]
+    sor_database_name = var.databases_names_map["sor"]
   }
 }
 
 # Definindo policy
-resource "aws_iam_policy" "pynvest-share-raw-financial-data" {
-  name   = "pynvest-share-raw-financial-data"
-  policy = data.template_file.pynvest-share-raw-financial-data.rendered
+resource "aws_iam_policy" "pynvest-share-sor-financial-data" {
+  name   = "pynvest-share-sor-financial-data"
+  policy = data.template_file.pynvest-share-sor-financial-data.rendered
+  tags   = var.module_default_tags
+}
+
+
+/* -------------------------------------------------------
+    IAM POLICY
+    Definindo policy para coleta, armazenamento e
+    catalogação de dados preparados na camada SoT
+------------------------------------------------------- */
+
+# Definindo template file para policy
+data "template_file" "pynvest-share-sot-financial-data" {
+  template = file("${path.module}/policy-templates/pynvest-share-sot-financial-data.json")
+
+  vars = {
+    region_name       = var.region_name
+    account_id        = var.account_id
+    sor_bucket_name   = var.bucket_names_map["sor"]
+    sot_bucket_name   = var.bucket_names_map["sot"]
+    sot_database_name = var.databases_names_map["sot"]
+  }
+}
+
+# Definindo policy
+resource "aws_iam_policy" "pynvest-share-sot-financial-data" {
+  name   = "pynvest-share-sot-financial-data"
+  policy = data.template_file.pynvest-share-sot-financial-data.rendered
+  tags   = var.module_default_tags
+}
+
+
+/* -------------------------------------------------------
+    IAM POLICY
+    Definindo policy para coleta, armazenamento e
+    catalogação de dados especializados na camada Spec
+------------------------------------------------------- */
+
+# Definindo template file para policy
+data "template_file" "pynvest-share-spec-financial-data" {
+  template = file("${path.module}/policy-templates/pynvest-share-spec-financial-data.json")
+
+  vars = {
+    region_name        = var.region_name
+    account_id         = var.account_id
+    sot_bucket_name    = var.bucket_names_map["sot"]
+    spec_bucket_name   = var.bucket_names_map["spec"]
+    spec_database_name = var.databases_names_map["spec"]
+  }
+}
+
+# Definindo policy
+resource "aws_iam_policy" "pynvest-share-spec-financial-data" {
+  name   = "pynvest-share-spec-financial-data"
+  policy = data.template_file.pynvest-share-spec-financial-data.rendered
+  tags   = var.module_default_tags
+}
+
+
+/* -------------------------------------------------------
+    IAM POLICY
+    Definindo policy para leitura e escrita de dados nas
+    camadas SoT e Spec como parte de processo de deduplicação
+------------------------------------------------------- */
+
+# Definindo template file para policy
+data "template_file" "pynvest-dedup-financial-data" {
+  template = file("${path.module}/policy-templates/pynvest-dedup-financial-data.json")
+
+  vars = {
+    region_name        = var.region_name
+    account_id         = var.account_id
+    sot_bucket_name    = var.bucket_names_map["sot"]
+    sot_database_name  = var.databases_names_map["sot"]
+    spec_bucket_name   = var.bucket_names_map["spec"]
+    spec_database_name = var.databases_names_map["spec"]
+  }
+}
+
+# Definindo policy
+resource "aws_iam_policy" "pynvest-dedup-financial-data" {
+  name   = "pynvest-dedup-financial-data"
+  policy = data.template_file.pynvest-dedup-financial-data.rendered
+  tags   = var.module_default_tags
+}
+
+
+/* -------------------------------------------------------
+    IAM POLICY
+    Definindo policy para invocação de state machines
+------------------------------------------------------- */
+
+# Definindo template file para policy
+data "template_file" "pynvest-invoke-state-machines" {
+  template = file("${path.module}/policy-templates/pynvest-invoke-state-machines.json")
+
+  vars = {
+    region_name = var.region_name
+    account_id  = var.account_id
+  }
+}
+
+# Definindo policy
+resource "aws_iam_policy" "pynvest-invoke-state-machines" {
+  name   = "pynvest-invoke-state-machines"
+  policy = data.template_file.pynvest-invoke-state-machines.rendered
+  tags   = var.module_default_tags
 }

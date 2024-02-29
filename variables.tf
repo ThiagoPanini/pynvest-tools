@@ -32,33 +32,13 @@ variable "databases_names_map" {
   }
 }
 
-/*
-variable "tables_names_map" {
-  description = "Dicionário (map) contendo os nomes de todas as tabelas a serem criadas no Glue Data Catalog para armazenamento de dados de indicadores financeiros em todas as camadas SoR, SoT e Spec"
-  type        = map(map(string))
-  default = {
-    "fundamentus" = {
-      "sor_acoes" = "tbsor_fundamentus_ind_financeiros_acoes",
-      "sor_fiis"  = "tbsor_fundamentus_ind_financeiros_fiis"
-    }
-    # ToDo: criar validação de chaves do dicionário (map) presente nesta variável
-    # ToDo: já que existe um vínculo entre o nome das tabelas e o schema em arquivo JSON, ou seja,
-    # o valor desta variável é usado para leitura de arquivo JSOn de mesmo nome, caso o usuário
-    # informe um valor diferente para a tabela desejada, a chamada ao módulo retornará um erro
-    # de arquivo inexistente (afinal, o nome do arquivo JSON terá um valor fixo)... neste caso,
-    # vale estudar se esta informação de nome de tabelas não deve ser chumbado em locals.tf
-    # em outras palavras, o usuário não terá permissões de modificar o nome da tabela
-  }
-}
-*/
-
 variable "bucket_names_map" {
   description = "Dicionário (map) contendo nomes dos buckets SoR, SoT e Spec da conta AWS alvo de implantação dos recursos. O objetivo desta variável e permitir que o usuário forneça seus próprios buckets para armazenamento dos arquivos gerados. O correto preenchimento desta variável exige que as referências de nomes sejam fornecidas dentro das chaves 'sor', 'sot' e 'spec'. O usuário também pode fornecer o mesmo nome de bucket para as três quebras, caso queira armazenar os dados das tabelas em um único bucket."
   type        = map(string)
-  default = {
-    "sor" = "pynvest-sor-640314716246-us-east-1"
-    # ToDo: retirar valor default para exigir q o usuário passe essa info
-    # ToDo: criar validação de chaves do dicionário (map) presente nesta variável
+
+  validation {
+    condition     = join(", ", tolist(keys(var.bucket_names_map))) == "sor, sot, spec"
+    error_message = "Variável bucket_names_map precisa ser fornecida como um dicionário (map) contendo exatamente as chaves 'sor', 'sot' e 'spec'. O dicionário fornecido não contém exatamente as chaves mencionadas e, portanto, é considerado inválido."
   }
 }
 
@@ -125,29 +105,44 @@ variable "functions_python_runtime" {
 variable "functions_timeout" {
   description = "Timeout das funções Lambda"
   type        = number
-  default     = 180
+  default     = 900
 }
 
-variable "cron_expression_to_initialize_process" {
-  description = "Expressão cron responsável por engatilhar todo o processo de obtenção e atualização dos dados"
-  type        = string
-  default     = "cron(0 22 ? * MON-FRI *)"
+variable "functions_memory_size" {
+  description = "Quantidade de memória (MB) a ser alocada para as funções Lambda"
+  type        = number
+  default     = 192
 }
 
 variable "sqs_lambda_trigger_batch_size" {
   description = "Número máximo de registros a serem enviados para a função em cada batch"
   type        = number
-  default     = 10
+  default     = 100
 }
 
 variable "sqs_lambda_trigger_batch_window" {
   description = "Valor máximo de tempo (em segundos) que a função irá aguardar para a coleta de registros antes da invocação"
   type        = number
-  default     = 5
+  default     = 10
 }
 
 variable "sqs_lambda_trigger_max_concurrency" {
   description = "Número máximo de funções concorrentes a serem invocadas pelo gatilho"
   type        = number
-  default     = 10
+  default     = 3
+}
+
+
+/* -------------------------------------------------------
+    VARIABLES: tags
+    Variáveis gerais relacionadas ao tagueamento
+------------------------------------------------------- */
+
+variable "module_default_tags" {
+  description = "Conjunto de tags padrão a serem associadas aos recursos do módulo"
+  type        = map(string)
+  default = {
+    "projeto"     = "pynvest-tools"
+    "iac-runtime" = "terraform"
+  }
 }

@@ -30,10 +30,11 @@ resource "aws_lambda_function" "pynvest-lambda-check-and-delete-partitions" {
   source_code_hash = data.archive_file.pynvest-lambda-check-and-delete-partitions.output_base64sha256
 
   # Configurações adicionais
-  role    = var.iam_roles_arns_map["pynvest-lambda-check-and-delete-partitions"]
-  handler = "lambda_function.lambda_handler"
-  runtime = var.functions_python_runtime
-  timeout = var.functions_timeout
+  role        = var.iam_roles_arns_map["pynvest-lambda-check-and-delete-partitions"]
+  handler     = "lambda_function.lambda_handler"
+  runtime     = var.functions_python_runtime
+  timeout     = var.functions_timeout
+  memory_size = var.functions_memory_size
 
   # Layers
   layers = [
@@ -43,10 +44,22 @@ resource "aws_lambda_function" "pynvest-lambda-check-and-delete-partitions" {
   # Variáveis de ambiente
   environment {
     variables = {
-      DATABASE_NAME = var.databases_names_map["sor"],
-      TABLE_NAMES   = "${var.tables_names_map["fundamentus"]["sor_acoes"]},${var.tables_names_map["fundamentus"]["sor_fiis"]}"
+      DATABASES_AND_TABLES = join(
+        ",",
+        distinct(
+          flatten(
+            [
+              for element in var.tables_info_map :
+              "${element.database}.${element.table}"
+            ]
+          )
+        )
+      )
     }
   }
+
+  # Tags
+  tags = var.module_default_tags
 
   # Dependências de recursos
   depends_on = [
@@ -75,14 +88,17 @@ resource "aws_lambda_function" "pynvest-lambda-get-tickers" {
   filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-get-tickers.zip"
   source_code_hash = data.archive_file.pynvest-lambda-get-tickers.output_base64sha256
 
-  role    = var.iam_roles_arns_map["pynvest-lambda-send-msgs-to-tickers-queue"]
-  handler = "lambda_function.lambda_handler"
-  runtime = var.functions_python_runtime
-  timeout = var.functions_timeout
+  role        = var.iam_roles_arns_map["pynvest-lambda-send-msgs-to-tickers-queue"]
+  handler     = "lambda_function.lambda_handler"
+  runtime     = var.functions_python_runtime
+  timeout     = var.functions_timeout
+  memory_size = var.functions_memory_size
 
   layers = [
     "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
   ]
+
+  tags = var.module_default_tags
 
   depends_on = [
     data.archive_file.pynvest-lambda-get-tickers
@@ -92,7 +108,7 @@ resource "aws_lambda_function" "pynvest-lambda-get-tickers" {
 
 /* -------------------------------------------------------
     ARCHIVE FILE
-    Zip comum a ser utlizado para próximas duas Lambdas
+    Zip comum a ser utilizado para próximas duas Lambdas
 ------------------------------------------------------- */
 
 # Criando pacote zip da função a ser criada
@@ -101,6 +117,7 @@ data "archive_file" "pynvest-lambda-get-financial-data" {
   source_dir  = "${path.module}/../../../app/lambda/functions/pynvest-lambda-get-financial-data/"
   output_path = "${path.module}/../../../app/lambda/zip/pynvest-lambda-get-financial-data.zip"
 }
+
 
 /* -------------------------------------------------------
     LAMBDA FUNCTION
@@ -115,10 +132,11 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-acoes" {
   filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-get-financial-data.zip"
   source_code_hash = data.archive_file.pynvest-lambda-get-financial-data.output_base64sha256
 
-  role    = var.iam_roles_arns_map["pynvest-lambda-share-raw-financial-data"]
-  handler = "lambda_function.lambda_handler"
-  runtime = var.functions_python_runtime
-  timeout = var.functions_timeout
+  role        = var.iam_roles_arns_map["pynvest-lambda-share-sor-financial-data"]
+  handler     = "lambda_function.lambda_handler"
+  runtime     = var.functions_python_runtime
+  timeout     = var.functions_timeout
+  memory_size = var.functions_memory_size
 
   layers = [
     "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
@@ -126,11 +144,13 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-acoes" {
 
   environment {
     variables = {
-      OUTPUT_BUCKET = var.bucket_names_map["sor"],
-      DATABASE_NAME = var.databases_names_map["sor"],
-      TABLE_NAME    = var.tables_names_map["fundamentus"]["sor_acoes"]
+      OUTPUT_BUCKET   = var.bucket_names_map["sor"],
+      OUTPUT_DATABASE = var.databases_names_map["sor"],
+      OUTPUT_TABLE    = var.tables_names_map["fundamentus"]["sor_acoes"]
     }
   }
+
+  tags = var.module_default_tags
 
   depends_on = [
     data.archive_file.pynvest-lambda-get-financial-data
@@ -151,10 +171,11 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-fiis" {
   filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-get-financial-data.zip"
   source_code_hash = data.archive_file.pynvest-lambda-get-financial-data.output_base64sha256
 
-  role    = var.iam_roles_arns_map["pynvest-lambda-share-raw-financial-data"]
-  handler = "lambda_function.lambda_handler"
-  runtime = var.functions_python_runtime
-  timeout = var.functions_timeout
+  role        = var.iam_roles_arns_map["pynvest-lambda-share-sor-financial-data"]
+  handler     = "lambda_function.lambda_handler"
+  runtime     = var.functions_python_runtime
+  timeout     = var.functions_timeout
+  memory_size = var.functions_memory_size
 
   layers = [
     "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
@@ -162,13 +183,288 @@ resource "aws_lambda_function" "pynvest-lambda-get-financial-data-for-fiis" {
 
   environment {
     variables = {
-      OUTPUT_BUCKET = var.bucket_names_map["sor"],
-      DATABASE_NAME = var.databases_names_map["sor"],
-      TABLE_NAME    = var.tables_names_map["fundamentus"]["sor_fiis"]
+      OUTPUT_BUCKET   = var.bucket_names_map["sor"],
+      OUTPUT_DATABASE = var.databases_names_map["sor"],
+      OUTPUT_TABLE    = var.tables_names_map["fundamentus"]["sor_fiis"]
     }
   }
 
+  tags = var.module_default_tags
+
   depends_on = [
     data.archive_file.pynvest-lambda-get-financial-data
+  ]
+}
+
+
+/* -------------------------------------------------------
+    ARCHIVE FILE
+    Zip comum a ser utilizado para próximas duas Lambdas
+------------------------------------------------------- */
+
+# Criando pacote zip da função a ser criada
+data "archive_file" "pynvest-lambda-prep-financial-data" {
+  type        = "zip"
+  source_dir  = "${path.module}/../../../app/lambda/functions/pynvest-lambda-prep-financial-data/"
+  output_path = "${path.module}/../../../app/lambda/zip/pynvest-lambda-prep-financial-data.zip"
+}
+
+
+/* -------------------------------------------------------
+    LAMBDA FUNCTION
+    pynvest-lambda-prep-financial-data-for-acoes
+------------------------------------------------------- */
+
+# Criando função Lambda
+resource "aws_lambda_function" "pynvest-lambda-prep-financial-data-for-acoes" {
+  function_name = "pynvest-lambda-prep-financial-data-for-acoes"
+  description   = "Lê indicadores brutos de Ações já extraídos e armazenados no S3 e prepara tipos primitivos para a camada SoT"
+
+  filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-prep-financial-data.zip"
+  source_code_hash = data.archive_file.pynvest-lambda-prep-financial-data.output_base64sha256
+
+  role        = var.iam_roles_arns_map["pynvest-lambda-share-sot-financial-data"]
+  handler     = "lambda_function.lambda_handler"
+  runtime     = var.functions_python_runtime
+  timeout     = var.functions_timeout
+  memory_size = var.functions_memory_size
+
+  layers = [
+    "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
+  ]
+
+  environment {
+    variables = {
+      OUTPUT_BUCKET   = var.bucket_names_map["sot"],
+      OUTPUT_DATABASE = var.databases_names_map["sot"],
+      OUTPUT_TABLE    = var.tables_names_map["fundamentus"]["sot_acoes"]
+    }
+  }
+
+  tags = var.module_default_tags
+
+  depends_on = [
+    data.archive_file.pynvest-lambda-get-financial-data
+  ]
+}
+
+
+/* -------------------------------------------------------
+    LAMBDA FUNCTION
+    pynvest-lambda-prep-financial-data-for-fiis
+------------------------------------------------------- */
+
+# Criando função Lambda
+resource "aws_lambda_function" "pynvest-lambda-prep-financial-data-for-fiis" {
+  function_name = "pynvest-lambda-prep-financial-data-for-fiis"
+  description   = "Lê indicadores brutos de FIIs já extraídos e armazenados no S3 e prepara tipos primitivos para a camada SoT"
+
+  filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-prep-financial-data.zip"
+  source_code_hash = data.archive_file.pynvest-lambda-prep-financial-data.output_base64sha256
+
+  role        = var.iam_roles_arns_map["pynvest-lambda-share-sot-financial-data"]
+  handler     = "lambda_function.lambda_handler"
+  runtime     = var.functions_python_runtime
+  timeout     = var.functions_timeout
+  memory_size = var.functions_memory_size
+
+  layers = [
+    "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
+  ]
+
+  environment {
+    variables = {
+      OUTPUT_BUCKET   = var.bucket_names_map["sot"],
+      OUTPUT_DATABASE = var.databases_names_map["sot"],
+      OUTPUT_TABLE    = var.tables_names_map["fundamentus"]["sot_fiis"]
+    }
+  }
+
+  tags = var.module_default_tags
+
+  depends_on = [
+    data.archive_file.pynvest-lambda-get-financial-data
+  ]
+}
+
+
+/* -------------------------------------------------------
+    LAMBDA FUNCTION
+    pynvest-lambda-specialize-financial-data
+------------------------------------------------------- */
+
+# Criando pacote zip da função a ser criada
+data "archive_file" "pynvest-lambda-specialize-financial-data" {
+  type        = "zip"
+  source_dir  = "${path.module}/../../../app/lambda/functions/pynvest-lambda-specialize-financial-data/"
+  output_path = "${path.module}/../../../app/lambda/zip/pynvest-lambda-specialize-financial-data.zip"
+}
+
+# Criando função Lambda
+resource "aws_lambda_function" "pynvest-lambda-specialize-financial-data" {
+  function_name = "pynvest-lambda-specialize-financial-data"
+  description   = "Lê indicadores de Ações ou FIIs para criar uma visão especializada de ativos de ambos os tipos"
+
+  filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-specialize-financial-data.zip"
+  source_code_hash = data.archive_file.pynvest-lambda-specialize-financial-data.output_base64sha256
+
+  role        = var.iam_roles_arns_map["pynvest-lambda-share-spec-financial-data"]
+  handler     = "lambda_function.lambda_handler"
+  runtime     = var.functions_python_runtime
+  timeout     = var.functions_timeout
+  memory_size = var.functions_memory_size
+
+  layers = [
+    "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
+  ]
+
+  environment {
+    variables = {
+      OUTPUT_BUCKET   = var.bucket_names_map["spec"],
+      OUTPUT_DATABASE = var.databases_names_map["spec"],
+      OUTPUT_TABLE    = var.tables_names_map["fundamentus"]["spec_ativos"]
+    }
+  }
+
+  tags = var.module_default_tags
+
+  depends_on = [
+    data.archive_file.pynvest-lambda-get-financial-data
+  ]
+}
+
+
+/* -------------------------------------------------------
+    ARCHIVE FILE
+    Zip comum a ser utilizado para próximas três Lambdas
+------------------------------------------------------- */
+
+# Criando pacote zip da função a ser criada
+data "archive_file" "pynvest-lambda-dedup-financial-data" {
+  type        = "zip"
+  source_dir  = "${path.module}/../../../app/lambda/functions/pynvest-lambda-dedup-financial-data/"
+  output_path = "${path.module}/../../../app/lambda/zip/pynvest-lambda-dedup-financial-data.zip"
+}
+
+
+/* -------------------------------------------------------
+    LAMBDA FUNCTION
+    pynvest-lambda-dedup-financial-data-for-acoes
+------------------------------------------------------- */
+
+# Criando função Lambda
+resource "aws_lambda_function" "pynvest-lambda-dedup-financial-data-for-acoes" {
+  function_name = "pynvest-lambda-dedup-financial-data-for-acoes"
+  description   = "Realiza a leitura da tabela SoT de Ações e realiza a remoção de dados duplicados"
+
+  filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-dedup-financial-data.zip"
+  source_code_hash = data.archive_file.pynvest-lambda-dedup-financial-data.output_base64sha256
+
+  role        = var.iam_roles_arns_map["pynvest-lambda-dedup-financial-data"]
+  handler     = "lambda_function.lambda_handler"
+  runtime     = var.functions_python_runtime
+  timeout     = var.functions_timeout
+  memory_size = var.functions_memory_size
+
+  layers = [
+    "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
+  ]
+
+  environment {
+    variables = {
+      TARGET_BUCKET       = var.bucket_names_map["sot"],
+      TARGET_DATABASE     = var.databases_names_map["sot"],
+      TARGET_TABLE        = var.tables_names_map["fundamentus"]["sot_acoes"]
+      PARTITION_NAME      = "anomesdia_exec"
+      SUBSET_COL_TO_DEDUP = "nome_papel"
+    }
+  }
+
+  tags = var.module_default_tags
+
+  depends_on = [
+    data.archive_file.pynvest-lambda-dedup-financial-data
+  ]
+}
+
+
+/* -------------------------------------------------------
+    LAMBDA FUNCTION
+    pynvest-lambda-dedup-financial-data-for-fiis
+------------------------------------------------------- */
+
+# Criando função Lambda
+resource "aws_lambda_function" "pynvest-lambda-dedup-financial-data-for-fiis" {
+  function_name = "pynvest-lambda-dedup-financial-data-for-fiis"
+  description   = "Realiza a leitura da tabela SoT de FIIs e realiza a remoção de dados duplicados"
+
+  filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-dedup-financial-data.zip"
+  source_code_hash = data.archive_file.pynvest-lambda-dedup-financial-data.output_base64sha256
+
+  role        = var.iam_roles_arns_map["pynvest-lambda-dedup-financial-data"]
+  handler     = "lambda_function.lambda_handler"
+  runtime     = var.functions_python_runtime
+  timeout     = var.functions_timeout
+  memory_size = var.functions_memory_size
+
+  layers = [
+    "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
+  ]
+
+  environment {
+    variables = {
+      TARGET_BUCKET       = var.bucket_names_map["sot"],
+      TARGET_DATABASE     = var.databases_names_map["sot"],
+      TARGET_TABLE        = var.tables_names_map["fundamentus"]["sot_fiis"]
+      PARTITION_NAME      = "anomesdia_exec"
+      SUBSET_COL_TO_DEDUP = "fii"
+    }
+  }
+
+  tags = var.module_default_tags
+
+  depends_on = [
+    data.archive_file.pynvest-lambda-dedup-financial-data
+  ]
+}
+
+
+/* -------------------------------------------------------
+    LAMBDA FUNCTION
+    pynvest-lambda-dedup-financial-data-for-spec-ativos
+------------------------------------------------------- */
+
+# Criando função Lambda
+resource "aws_lambda_function" "pynvest-lambda-dedup-financial-data-for-spec-ativos" {
+  function_name = "pynvest-lambda-dedup-financial-data-for-spec-ativos"
+  description   = "Realiza a leitura da tabela Spec de cotação de ativos e realiza a remoção de dados duplicados"
+
+  filename         = "${path.module}/../../../app/lambda/zip/pynvest-lambda-dedup-financial-data.zip"
+  source_code_hash = data.archive_file.pynvest-lambda-dedup-financial-data.output_base64sha256
+
+  role        = var.iam_roles_arns_map["pynvest-lambda-dedup-financial-data"]
+  handler     = "lambda_function.lambda_handler"
+  runtime     = var.functions_python_runtime
+  timeout     = var.functions_timeout
+  memory_size = var.functions_memory_size
+
+  layers = [
+    "arn:aws:lambda:${var.region_name}:336392948345:layer:AWSSDKPandas-Python310:5"
+  ]
+
+  environment {
+    variables = {
+      TARGET_BUCKET       = var.bucket_names_map["spec"],
+      TARGET_DATABASE     = var.databases_names_map["spec"],
+      TARGET_TABLE        = var.tables_names_map["fundamentus"]["spec_ativos"]
+      PARTITION_NAME      = "anomesdia_exec"
+      SUBSET_COL_TO_DEDUP = "codigo_ticker_ativo"
+    }
+  }
+
+  tags = var.module_default_tags
+
+  depends_on = [
+    data.archive_file.pynvest-lambda-dedup-financial-data
   ]
 }
