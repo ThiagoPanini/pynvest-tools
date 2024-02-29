@@ -43,12 +43,12 @@ COMMON_COLS = [
     "pct_var_mes",
     "pct_var_30d",
     "pct_var_12m",
-    "pct_var_2023",
-    "pct_var_2022",
-    "pct_var_2021",
-    "pct_var_2020",
-    "pct_var_2019",
-    "pct_var_2018"
+    "pct_var_ano_a0",
+    "pct_var_ano_a1",
+    "pct_var_ano_a2",
+    "pct_var_ano_a3",
+    "pct_var_ano_a4",
+    "pct_var_ano_a5"
 ]
 
 
